@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Tennis Bot (Interactive)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tennis_bot.py",
+            "console": "integratedTerminal",
+            "args": []
+        },
+        {
+            "name": "Run Tennis Bot (Simulate Match)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tennis_bot.py",
+            "console": "integratedTerminal",
+            "args": ["--simulate"]
+        }
+    ]
+}

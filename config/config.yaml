@@ -1,0 +1,212 @@
+# Educational/Research Betfury Scraper Configuration
+# Copy this file to config.yaml and customize as needed
+
+# Global Settings
+debug: false
+log_level: INFO
+research_mode: true  # Enables ethical rate limiting and logging
+
+# Rate Limiting (CRITICAL for ethical scraping)
+rate_limit:
+  min_delay_seconds: 5.0  # Minimum delay between requests
+  max_delay_seconds: 10.0  # Maximum delay between requests
+  randomization: true      # Add random delays
+  respect_robots_txt: true # Follow robots.txt rules
+  max_requests_per_hour: 720  # 1 request every 5 seconds
+
+# Web Scraping Configuration
+scraping:
+  user_agent: "EducationalResearchBot/1.0 (Sports Analytics Research)"
+  timeout_seconds: 30
+  retry_attempts: 3
+  retry_delay: 2.0
+  headless_browser: true
+  window_size: [1920, 1080]
+  
+  # Target URLs (EDUCATIONAL USE ONLY)
+  targets:
+    sports_page: "https://betfury.io/sports"
+    live_page: "https://betfury.io/sports/live"
+    api_base: "https://betfury.io/api"
+  
+  # CSS Selectors (may need updating based on site changes)
+  selectors:
+    match_container: ".match-card"
+    league_name: ".league-name"
+    home_team: ".home-team"
+    away_team: ".away-team"
+    score: ".score"
+    minute: ".minute"
+    odds_button: ".odd-button"
+    over_under: ".over-under"
+    asian_handicap: ".asian-handicap"
+
+# WebSocket Configuration (Research Mode)
+websocket:
+  enabled: true
+  max_connections: 3
+  connection_timeout: 10
+  message_timeout: 30
+  ping_interval: 20
+  
+  # Educational WebSocket endpoints (may change)
+  endpoints:
+    sports_ws: "wss://betfury.io/ws/sports"
+    live_odds: "wss://betfury.io/ws/odds"
+
+# AI/ML Prediction Engine
+ml_config:
+  model_type: "ensemble"  # ensemble, random_forest, xgboost, neural_network
+  
+  # Feature Engineering
+  features:
+    - current_score
+    - time_remaining
+    - odds_movement
+    - league_strength
+    - team_form
+    - head_to_head
+  
+  # Model Parameters
+  parameters:
+    min_confidence: 0.70  # Minimum confidence for predictions
+    max_odds: 3.0         # Maximum odds to consider
+    min_odds: 1.05        # Minimum odds to consider
+    ensemble_models: 5    # Number of models in ensemble
+  
+  # Training Configuration
+  training:
+    validation_split: 0.2
+    test_size: 0.1
+    cross_validation_folds: 5
+    random_state: 42
+
+# Telegram Bot (Optional)
+telegram:
+  enabled: false  # Set to true to enable bot
+  bot_token: ""   # Your bot token
+  chat_id: ""     # Target chat ID
+  
+  # Notification Settings
+  notifications:
+    high_confidence_predictions: true
+    odds_movements: true
+    system_status: true
+    daily_summaries: true
+  
+  # Bot Commands
+  commands:
+    - /start
+    - /status
+    - /stats
+    - /help
+    - /config
+
+# Data Storage
+data_storage:
+  # Storage Backend
+  backend: "sqlite"  # sqlite, postgresql, json
+  
+  # SQLite Configuration
+  sqlite:
+    database_path: "./data/betfury_research.db"
+    backup_enabled: true
+    backup_interval_hours: 24
+  
+  # JSON Storage (Alternative)
+  json:
+    data_directory: "./data"
+    max_file_size_mb: 100
+    compression: true
+  
+  # PostgreSQL (Optional)
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "betfury_research"
+    username: ""
+    password: ""
+    ssl_mode: "prefer"
+
+# Logging and Monitoring
+logging:
+  level: "INFO"
+  format: "{time} | {level} | {name}:{function}:{line} | {message}"
+  
+  # File Logging
+  file:
+    enabled: true
+    path: "./logs"
+    rotation: "100 MB"
+    retention: "30 days"
+    compression: true
+  
+  # Console Logging
+  console:
+    enabled: true
+    colors: true
+  
+  # Audit Logging (Critical for research)
+  audit:
+    enabled: true
+    file: "./logs/audit.log"
+    include_requests: true
+    include_predictions: true
+    include_errors: true
+
+# Risk Management (Educational Limits)
+risk_management:
+  # Research Limits (Prevent abuse)
+  max_matches_per_hour: 50
+  max_predictions_per_day: 100
+  max_concurrent_analyses: 5
+  
+  # Data Retention
+  data_retention_days: 30
+  auto_cleanup: true
+  
+  # Alert Thresholds
+  error_rate_threshold: 0.05  # 5% error rate
+  response_time_threshold: 30  # seconds
+
+# Security Settings
+security:
+  # API Keys (Store securely)
+  encrypt_secrets: true
+  secret_key: "CHANGE_THIS_IN_PRODUCTION"
+  
+  # Network Security
+  verify_ssl: true
+  allow_insecure_requests: false
+  
+  # Data Privacy
+  anonymize_data: true
+  gdpr_compliance: true
+  data_minimization: true
+
+# Development Settings
+development:
+  mock_mode: false  # Use mock data for testing
+  test_data_path: "./test_data"
+  sandbox_mode: false
+  
+  # Performance Testing
+  performance_monitoring: true
+  memory_tracking: true
+  cpu_profiling: false
+
+# Research Configuration
+research:
+  # Study Parameters
+  study_name: "Educational Sports Analytics Study"
+  researcher_contact: "researcher@example.com"
+  
+  # Data Collection
+  collect_historical_data: true
+  prediction_validation: true
+  performance_metrics: true
+  
+  # Ethics and Compliance
+  comply_with_gdpr: true
+  respect_website_terms: true
+  educational_only: true

@@ -1,0 +1,91 @@
+# BETFURY.IO EDUCATIONAL RESEARCH SYSTEM
+# Configuration Template - Educational Purposes Only
+
+# System Configuration
+system:
+  name: "Betfury Educational Research System"
+  version: "1.0.0"
+  mode: "educational"  # educational, research, demo
+  
+# Educational Safeguards
+educational_mode:
+  enabled: true
+  max_session_duration: 300  # 5 minutes max
+  rate_limit_delay: 10  # 10 seconds between requests
+  log_all_activities: true
+  
+# Web Scraping Configuration (Educational Use Only)
+scraping:
+  enabled: true
+  target_url: "https://betfury.io"  # Example educational target
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  rate_limit: 10  # seconds between requests
+  max_concurrent: 1
+  respect_robots_txt: true
+  timeout: 30
+  
+# WebSocket Monitoring (Educational)
+websocket:
+  enabled: true
+  educational_endpoint: "wss://example.com/educational-stream"
+  reconnect_attempts: 3
+  message_rate_limit: 5  # messages per second
+  max_connection_time: 60  # seconds
+  
+# AI/ML Configuration
+ai_ml:
+  model_path: "./models/educational_model.pkl"
+  confidence_threshold: 0.75
+  min_odds: 1.05
+  max_odds: 3.00
+  feature_selection:
+    enabled: true
+    max_features: 20
+  validation:
+    test_size: 0.2
+    cross_validation_folds: 5
+    
+# Telegram Bot Configuration (Educational Notifications)
+telegram:
+  enabled: false  # Disabled for educational use
+  bot_token: "YOUR_BOT_TOKEN"
+  chat_id: "YOUR_CHAT_ID"
+  rate_limit: 60  # seconds between messages
+  max_messages_per_hour: 10
+  
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name: <20} | {message}"
+  rotation: "10 MB"
+  retention: "7 days"
+  compression: "gz"
+  
+# Risk Management (Educational Safeguards)
+risk_management:
+  max_bankroll: 1000  # Virtual educational bankroll
+  max_bet_percentage: 2  # 2% of bankroll max
+  stop_loss_limit: -500  # Virtual stop loss
+  daily_loss_limit: -100  # Virtual daily limit
+  educational_mode: true
+  
+# Data Storage
+data:
+  storage_path: "./data"
+  backup_enabled: true
+  cleanup_after_days: 30
+  encrypt_sensitive: false  # Educational data only
+  
+# Performance Monitoring
+monitoring:
+  performance_tracking: true
+  alerts_enabled: false  # Educational mode
+  metrics_retention: "24h"
+  
+# Legal and Compliance
+legal:
+  terms_acknowledged: false
+  educational_use_only: true
+  no_real_money: true
+  compliance_mode: strict

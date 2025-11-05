@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  betfury-research:
+    build: .
+    container_name: betfury-educational-research
+    restart: unless-stopped
+    
+    # Environment variables
+    environment:
+      - PYTHONUNBUFFERED=1
+      - RESEARCH_MODE=true
+      - EDUCATIONAL_ONLY=true
+    
+    # Volume mounts for data persistence
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./models:/app/models
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    
+    # Network configuration
+    networks:
+      - betfury-network
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Security settings
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    
+    # Command (can be overridden)
+    command: >
+      sh -c "
+        echo '⚠️  EDUCATIONAL SYSTEM WARNING ⚠️';
+        echo 'This system is for educational purposes only.';
+        echo 'DO NOT use for actual betting or financial decisions.';
+        echo '';
+        python main.py --mode analyze --duration 300 --debug
+      "
+
+  # Optional: PostgreSQL for data storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: betfury-research-db
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_DB: betfury_research
+      POSTGRES_USER: research_user
+      POSTGRES_PASSWORD: research_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    networks:
+      - betfury-network
+    
+    # Security settings
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U research_user -d betfury_research"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: betfury-research-cache
+    restart: unless-stopped
+    
+    command: redis-server --appendonly yes --requirepass redis_password
+    
+    volumes:
+      - redis_data:/data
+    
+    networks:
+      - betfury-network
+    
+    # Security settings
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Networks
+networks:
+  betfury-network:
+    driver: bridge
+    name: betfury-network
+
+# Volumes
+volumes:
+  postgres_data:
+    name: betfury-postgres-data
+  redis_data:
+    name: betfury-redis-data

@@ -1,0 +1,98 @@
+name: 🔒 Security Validation & Deployment
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Daily security check at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-validation:
+    name: 🛡️ Security Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: 📦 Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: 🔒 Security Validation
+        run: |
+          echo "Running comprehensive security validation..."
+          python security_manager.py --validate
+          echo "Security validation completed successfully"
+          
+      - name: 📊 Generate Security Report
+        run: |
+          python security_manager.py --report > security_report.md
+          echo "Security report generated"
+          
+      - name: 📤 Upload Security Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: security_report.md
+          
+  secret-validation:
+    name: 🔐 Secret Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🔒 Validate GitHub Secrets
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          echo "Validating GitHub repository secrets..."
+          python -c "
+          import os
+          secrets = ['TELEGRAM_BOT_TOKEN', 'API_FOOTBALL_KEY', 'SECRET_KEY']
+          for secret in secrets:
+              if os.environ.get(secret):
+                  print(f'✅ {secret} is configured')
+              else:
+                  print(f'⚠️  {secret} is not configured')
+          "
+          
+  code-quality:
+    name: 📋 Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: 📦 Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install black flake8 mypy
+          
+      - name: 🔍 Code Quality (Black)
+        run: black --check --diff .
+        
+      - name: 🔍 Code Quality (Flake8)
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        
+      - name: 🔍 Code Quality (MyPy)
+        run: mypy . --ignore-missing-imports

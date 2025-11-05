@@ -1,0 +1,191 @@
+# Educational API Football Betting System Configuration
+# ⚠️ EDUCATIONAL USE ONLY - NO REAL MONEY BETTING ⚠️
+
+# System Mode Configuration
+system_mode:
+  educational_mode: true
+  enable_real_api: false
+  mock_data_mode: true
+  enable_notifications: false
+
+# API Configuration
+api:
+  football_api:
+    base_url: "https://v3.football.api-sports.io"
+    timeout: 30
+    retry_attempts: 3
+    rate_limit_per_minute: 10
+    # Get free API key from: https://www.api-football.com/documentation-v3
+    api_key: "${API_FOOTBALL_KEY}"  # Set via environment variable
+  
+  telegram_bot:
+    enabled: false
+    bot_token: "${TELEGRAM_BOT_TOKEN}"  # Set via environment variable
+    chat_id: "${TELEGRAM_CHAT_ID}"  # Set via environment variable
+
+# Safety Configuration
+safety:
+  max_daily_signals: 10
+  min_confidence_threshold: 0.75
+  max_odds_range: [1.10, 2.00]
+  educational_mode: true
+  require_confirmation: true
+  daily_reset_hour: 6
+  
+  # Risk Management (Educational)
+  max_stake_percentage: 0.02  # 2% of bankroll (for simulation)
+  min_stake_amount: 0.50  # $0.50 minimum
+  
+  # Pattern Validation
+  min_pattern_confidence: 0.72
+  max_pattern_confidence: 0.85
+  
+# Pattern Configuration
+patterns:
+  enabled:
+    - LateGameProtection
+    - DefensiveStalemate
+    - DominantFavorite
+    - GoalContinuation
+    - SafeBTTS
+  
+  LateGameProtection:
+    min_minute: 70
+    max_goal_difference: 1
+    confidence_threshold: 0.78
+    expected_hitrate: 0.80
+  
+  DefensiveStalemate:
+    max_goals_scored: 1
+    min_minute: 30
+    confidence_threshold: 0.76
+    expected_hitrate: 0.78
+  
+  DominantFavorite:
+    min_elo_difference: 100
+    min_possession_diff: 15
+    confidence_threshold: 0.74
+    expected_hitrate: 0.75
+  
+  GoalContinuation:
+    min_goals_scored: 2
+    min_xg_total: 1.5
+    confidence_threshold: 0.72
+    expected_hitrate: 0.74
+  
+  SafeBTTS:
+    min_goals_both_teams: 1
+    min_time_remaining: 20
+    confidence_threshold: 0.71
+    expected_hitrate: 0.73
+
+# Data Storage Configuration
+storage:
+  educational_signals_dir: "educational_signals"
+  log_dir: "logs"
+  data_retention_days: 30
+  
+  # File naming patterns
+  signal_filename_pattern: "signal_{signal_id}.json"
+  daily_log_pattern: "daily_signals_{date}.csv"
+  error_log_pattern: "error_{date}.log"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  max_file_size_mb: 10
+  backup_count: 5
+  
+  # Console output
+  console_enabled: true
+  console_level: "INFO"
+  
+  # File output
+  file_enabled: true
+  file_level: "DEBUG"
+
+# Notification Configuration (Educational)
+notifications:
+  educational_mode: true
+  mock_notifications: true
+  
+  telegram:
+    enabled: false
+    format: "educational"
+    include_context: true
+    include_disclaimers: true
+  
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+  
+  discord:
+    enabled: false
+    webhook_url: "${DISCORD_WEBHOOK_URL}"
+
+# Performance Configuration
+performance:
+  update_interval_seconds: 60
+  max_concurrent_requests: 5
+  cache_ttl_minutes: 10
+  cooldown_period_seconds: 300
+  
+  # Pattern Analysis
+  max_matches_per_analysis: 20
+  analysis_timeout_seconds: 30
+
+# Testing Configuration
+testing:
+  enable_unit_tests: true
+  enable_integration_tests: false
+  mock_api_responses: true
+  test_data_file: "test_data/sample_matches.json"
+  
+  # Educational Validation Tests
+  validate_safety_protocols: true
+  validate_educational_mode: true
+  validate_pattern_calculations: true
+
+# Environment-specific Overrides
+environments:
+  development:
+    logging_level: "DEBUG"
+    update_interval_seconds: 30
+    educational_mode: true
+  
+  staging:
+    logging_level: "INFO"
+    update_interval_seconds: 60
+    educational_mode: true
+  
+  production:
+    logging_level: "WARNING"
+    update_interval_seconds: 120
+    educational_mode: true  # Always educational in production
+
+# Educational Context Configuration
+educational:
+  pattern_explanations: true
+  learning_objectives: true
+  disclaimer_frequency: "every_signal"
+  
+  context_templates:
+    pattern_explanation: "detailed"
+    risk_disclosure: "comprehensive"
+    learning_reminder: "frequent"
+
+# Deployment Configuration
+deployment:
+  environment: "${ENVIRONMENT}"  # development, staging, production
+  container_registry: "${CONTAINER_REGISTRY}"
+  health_check_endpoint: "/health"
+  
+  # Resource Limits (Educational)
+  max_memory_mb: 512
+  max_cpu_percent: 50
+  
+  # Monitoring
+  enable_metrics: true
+  metrics_port: 8080

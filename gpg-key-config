@@ -1,0 +1,7 @@
+%no-protection
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: Betfury Educational System
+Name-Email: bot@educational-system.local
+Expire-Date: 2y
+%commit

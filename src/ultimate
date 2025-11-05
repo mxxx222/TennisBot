@@ -1,0 +1,700 @@
+#!/usr/bin/env python3
+"""
+Ultimate Multi-Source Football Analytics System
+==============================================
+
+Complete system integration that combines:
+- Multi-source web scraping (6 sources)
+- GPT-4 advanced analysis
+- Real-time value detection
+- Automated signal generation
+- Telegram notifications
+
+This represents the complete evolution from the educational API Football system
+to a sophisticated multi-source AI-powered betting analysis platform.
+"""
+
+import asyncio
+import json
+import time
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Any, Tuple
+import logging
+from dataclasses import asdict
+import yaml
+
+# Import all components
+from src.advanced_scraper import UnifiedDataScraper, UnifiedMatchData
+from src.gpt4_analyzer import GPT4Analyzer, AnalysisResult
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+class UltimateAnalyticsSystem:
+    """
+    Main orchestrator for the complete multi-source analytics system
+    """
+    
+    def __init__(self, config_path: str = "config/ultimate_config.yaml"):
+        self.config = self.load_config(config_path)
+        self.unified_scraper = None
+        self.gpt4_analyzer = None
+        
+        # System state
+        self.running = False
+        self.analyzed_matches = set()
+        self.signal_history = []
+        self.performance_metrics = {
+            'matches_analyzed': 0,
+            'signals_generated': 0,
+            'high_confidence_signals': 0,
+            'value_opportunities_found': 0,
+            'system_uptime': 0
+        }
+        
+        # Rate limiting and monitoring
+        self.last_analysis_time = {}
+        self.analysis_interval = self.config.get('analysis_interval', 60)  # seconds
+        self.max_concurrent_analyses = self.config.get('max_concurrent_analyses', 3)
+        
+    def load_config(self, config_path: str) -> Dict[str, Any]:
+        """
+        Load system configuration
+        """
+        try:
+            with open(config_path, 'r') as file:
+                config = yaml.safe_load(file)
+            
+            # Set defaults
+            config.setdefault('analysis_interval', 60)
+            config.setdefault('confidence_threshold', 0.75)
+            config.setdefault('value_threshold', 0.05)
+            config.setdefault('max_concurrent_analyses', 3)
+            
+            # Set default scraper configurations
+            scraper_defaults = {
+                'sofascore': {'rate_limit': 2.0, 'timeout': 15},
+                'fotmob': {'rate_limit': 3.0, 'timeout': 15},
+                'flashscore': {'rate_limit': 2.5, 'timeout': 10},
+                'betfury': {'rate_limit': 5.0, 'timeout': 20},
+                'understat': {'rate_limit': 4.0, 'timeout': 15},
+                'api_football': {'rate_limit': 1.0, 'timeout': 10, 'api_key': ''}
+            }
+            
+            config.setdefault('scrapers', scraper_defaults)
+            config.setdefault('rate_limits', scraper_defaults)
+            
+            return config
+            
+        except FileNotFoundError:
+            logger.warning(f"⚠️ Config file {config_path} not found, using defaults")
+            return self.get_default_config()
+        except Exception as e:
+            logger.error(f"💥 Error loading config: {e}, using defaults")
+            return self.get_default_config()
+    
+    def get_default_config(self) -> Dict[str, Any]:
+        """
+        Get default configuration
+        """
+        return {
+            'analysis_interval': 60,
+            'confidence_threshold': 0.75,
+            'value_threshold': 0.05,
+            'max_concurrent_analyses': 3,
+            'scrapers': {
+                'sofascore': {'rate_limit': 2.0, 'timeout': 15},
+                'fotmob': {'rate_limit': 3.0, 'timeout': 15},
+                'flashscore': {'rate_limit': 2.5, 'timeout': 10},
+                'betfury': {'rate_limit': 5.0, 'timeout': 20},
+                'understat': {'rate_limit': 4.0, 'timeout': 15},
+                'api_football': {'rate_limit': 1.0, 'timeout': 10, 'api_key': ''}
+            },
+            'rate_limits': {
+                'sofascore': 2.0,
+                'fotmob': 3.0,
+                'flashscore': 2.5,
+                'betfury': 5.0,
+                'understat': 4.0,
+                'api_football': 1.0
+            },
+            'openai': {
+                'api_key': '',
+                'model': 'gpt-4-1106-preview',
+                'max_tokens': 2000,
+                'temperature': 0.3
+            },
+            'notifications': {
+                'telegram': {
+                    'bot_token': '',
+                    'chat_id': '',
+                    'enabled': False
+                }
+            }
+        }
+    
+    async def initialize(self):
+        """
+        Initialize all system components
+        """
+        try:
+            logger.info("🚀 Initializing Ultimate Multi-Source Analytics System...")
+            
+            # Initialize unified scraper
+            scraper_config = {
+                'sofascore': self.config['scrapers']['sofascore'],
+                'fotmob': self.config['scrapers']['fotmob'],
+                'flashscore': self.config['scrapers']['flashscore'],
+                'betfury': self.config['scrapers']['betfury'],
+                'understat': self.config['scrapers']['understat'],
+                'api_football': self.config['scrapers']['api_football'],
+                'rate_limits': self.config['rate_limits']
+            }
+            
+            self.unified_scraper = UnifiedDataScraper(scraper_config)
+            
+            # Initialize GPT-4 analyzer
+            analyzer_config = self.config.get('openai', {})
+            self.gpt4_analyzer = GPT4Analyzer(analyzer_config)
+            
+            logger.info("✅ System initialization complete")
+            return True
+            
+        except Exception as e:
+            logger.error(f"💥 Error initializing system: {e}")
+            return False
+    
+    async def start_monitoring(self):
+        """
+        Start the main monitoring loop
+        """
+        if not await self.initialize():
+            logger.error("💥 System initialization failed, cannot start monitoring")
+            return
+        
+        self.running = True
+        logger.info("🎯 Starting Ultimate Analytics System monitoring...")
+        
+        try:
+            while self.running:
+                start_time = time.time()
+                
+                # Get live matches
+                live_matches = await self.get_live_matches()
+                
+                if live_matches:
+                    logger.info(f"📊 Found {len(live_matches)} live matches to analyze")
+                    
+                    # Filter promising matches
+                    promising_matches = await self.unified_scraper.quick_filter_matches(live_matches)
+                    logger.info(f"🎯 Filtered to {len(promising_matches)} promising matches")
+                    
+                    # Analyze matches concurrently
+                    await self.analyze_matches_batch(promising_matches)
+                else:
+                    logger.info("🔍 No live matches found")
+                
+                # Update performance metrics
+                await self.update_metrics()
+                
+                # Wait for next analysis cycle
+                cycle_time = time.time() - start_time
+                wait_time = max(0, self.analysis_interval - cycle_time)
+                
+                logger.debug(f"⏰ Cycle completed in {cycle_time:.2f}s, waiting {wait_time:.2f}s")
+                await asyncio.sleep(wait_time)
+                
+        except asyncio.CancelledError:
+            logger.info("🛑 Monitoring cancelled by user")
+        except Exception as e:
+            logger.error(f"💥 Error in monitoring loop: {e}")
+        finally:
+            await self.shutdown()
+    
+    async def get_live_matches(self) -> List[Dict[str, Any]]:
+        """
+        Get live matches from various sources
+        """
+        try:
+            # Try API Football first for live fixtures
+            if self.config['scrapers']['api_football'].get('api_key'):
+                async with self.unified_scraper:
+                    # This would use API Football's live fixtures endpoint
+                    logger.info("🔍 Checking API Football for live matches...")
+                    # Return empty for now - would implement actual API call
+                    return []
+            
+            # Fallback: return demo matches for testing
+            return self.get_demo_matches()
+            
+        except Exception as e:
+            logger.error(f"💥 Error getting live matches: {e}")
+            return []
+    
+    def get_demo_matches(self) -> List[Dict[str, Any]]:
+        """
+        Get demo matches for testing purposes
+        """
+        return [
+            {
+                'id': 'demo_001',
+                'home_team': 'Manchester City',
+                'away_team': 'Liverpool',
+                'league': 'Premier League',
+                'minute': 32,
+                'status': 'LIVE',
+                'score': {'home': 1, 'away': 0},
+                'home_score': 1,
+                'away_score': 0
+            },
+            {
+                'id': 'demo_002',
+                'home_team': 'Real Madrid',
+                'away_team': 'Barcelona',
+                'league': 'La Liga',
+                'minute': 28,
+                'status': 'LIVE',
+                'score': {'home': 0, 'away': 1},
+                'home_score': 0,
+                'away_score': 1
+            },
+            {
+                'id': 'demo_003',
+                'home_team': 'Bayern Munich',
+                'away_team': 'Borussia Dortmund',
+                'league': 'Bundesliga',
+                'minute': 45,
+                'status': 'LIVE',
+                'score': {'home': 2, 'away': 1},
+                'home_score': 2,
+                'away_score': 1
+            }
+        ]
+    
+    async def analyze_matches_batch(self, matches: List[Dict[str, Any]]):
+        """
+        Analyze matches in batch with concurrency control
+        """
+        try:
+            # Limit concurrent analyses
+            semaphore = asyncio.Semaphore(self.max_concurrent_analyses)
+            
+            async def analyze_single_match(match: Dict[str, Any]):
+                async with semaphore:
+                    try:
+                        return await self.analyze_match_comprehensive(match)
+                    except Exception as e:
+                        logger.error(f"💥 Error analyzing match {match.get('id')}: {e}")
+                        return None
+            
+            # Process matches concurrently
+            tasks = [analyze_single_match(match) for match in matches]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Process successful results
+            successful_results = [r for r in results if r is not None and not isinstance(r, Exception)]
+            
+            if successful_results:
+                logger.info(f"✅ Completed analysis for {len(successful_results)} matches")
+                
+                # Generate signals for high-confidence results
+                await self.generate_signals(successful_results)
+            
+        except Exception as e:
+            logger.error(f"💥 Error in batch analysis: {e}")
+    
+    async def analyze_match_comprehensive(self, match_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Perform comprehensive analysis of a single match
+        """
+        try:
+            match_id = match_info.get('id')
+            
+            # Skip if already analyzed recently
+            if await self.should_skip_analysis(match_id):
+                return None
+            
+            logger.info(f"🔍 Analyzing: {match_info.get('home_team')} vs {match_info.get('away_team')}")
+            
+            # Multi-source data scraping
+            async with self.unified_scraper:
+                unified_data = await self.unified_scraper.get_unified_match_data(match_info)
+            
+            if not unified_data:
+                logger.warning(f"⚠️ No unified data available for match {match_id}")
+                return None
+            
+            logger.info(f"📊 Unified data confidence: {unified_data.get_confidence_score():.2%}")
+            
+            # GPT-4 advanced analysis
+            analysis_result = await self.gpt4_analyzer.analyze_match(unified_data.to_dict())
+            
+            if not analysis_result:
+                logger.warning(f"⚠️ GPT-4 analysis failed for match {match_id}")
+                return None
+            
+            # Combine all results
+            comprehensive_result = {
+                'match_info': match_info,
+                'unified_data': unified_data,
+                'gpt4_analysis': analysis_result,
+                'analysis_timestamp': datetime.now().isoformat(),
+                'data_sources': list(self.unified_scraper.scrapers.keys()),
+                'analysis_duration': time.time()
+            }
+            
+            # Update tracking
+            self.analyzed_matches.add(match_id)
+            self.performance_metrics['matches_analyzed'] += 1
+            
+            return comprehensive_result
+            
+        except Exception as e:
+            logger.error(f"💥 Error in comprehensive analysis: {e}")
+            return None
+    
+    async def should_skip_analysis(self, match_id: str) -> bool:
+        """
+        Check if analysis should be skipped (rate limiting)
+        """
+        now = time.time()
+        
+        if match_id in self.last_analysis_time:
+            elapsed = now - self.last_analysis_time[match_id]
+            if elapsed < self.analysis_interval:
+                return True
+        
+        self.last_analysis_time[match_id] = now
+        return False
+    
+    async def generate_signals(self, results: List[Dict[str, Any]]):
+        """
+        Generate betting signals based on analysis results
+        """
+        try:
+            for result in results:
+                analysis = result['gpt4_analysis']
+                
+                # Check confidence threshold
+                if analysis.prediction_confidence < self.config.get('confidence_threshold', 0.75):
+                    continue
+                
+                # Check for value opportunities
+                if not analysis.value_opportunities:
+                    continue
+                
+                # Generate signal
+                signal = await self.create_betting_signal(result)
+                
+                if signal:
+                    self.signal_history.append(signal)
+                    self.performance_metrics['signals_generated'] += 1
+                    
+                    if analysis.prediction_confidence > 0.85:
+                        self.performance_metrics['high_confidence_signals'] += 1
+                    
+                    if len(analysis.value_opportunities) > 0:
+                        self.performance_metrics['value_opportunities_found'] += 1
+                    
+                    # Send notification
+                    await self.send_notification(signal)
+                    
+                    logger.info(f"🎯 Signal generated: {signal['prediction']} (confidence: {analysis.prediction_confidence:.2%})")
+            
+            # Keep only recent signals (last 100)
+            if len(self.signal_history) > 100:
+                self.signal_history = self.signal_history[-100:]
+                
+        except Exception as e:
+            logger.error(f"💥 Error generating signals: {e}")
+    
+    async def create_betting_signal(self, result: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Create a betting signal from analysis results
+        """
+        try:
+            match_info = result['match_info']
+            analysis = result['gpt4_analysis']
+            unified_data = result['unified_data']
+            
+            # Determine primary recommendation
+            primary_market = analysis.recommended_markets[0] if analysis.recommended_markets else '1X2'
+            prediction = analysis.predicted_outcome
+            
+            # Calculate recommended stake (simple Kelly criterion)
+            confidence = analysis.prediction_confidence
+            odds = unified_data.odds.get(prediction.lower(), 2.0)  # Default to 2.0 if not found
+            
+            # Kelly stake calculation (simplified)
+            if odds > 1:
+                kelly = (confidence * odds - 1) / (odds - 1)
+                stake_pct = max(0.01, min(0.05, kelly * 0.25))  # 1-5% of bankroll
+            else:
+                stake_pct = 0.01  # Minimum 1%
+            
+            # Create signal
+            signal = {
+                'signal_id': f"{match_info['id']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                'timestamp': datetime.now().isoformat(),
+                'match': f"{match_info['home_team']} vs {match_info['away_team']}",
+                'league': match_info.get('league', 'Unknown'),
+                'minute': match_info.get('minute', 0),
+                'score': f"{match_info.get('score', {}).get('home', 0)}-{match_info.get('score', {}).get('away', 0)}",
+                'prediction': prediction,
+                'market': primary_market,
+                'confidence': confidence,
+                'recommended_odds': odds,
+                'stake_percentage': stake_pct,
+                'value_opportunities': len(analysis.value_opportunities),
+                'data_quality': analysis.data_quality_score,
+                'reasoning': analysis.reasoning_summary,
+                'key_factors': analysis.key_factors,
+                'sharp_money': analysis.sharp_money_prediction,
+                'momentum_analysis': analysis.momentum_analysis,
+                'tactical_analysis': analysis.tactical_analysis,
+                'risk_assessment': analysis.risk_assessment,
+                'unified_confidence': unified_data.get_confidence_score(),
+                'data_sources': result['data_sources']
+            }
+            
+            return signal
+            
+        except Exception as e:
+            logger.error(f"💥 Error creating betting signal: {e}")
+            return None
+    
+    async def send_notification(self, signal: Dict[str, Any]):
+        """
+        Send signal notification (Telegram, email, etc.)
+        """
+        try:
+            # Format message
+            message = self.format_telegram_message(signal)
+            
+            # Send via Telegram if configured
+            if self.config.get('notifications', {}).get('telegram', {}).get('enabled'):
+                await self.send_telegram_message(message)
+            else:
+                logger.info(f"📱 Signal Notification:\n{message}")
+                
+        except Exception as e:
+            logger.error(f"💥 Error sending notification: {e}")
+    
+    def format_telegram_message(self, signal: Dict[str, Any]) -> str:
+        """
+        Format signal for Telegram notification
+        """
+        # Determine emoji for confidence
+        if signal['confidence'] > 0.85:
+            confidence_emoji = "🔥"
+        elif signal['confidence'] > 0.75:
+            confidence_emoji = "⭐"
+        else:
+            confidence_emoji = "📊"
+        
+        # Determine emoji for value
+        if signal['value_opportunities'] > 0:
+            value_emoji = "💎"
+        else:
+            value_emoji = "📈"
+        
+        message = f"""
+{confidence_emoji} *ULTIMATE AI SIGNAL* {value_emoji}
+
+🏆 *{signal['match']}*
+📍 {signal['league']}
+⏱️ {signal['minute']}' | Score: {signal['score']}
+
+🎯 *Prediction:* {signal['prediction']}
+💰 *Market:* {signal['market']}
+📊 *Confidence:* {signal['confidence']:.1%}
+💎 *Value Opps:* {signal['value_opportunities']}
+
+📈 *Recommended Odds:* {signal['recommended_odds']:.2f}
+💵 *Stake:* {signal['stake_percentage']:.1%} of bankroll
+
+🧠 *Key Factors:*
+{chr(10).join(f"• {factor}" for factor in signal['key_factors'][:3])}
+
+⚡ *Sharp Money:* {signal.get('sharp_money', 'N/A')}
+
+🔍 *Data Quality:* {signal['data_quality']:.1%}
+📡 *Sources:* {len(signal['data_sources'])} active
+
+💡 *Reasoning:* {signal['reasoning'][:200]}...
+
+🔗 *Generated by Ultimate Multi-Source AI System*
+        """
+        
+        return message.strip()
+    
+    async def send_telegram_message(self, message: str):
+        """
+        Send Telegram message
+        """
+        try:
+            telegram_config = self.config.get('notifications', {}).get('telegram', {})
+            bot_token = telegram_config.get('bot_token')
+            chat_id = telegram_config.get('chat_id')
+            
+            if not bot_token or not chat_id:
+                logger.warning("⚠️ Telegram credentials not configured")
+                return
+            
+            import aiohttp
+            
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            payload = {
+                'chat_id': chat_id,
+                'text': message,
+                'parse_mode': 'Markdown'
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, json=payload) as response:
+                    if response.status == 200:
+                        logger.info("✅ Telegram message sent successfully")
+                    else:
+                        logger.warning(f"⚠️ Telegram API returned status {response.status}")
+                        
+        except Exception as e:
+            logger.error(f"💥 Error sending Telegram message: {e}")
+    
+    async def update_metrics(self):
+        """
+        Update system performance metrics
+        """
+        self.performance_metrics['system_uptime'] += self.analysis_interval
+        
+        # Log metrics every 10 cycles
+        if self.performance_metrics['matches_analyzed'] % 10 == 0:
+            logger.info(f"📊 System Metrics: {self.performance_metrics}")
+    
+    async def get_system_status(self) -> Dict[str, Any]:
+        """
+        Get current system status
+        """
+        return {
+            'system_running': self.running,
+            'analyzed_matches_count': len(self.analyzed_matches),
+            'signals_generated': len(self.signal_history),
+            'performance_metrics': self.performance_metrics.copy(),
+            'configuration': self.config,
+            'last_analysis_time': max(self.last_analysis_time.values()) if self.last_analysis_time else None
+        }
+    
+    async def shutdown(self):
+        """
+        Graceful shutdown
+        """
+        logger.info("🛑 Shutting down Ultimate Analytics System...")
+        
+        self.running = False
+        
+        # Close any open connections
+        if self.unified_scraper and hasattr(self.unified_scraper, 'session') and self.unified_scraper.session:
+            await self.unified_scraper.session.close()
+        
+        # Save performance report
+        await self.save_performance_report()
+        
+        logger.info("✅ System shutdown complete")
+    
+    async def save_performance_report(self):
+        """
+        Save performance report to file
+        """
+        try:
+            report = {
+                'timestamp': datetime.now().isoformat(),
+                'session_summary': self.performance_metrics,
+                'signals_generated': self.signal_history[-20:] if self.signal_history else [],  # Last 20 signals
+                'analyzed_matches': list(self.analyzed_matches)
+            }
+            
+            filename = f"reports/ultimate_system_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            
+            with open(filename, 'w') as f:
+                json.dump(report, f, indent=2)
+            
+            logger.info(f"📊 Performance report saved: {filename}")
+            
+        except Exception as e:
+            logger.error(f"💥 Error saving performance report: {e}")
+
+# Demo and testing functions
+async def run_demo():
+    """
+    Run a demonstration of the Ultimate Analytics System
+    """
+    print("🚀 Starting Ultimate Multi-Source Analytics System Demo")
+    print("=" * 60)
+    
+    # Initialize system
+    system = UltimateAnalyticsSystem()
+    
+    if await system.initialize():
+        print("✅ System initialized successfully")
+        
+        # Demo: Analyze a single match
+        demo_match = {
+            'id': 'demo_001',
+            'home_team': 'Manchester City',
+            'away_team': 'Liverpool',
+            'league': 'Premier League',
+            'minute': 32,
+            'status': 'LIVE',
+            'score': {'home': 1, 'away': 0},
+            'home_score': 1,
+            'away_score': 0
+        }
+        
+        print(f"🔍 Analyzing demo match: {demo_match['home_team']} vs {demo_match['away_team']}")
+        
+        # Perform comprehensive analysis
+        result = await system.analyze_match_comprehensive(demo_match)
+        
+        if result:
+            print("✅ Analysis completed successfully")
+            
+            # Display results
+            analysis = result['gpt4_analysis']
+            print(f"\n📊 Analysis Results:")
+            print(f"• Prediction: {analysis.predicted_outcome}")
+            print(f"• Confidence: {analysis.prediction_confidence:.1%}")
+            print(f"• Data Quality: {analysis.data_quality_score:.1%}")
+            print(f"• Recommended Markets: {', '.join(analysis.recommended_markets)}")
+            print(f"• Value Opportunities: {len(analysis.value_opportunities)}")
+            
+            if analysis.value_opportunities:
+                print(f"\n💎 Value Opportunities:")
+                for i, opportunity in enumerate(analysis.value_opportunities[:3], 1):
+                    print(f"  {i}. {opportunity}")
+            
+            print(f"\n🧠 Reasoning: {analysis.reasoning_summary[:150]}...")
+        else:
+            print("❌ Analysis failed")
+        
+        # Show system status
+        status = await system.get_system_status()
+        print(f"\n📈 System Status: {status['analyzed_matches_count']} matches analyzed")
+        
+    else:
+        print("❌ System initialization failed")
+
+async def main():
+    """
+    Main entry point
+    """
+    import sys
+    
+    if len(sys.argv) > 1 and sys.argv[1] == 'demo':
+        await run_demo()
+    else:
+        # Start full monitoring system
+        system = UltimateAnalyticsSystem()
+        await system.start_monitoring()
+
+if __name__ == "__main__":
+    asyncio.run(main())

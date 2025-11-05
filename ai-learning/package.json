@@ -1,0 +1,41 @@
+{
+  "name": "ai-learning-openai-focus",
+  "version": "1.0.0",
+  "description": "AI learning system focused on OpenAI GPT-4 integration and educational AI analysis",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8080",
+    "build": "echo 'AI learning system ready'",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "tailwindcss": "^3.3.0"
+  },
+  "ai_features": {
+    "openai_gpt4_integration": true,
+    "prompt_engineering": true,
+    "ai_confidence_calibration": true,
+    "ai_safety_ethics": true,
+    "educational_transparency": true,
+    "ai_progress_tracking": true,
+    "interactive_learning": true,
+    "mobile_responsive": true
+  },
+  "keywords": [
+    "ai-learning",
+    "openai",
+    "gpt-4",
+    "prompt-engineering",
+    "ai-confidence",
+    "ai-safety",
+    "educational-ai",
+    "ai-transparency",
+    "ai-ethics",
+    "machine-learning"
+  ],
+  "author": "AI Learning System",
+  "license": "MIT",
+  "educational_purpose": true,
+  "focus_area": "OpenAI GPT-4 Integration and AI Analysis Education"
+}

@@ -1,148 +1,92 @@
 version: '3.8'
 
 services:
-  betfury-research:
+  betfury-system:
     build: .
-    container_name: betfury-educational-research
+    container_name: betfury-ultimate
     restart: unless-stopped
     
-    # Environment variables
     environment:
-      - PYTHONUNBUFFERED=1
-      - RESEARCH_MODE=true
-      - EDUCATIONAL_ONLY=true
+      # Telegram (from .env)
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      
+      # OpenAI
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # API Football
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      
+      # System settings
+      - MIN_CONFIDENCE=0.75
+      - MIN_ODDS=1.10
+      - MAX_ODDS=2.00
+      - MAX_SIGNALS_PER_DAY=15
+      - EDUCATIONAL_MODE=true
+      
+      # Mode
+      - SYSTEM_MODE=balanced
     
-    # Volume mounts for data persistence
     volumes:
-      - ./data:/app/data
+      # Persist logs
       - ./logs:/app/logs
+      
+      # Persist data
+      - ./data:/app/data
+      
+      # Config
       - ./config:/app/config
-      - ./models:/app/models
     
-    # Resource limits
+    # Resource limits (prevents runaway)
     deploy:
       resources:
         limits:
+          cpus: '2.0'
           memory: 2G
-          cpus: '1.0'
         reservations:
-          memory: 1G
           cpus: '0.5'
+          memory: 512M
     
-    # Network configuration
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Network
     networks:
-      - betfury-network
+      - betfury-net
     
     # Health check
     healthcheck:
       test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
-      interval: 30s
+      interval: 5m
       timeout: 10s
       retries: 3
-      start_period: 40s
-    
-    # Security settings
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp:noexec,nosuid,size=100m
-    
-    # Command (can be overridden)
-    command: >
-      sh -c "
-        echo '⚠️  EDUCATIONAL SYSTEM WARNING ⚠️';
-        echo 'This system is for educational purposes only.';
-        echo 'DO NOT use for actual betting or financial decisions.';
-        echo '';
-        python main.py --mode analyze --duration 300 --debug
-      "
+      start_period: 60s
 
-  # Optional: PostgreSQL for data storage
-  postgres:
-    image: postgres:15-alpine
-    container_name: betfury-research-db
+  # Optional: Add monitoring with a simple web server
+  monitoring:
+    image: nginx:alpine
+    container_name: betfury-monitoring
     restart: unless-stopped
-    
-    environment:
-      POSTGRES_DB: betfury_research
-      POSTGRES_USER: research_user
-      POSTGRES_PASSWORD: research_password
-      PGDATA: /var/lib/postgresql/data/pgdata
-    
+    ports:
+      - "8080:80"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    
+      - ./monitoring/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs:/var/log/nginx:ro
     networks:
-      - betfury-network
-    
-    # Security settings
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    
-    # Resource limits
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: '0.5'
-        reservations:
-          memory: 256M
-          cpus: '0.25'
-    
-    # Health check
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U research_user -d betfury_research"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - betfury-net
+    depends_on:
+      - betfury-system
+    profiles:
+      - monitoring
 
-  # Optional: Redis for caching
-  redis:
-    image: redis:7-alpine
-    container_name: betfury-research-cache
-    restart: unless-stopped
-    
-    command: redis-server --appendonly yes --requirepass redis_password
-    
-    volumes:
-      - redis_data:/data
-    
-    networks:
-      - betfury-network
-    
-    # Security settings
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    
-    # Resource limits
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.25'
-        reservations:
-          memory: 128M
-          cpus: '0.1'
-    
-    # Health check
-    healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-# Networks
 networks:
-  betfury-network:
+  betfury-net:
     driver: bridge
-    name: betfury-network
 
-# Volumes
 volumes:
-  postgres_data:
-    name: betfury-postgres-data
-  redis_data:
-    name: betfury-redis-data
+  betfury_logs:
+  betfury_data:

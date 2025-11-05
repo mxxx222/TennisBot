@@ -1,0 +1,108 @@
+# Ultimate Multi-Source Analytics System Configuration
+# =================================================
+
+# Core system settings
+analysis_interval: 60  # seconds between analysis cycles
+confidence_threshold: 0.75  # minimum confidence for signals
+value_threshold: 0.05  # minimum value percentage
+max_concurrent_analyses: 3  # maximum matches analyzed simultaneously
+
+# Multi-source scraper configurations
+scrapers:
+  sofascore:
+    rate_limit: 2.0  # seconds between requests
+    timeout: 15  # request timeout
+    enabled: true
+    priority: 10
+  
+  fotmob:
+    rate_limit: 3.0
+    timeout: 15
+    enabled: true
+    priority: 10
+  
+  flashscore:
+    rate_limit: 2.5
+    timeout: 10
+    enabled: true
+    priority: 10
+  
+  betfury:
+    rate_limit: 5.0
+    timeout: 20
+    enabled: true
+    priority: 10
+  
+  understat:
+    rate_limit: 4.0
+    timeout: 15
+    enabled: true
+    priority: 10
+  
+  api_football:
+    rate_limit: 1.0
+    timeout: 10
+    enabled: false  # Requires API key
+    priority: 7
+    api_key: ""  # Set your RapidAPI key here
+
+# Rate limiting configuration (backup)
+rate_limits:
+  sofascore: 2.0
+  fotmob: 3.0
+  flashscore: 2.5
+  betfury: 5.0
+  understat: 4.0
+  api_football: 1.0
+
+# GPT-4 Analysis configuration
+openai:
+  api_key: ""  # Set your OpenAI API key here
+  model: "gpt-4-1106-preview"
+  max_tokens: 2000
+  temperature: 0.3
+  enabled: true
+
+# Notification settings
+notifications:
+  telegram:
+    enabled: false  # Set to true to enable
+    bot_token: ""  # Your Telegram bot token
+    chat_id: ""  # Your Telegram chat ID
+  
+  email:
+    enabled: false
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    to_email: ""
+
+# Advanced features
+features:
+  sharp_money_tracking: true
+  odds_movement_analysis: true
+  value_detection: true
+  risk_assessment: true
+  pattern_recognition: true
+  momentum_analysis: true
+
+# Logging configuration
+logging:
+  level: "INFO"
+  file: "logs/ultimate_analytics.log"
+  max_size_mb: 100
+  backup_count: 5
+
+# Performance monitoring
+performance:
+  max_signals_history: 100  # Keep last 100 signals
+  report_interval: 3600  # Generate report every hour
+  metrics_retention_days: 30
+
+# Demo mode (for testing without live data)
+demo:
+  enabled: true
+  sample_matches: 3
+  realistic_delay: true
+  fake_api_responses: true

@@ -1,0 +1,48 @@
+{
+  "webhooks": {
+    "match_results_update": {
+      "url": "PASTE_ZAPIER_WEBHOOK_URL_HERE",
+      "description": "Webhook for match results auto-update",
+      "trigger": "Match finished",
+      "actions": [
+        "Update Notion Ottelut database (Status = Finished, maalit)",
+        "Update Notion Vedot database (Tulos = Won/Lost)",
+        "Calculate ROI automatically"
+      ],
+      "enabled": false
+    },
+    "odds_monitor": {
+      "url": "PASTE_ZAPIER_WEBHOOK_URL_HERE",
+      "description": "Webhook for odds monitoring",
+      "trigger": "Schedule (every 30 min)",
+      "actions": [
+        "Fetch odds from Pinnacle/Bet365 API",
+        "Update Notion Analytiikka database (Markkina probability %)",
+        "If Edge % > 4% → Send Telegram notification"
+      ],
+      "enabled": false
+    },
+    "strategy_alert": {
+      "url": "PASTE_ZAPIER_WEBHOOK_URL_HERE",
+      "description": "Webhook for strategy alerts",
+      "trigger": "Notion Database updated (Strategiat)",
+      "actions": [
+        "Check Alert field",
+        "If Alert = ⚠️ or ❌ → Send Telegram notification"
+      ],
+      "enabled": false
+    }
+  },
+  "telegram": {
+    "bot_token": "PASTE_TELEGRAM_BOT_TOKEN_HERE",
+    "chat_id": "PASTE_TELEGRAM_CHAT_ID_HERE"
+  },
+  "setup_instructions": {
+    "step_1": "Create Zapier/Make.com account",
+    "step_2": "Create 3 Zaps/Scenarios as described above",
+    "step_3": "Copy webhook URLs and paste above",
+    "step_4": "Test each webhook manually",
+    "step_5": "Enable webhooks (set enabled: true)"
+  }
+}
+

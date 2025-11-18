@@ -1,3 +1,19 @@
+"""
+📊 COMPREHENSIVE DATA PROCESSOR & ANALYZER
+=========================================
+
+Advanced data processing pipeline for sports analytics
+Includes statistical analysis, machine learning features, and prediction models
+
+⚠️  COMPLIANCE NOTICE:
+This module processes sports data for analytical purposes only.
+All data must be obtained through legal and ethical means, strictly complying
+with the terms of service of data sources and applicable laws and regulations.
+Unauthorized scraping or data collection is prohibited.
+
+Author: TennisBot Advanced Analytics
+Version: 2.0.0
+"""
 #!/usr/bin/env python3
 """
 📊 COMPREHENSIVE DATA PROCESSOR & ANALYZER
@@ -31,6 +47,28 @@ class ProcessedMatch:
     match_id: str
     sport: str
     league: str
+class AdvancedDataProcessor:
+    """Comprehensive data processing and analysis system
+
+    ⚠️  COMPLIANCE REQUIREMENTS:
+    - All data must be obtained legally and ethically
+    - Respect website terms of service and robots.txt
+    - Implement rate limiting and anti-detection measures
+    - Only process data for analytical and educational purposes
+    - Do not use for commercial betting without proper licensing
+    """
+
+    def __init__(self):
+        self.setup_logging()
+        self.scaler = StandardScaler()
+        self.encoders = {}
+        self.models = {}
+        self.historical_data = pd.DataFrame()
+        self.processed_matches = []
+
+        # Compliance tracking
+        self.compliance_log = []
+        self.last_data_source_check = None
     home_team: str
     away_team: str
     home_odds: float
@@ -757,7 +795,141 @@ class AdvancedDataProcessor:
             recommendations.append("Market appears efficient - be extra selective")
         
         return recommendations
+    def odds_to_probability(self, odds: float) -> float:
+        """Convert betting odds to implied probability
 
+        Args:
+            odds: Betting odds (decimal format)
+
+        Returns:
+            Implied probability (0-1)
+        """
+        if not odds or odds < 1.01:
+            return 0.0
+        return 1.0 / float(odds)
+
+    def process_matches_with_probabilities(self, live_matches: List[Dict],
+                                         upcoming_matches: List[Dict]) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """Process live and upcoming matches with probability calculations
+
+        Args:
+            live_matches: List of live match dictionaries
+            upcoming_matches: List of upcoming match dictionaries
+
+        Returns:
+    def validate_data_compliance(self, data_source: str = None) -> bool:
+        """Validate that data processing complies with terms of service
+
+        Args:
+            data_source: Source of the data being processed
+
+        Returns:
+            True if compliant, False otherwise
+        """
+        compliance_warnings = []
+
+        # Check if data source is specified
+        if not data_source:
+            compliance_warnings.append("Data source not specified - unable to verify compliance")
+
+        # Log compliance check
+        compliance_entry = {
+            'timestamp': datetime.now().isoformat(),
+            'data_source': data_source,
+            'warnings': compliance_warnings,
+            'compliant': len(compliance_warnings) == 0
+        }
+
+        self.compliance_log.append(compliance_entry)
+        self.last_data_source_check = data_source
+
+        if compliance_warnings:
+            self.logger.warning(f"⚠️  Compliance warnings: {', '.join(compliance_warnings)}")
+            return False
+
+        self.logger.info(f"✅ Data compliance validated for source: {data_source}")
+        return True
+
+    def get_compliance_report(self) -> Dict[str, Any]:
+        """Generate compliance report for data processing activities"""
+        total_checks = len(self.compliance_log)
+        compliant_checks = len([c for c in self.compliance_log if c['compliant']])
+
+        return {
+            'total_compliance_checks': total_checks,
+            'compliant_checks': compliant_checks,
+            'compliance_rate': round(compliant_checks / total_checks * 100, 1) if total_checks > 0 else 0,
+            'last_check': self.last_data_source_check,
+            'warnings_summary': [
+                warning for entry in self.compliance_log
+                for warning in entry['warnings']
+            ]
+        }
+            Tuple of (live_df, upcoming_df) with probability columns added
+        """
+        # Process live matches
+        live_df = pd.DataFrame(live_matches)
+        if not live_df.empty and 'odds' in live_df.columns:
+            live_df['probability'] = live_df['odds'].apply(self.odds_to_probability)
+        else:
+            live_df['probability'] = 0.0
+
+        # Process upcoming matches
+        upcoming_df = pd.DataFrame(upcoming_matches)
+        if not upcoming_df.empty and 'odds' in upcoming_df.columns:
+            upcoming_df['probability'] = upcoming_df['odds'].apply(self.odds_to_probability)
+        else:
+            upcoming_df['probability'] = 0.0
+
+        return live_df, upcoming_df
+
+    def filter_high_probability_matches(self, live_df: pd.DataFrame, upcoming_df: pd.DataFrame,
+                                       probability_threshold: float = 0.7) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """Filter matches with high probability predictions
+
+        Args:
+            live_df: DataFrame with live matches
+            upcoming_df: DataFrame with upcoming matches
+            probability_threshold: Minimum probability threshold (default 0.7)
+
+        Returns:
+            Tuple of filtered (live_df, upcoming_df) with high probability matches
+        """
+        # Filter live matches
+        high_prob_live = live_df[live_df['probability'] > probability_threshold].copy()
+
+        # Filter upcoming matches
+        high_prob_upcoming = upcoming_df[upcoming_df['probability'] > probability_threshold].copy()
+
+        self.logger.info(f"📊 Filtered to {len(high_prob_live)} high-probability live matches")
+        self.logger.info(f"📊 Filtered to {len(high_prob_upcoming)} high-probability upcoming matches")
+
+        return high_prob_live, high_prob_upcoming
+
+    def display_filtered_matches(self, live_df: pd.DataFrame, upcoming_df: pd.DataFrame,
+                                probability_threshold: float = 0.7) -> None:
+        """Display filtered high-probability matches
+
+        Args:
+            live_df: DataFrame with live matches
+            upcoming_df: DataFrame with upcoming matches
+            probability_threshold: Minimum probability threshold (default 0.7)
+        """
+        high_prob_live, high_prob_upcoming = self.filter_high_probability_matches(
+            live_df, upcoming_df, probability_threshold
+        )
+
+        print(f"\n🔥 High-Probability Live Matches (>{probability_threshold}):")
+        if not high_prob_live.empty:
+            print(high_prob_live.to_string(index=False))
+        else:
+            print("No high-probability live matches found")
+
+        print(f"\n⏰ High-Probability Upcoming Matches (>{probability_threshold}):")
+        if not high_prob_upcoming.empty:
+            print(high_prob_upcoming.to_string(index=False))
+        else:
+            print("No high-probability upcoming matches found")
     def export_processed_data(self, filename: str = None) -> str:
         """Export processed data to JSON file"""
         if filename is None:

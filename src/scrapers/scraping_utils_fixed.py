@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 🌐 ADVANCED WEB SCRAPING UTILITIES
-==================================
+=================================
 
 Comprehensive utilities for web scraping with anti-detection
 Includes proxy rotation, user agent cycling, and rate limiting
@@ -27,7 +27,7 @@ try:
     UNDETECTED_CHROMEDRIVER_AVAILABLE = True
 except ImportError:
     UNDETECTED_CHROMEDRIVER_AVAILABLE = False
-    uc = None
+    logging.warning("undetected-chromedriver not available - some features will be limited")
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
@@ -37,14 +37,16 @@ from pathlib import Path
 import asyncio
 import aiohttp
 from fake_useragent import UserAgent
-# Add new imports for enhanced anti-detection
-import undetected_chromedriver as uc
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-import json
-import os
-from pathlib import Path
-import asyncio
+
+@dataclass
+class ProxyConfig:
+    """Proxy configuration"""
+    host: str
+    port: int
+    username: Optional[str] = None
+    password: Optional[str] = None
+    protocol: str = 'http'
+
 @dataclass
 class ProxyPool:
     """Rotating proxy pool for anti-detection"""
@@ -72,36 +74,24 @@ class ProxyPool:
             self.proxies.remove(proxy)
             if self.current_index >= len(self.proxies):
                 self.current_index = 0
-import aiohttp
-from fake_useragent import UserAgent
-
-@dataclass
-class ProxyConfig:
-    """Proxy configuration"""
-    host: str
-    port: int
-    username: Optional[str] = None
-    password: Optional[str] = None
-    protocol: str = 'http'
 
 class AntiDetectionSession:
     """Advanced session with anti-detection features"""
-    
-    def __init__(self):
+
+    def __init__(self, proxy_pool: Optional[ProxyPool] = None):
         self.session = requests.Session()
+        self.ua = UserAgent()
         self.user_agents = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15',
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            self.ua.random for _ in range(10)  # Generate 10 random user agents
         ]
         self.current_ua_index = 0
         self.request_count = 0
         self.last_request_time = time.time()
         self.min_delay = 1.0
         self.max_delay = 3.0
-        
+        self.proxy_pool = proxy_pool
+        self.current_proxy = None
+
         # Setup retry strategy
         retry_strategy = Retry(
             total=3,
@@ -111,9 +101,9 @@ class AntiDetectionSession:
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
-        
+
         self.setup_default_headers()
-    
+
     def setup_default_headers(self):
         """Setup default headers for anti-detection"""
         self.session.headers.update({
@@ -128,41 +118,43 @@ class AntiDetectionSession:
             'Sec-Fetch-Site': 'none',
             'Cache-Control': 'max-age=0'
         })
-    
+
     def rotate_user_agent(self):
         """Rotate user agent"""
         self.current_ua_index = (self.current_ua_index + 1) % len(self.user_agents)
         self.session.headers['User-Agent'] = self.user_agents[self.current_ua_index]
-    
+
     def smart_delay(self):
         """Implement smart delay between requests"""
         current_time = time.time()
         time_since_last = current_time - self.last_request_time
-        
+
         # Calculate delay based on request frequency
         base_delay = random.uniform(self.min_delay, self.max_delay)
-        
+
         if time_since_last < 1.0:
             additional_delay = random.uniform(1.0, 2.0)
             base_delay += additional_delay
-        
+
         time.sleep(base_delay)
         self.last_request_time = time.time()
-    
-        # Rotate proxy every 20 requests
-        if self.proxy_pool and self.request_count % 20 == 0:
-            self.rotate_proxy()
+
     def get(self, url: str, **kwargs) -> requests.Response:
         """Enhanced GET request with anti-detection"""
         self.smart_delay()
-        
+
         # Rotate user agent every 10 requests
         if self.request_count % 10 == 0:
             self.rotate_user_agent()
-        
+
+        # Rotate proxy every 20 requests
+        if self.proxy_pool and self.request_count % 20 == 0:
+            self.rotate_proxy()
+
         self.request_count += 1
-        
+
         return self.session.get(url, **kwargs)
+
     def rotate_proxy(self):
         """Rotate to next proxy in pool"""
         if self.proxy_pool:
@@ -180,33 +172,33 @@ class AntiDetectionSession:
 
 class DataValidator:
     """Data validation and cleaning utilities"""
-    
+
     @staticmethod
     def clean_team_name(name: str) -> str:
         """Clean and standardize team names"""
         if not name:
             return ""
-        
+
         # Remove extra whitespace
         name = ' '.join(name.split())
-        
+
         # Remove special characters but keep hyphens and apostrophes
         import re
         name = re.sub(r'[^\w\s\-\']', '', name)
-        
+
         return name.strip()
-    
+
     @staticmethod
     def validate_odds(odds: float) -> bool:
         """Validate odds values"""
         return isinstance(odds, (int, float)) and 1.01 <= odds <= 100.0
-    
+
     @staticmethod
     def parse_score(score_text: str) -> Dict[str, str]:
         """Parse score text into structured format"""
         if not score_text:
             return {'status': 'Scheduled', 'score': ''}
-        
+
         # Common score patterns
         patterns = {
             r'(\d+)-(\d+)': 'simple_score',
@@ -214,7 +206,7 @@ class DataValidator:
             r'(\d+):(\d+)': 'time_score',
             r'FT (\d+)-(\d+)': 'final_score'
         }
-        
+
         import re
         for pattern, score_type in patterns.items():
             match = re.search(pattern, score_text)
@@ -224,41 +216,41 @@ class DataValidator:
                     'score': score_text,
                     'parsed': match.groups()
                 }
-        
+
         return {'status': 'Unknown', 'score': score_text}
 
 class RateLimiter:
     """Advanced rate limiting with per-domain limits"""
-    
+
     def __init__(self):
         self.domain_limits = {}
         self.domain_requests = {}
         self.lock = threading.Lock()
-    
+
     def set_limit(self, domain: str, requests_per_minute: int):
         """Set rate limit for domain"""
         with self.lock:
             self.domain_limits[domain] = requests_per_minute
             if domain not in self.domain_requests:
                 self.domain_requests[domain] = queue.Queue()
-    
+
     def wait_if_needed(self, domain: str):
         """Wait if rate limit would be exceeded"""
         if domain not in self.domain_limits:
             return
-        
+
         with self.lock:
             current_time = time.time()
             request_queue = self.domain_requests[domain]
             limit = self.domain_limits[domain]
-            
+
             # Remove requests older than 1 minute
             while not request_queue.empty():
                 if current_time - request_queue.queue[0] > 60:
                     request_queue.get()
                 else:
                     break
-            
+
             # Check if we're at the limit
             if request_queue.qsize() >= limit:
                 # Wait until the oldest request is more than 1 minute old
@@ -266,13 +258,13 @@ class RateLimiter:
                 wait_time = 60 - (current_time - oldest_request)
                 if wait_time > 0:
                     time.sleep(wait_time)
-            
+
             # Add current request
             request_queue.put(current_time)
 
 class ScrapingMetrics:
     """Track scraping performance and statistics"""
-    
+
     def __init__(self):
         self.start_time = time.time()
         self.requests_made = 0
@@ -281,25 +273,25 @@ class ScrapingMetrics:
         self.data_points_extracted = 0
         self.errors = []
         self.domain_stats = {}
-    
+
     def record_request(self, domain: str, success: bool):
         """Record a request attempt"""
         self.requests_made += 1
-        
+
         if domain not in self.domain_stats:
             self.domain_stats[domain] = {'success': 0, 'failed': 0}
-        
+
         if success:
             self.successful_requests += 1
             self.domain_stats[domain]['success'] += 1
         else:
             self.failed_requests += 1
             self.domain_stats[domain]['failed'] += 1
-    
+
     def record_data_point(self):
         """Record a successful data extraction"""
         self.data_points_extracted += 1
-    
+
     def record_error(self, error: str, domain: str = None):
         """Record an error"""
         self.errors.append({
@@ -307,11 +299,11 @@ class ScrapingMetrics:
             'domain': domain,
             'timestamp': time.time()
         })
-    
+
     def get_summary(self) -> Dict:
         """Get performance summary"""
         duration = time.time() - self.start_time
-        
+
         return {
             'duration_seconds': round(duration, 2),
             'requests_made': self.requests_made,
@@ -358,11 +350,6 @@ def create_scraping_config() -> Dict:
         'respect_robots_txt': True
     }
 
-if __name__ == "__main__":
-    # Test the utilities
-    session = AntiDetectionSession()
-    validator = DataValidator()
-    metrics = ScrapingMetrics()
 class UndetectedChromeDriver:
     """Enhanced Chrome driver with anti-detection features"""
 
@@ -382,6 +369,9 @@ class UndetectedChromeDriver:
 
     def start_driver(self):
         """Initialize undetected Chrome driver with anti-detection"""
+        if not UNDETECTED_CHROMEDRIVER_AVAILABLE:
+            raise ImportError("undetected-chromedriver is not available. Install it to use this feature.")
+
         options = uc.ChromeOptions()
 
         if self.headless:
@@ -394,7 +384,6 @@ class UndetectedChromeDriver:
         options.add_argument('--disable-extensions')
         options.add_argument('--disable-plugins')
         options.add_argument('--disable-images')  # Speed up loading
-        options.add_argument('--disable-javascript')  # Can be enabled per site
         options.add_argument('--disable-web-security')
         options.add_argument('--allow-running-insecure-content')
 
@@ -485,12 +474,7 @@ class UndetectedChromeDriver:
                     self.human_like_delay(5, 10)  # Longer delay before retry
 
         return False
-    
-    print("🛠️ Web Scraping Utilities Loaded")
-    print("✅ Anti-detection session ready")
-    print("✅ Data validation tools ready") 
-    print("✅ Rate limiting configured")
-    print("✅ Performance metrics initialized")
+
 class ROIAnalyzer:
     """Analyze scraped data for ROI opportunities"""
 
@@ -663,3 +647,15 @@ class ROIAnalyzer:
                 })
 
         return trends
+
+if __name__ == "__main__":
+    # Test the utilities
+    session = AntiDetectionSession()
+    validator = DataValidator()
+    metrics = ScrapingMetrics()
+
+    print("🛠️ Web Scraping Utilities Loaded")
+    print("✅ Anti-detection session ready")
+    print("✅ Data validation tools ready")
+    print("✅ Rate limiting configured")
+    print("✅ Performance metrics initialized")

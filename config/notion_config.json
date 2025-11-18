@@ -1,0 +1,22 @@
+{
+  "notion_token": "PASTE_YOUR_TOKEN_HERE",
+  "page_id": "PASTE_YOUR_PAGE_ID_HERE",
+  "databases": {
+    "joukkueet": "",
+    "pelaajat": "",
+    "ottelut": "",
+    "analytiikka": "",
+    "vedot": "",
+    "strategiat": ""
+  },
+  "setup_instructions": {
+    "step_1": "Go to https://www.notion.so/my-integrations",
+    "step_2": "Click '+ New integration'",
+    "step_3": "Name: 'TennisBot ROI System', Type: Internal",
+    "step_4": "Copy the 'Internal Integration Token' and paste above",
+    "step_5": "Create a new Notion page called 'Jalkapallo ROI System'",
+    "step_6": "Click '...' → 'Connections' → Add 'TennisBot ROI System'",
+    "step_7": "Copy page ID from URL (32 characters) and paste above"
+  }
+}
+

@@ -1,0 +1,15 @@
+{
+  "bot_token": "Enter your bot token from @BotFather",
+  "chat_id": "-4956738581",
+  "notification_settings": {
+    "min_confidence": 0.35,
+    "min_roi_percentage": 7.0,
+    "max_risk_level": 0.4,
+    "notification_cooldown_seconds": 300
+  },
+  "message_settings": {
+    "include_emojis": true,
+    "detailed_analysis": true,
+    "show_risk_warning": true
+  }
+}

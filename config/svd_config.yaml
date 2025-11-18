@@ -1,0 +1,103 @@
+# 🎯 SMART VALUE DETECTOR - KONFIGURAATIO
+# ========================================
+# Korkeimman ROI:n saavuttamiseksi optimoitu konfiguraatio
+
+smart_value_detector:
+  # Tilastolliset parametrit
+  min_edge: 0.05  # Min 5% edge (markkinoiden virhe)
+  min_confidence: 0.65  # Min 65% todennäköisyys
+  kelly_fraction: 0.25  # 25% Kelly (konservatiivinen)
+  max_stake_pct: 0.10  # Max 10% pankkisaldosta per trade
+  
+  # Bankroll hallinta
+  bankroll:
+    initial: 1000.0
+    daily_max_risk: 0.03  # Max 3% päivässä
+    monthly_target: 0.15  # 15% kuukausi ROI (konservatiivinen)
+    stop_loss_pct: 0.10  # Pysäytä 10% tappion jälkeen
+    profit_target_pct: 0.30  # Lopeta 30% voiton jälkeen
+  
+  # Komponenttien painot (todennäköisyyslaskennassa)
+  weights:
+    elo: 0.40  # ELO-rating paino
+    h2h: 0.25  # Head-to-head paino
+    surface: 0.25  # Kenttäspesifinen paino
+    form: 0.10  # Muoto-paino
+  
+  # Tietolähteet (VAIN LAILLISET)
+  data_sources:
+    tennis:
+      - tennis_explorer  # Julkinen
+      - flashscore       # Julkinen
+      - sofascore        # Julkinen
+      - atp_tour         # Virallinen
+      - wta_tour         # Virallinen
+    
+    odds:
+      - odds_aggregator  # Julkinen kertoimet
+      - betfair_api      # Julkinen API
+      - bet365_scraper   # Julkinen scraping
+      - pinnacle_api     # Julkinen API
+  
+  # Markkinoiden analyysi
+  market_analysis:
+    track_odds_movement: true
+    detect_arbitrage: true
+    arbitrage_min_profit: 0.02  # Min 2% arbitraasi-voitto
+    liquidity_threshold: 1000  # Min €1000 likviditeetti
+    odds_update_interval: 60  # Sekuntia
+  
+  # Scraping-asetukset
+  scraping:
+    request_delay: 2.0  # Sekuntia pyyntöjen välillä
+    max_concurrent: 5  # Maksimi samanaikaisia pyyntöjä
+    retry_attempts: 3
+    timeout: 30  # Sekuntia
+    
+    # Bookmakers to scrape
+    bookmakers:
+      - bet365
+      - betfair
+      - pinnacle
+      - smarkets
+      - unibet
+      - william_hill
+      - ladbrokes
+  
+  # Telegram-ilmoitukset
+  telegram:
+    enabled: true
+    send_value_trades: true
+    send_arbitrage: true
+    send_daily_report: true
+    min_edge_for_notification: 0.08  # Min 8% edge ilmoitukseen
+    min_ev_for_notification: 0.10  # Min 10% EV ilmoitukseen
+  
+  # Turvallisuus
+  safety:
+    max_trades_per_day: 5
+    max_trades_per_match: 1
+    cooldown_seconds: 300  # 5 min cooldown samalle ottelulle
+    validate_data: true
+    require_multiple_sources: true
+  
+  # Backtesting
+  backtesting:
+    enabled: true
+    historical_data_path: "data/historical"
+    min_trades_for_valid: 50
+    min_win_rate: 0.55  # Min 55% voittoprosentti
+  
+  # Logging
+  logging:
+    level: "INFO"
+    file: "logs/svd.log"
+    daily_report: true
+  
+  # Performance monitoring
+  monitoring:
+    track_all_trades: true
+    calculate_sharpe: true
+    calculate_max_drawdown: true
+    save_results: true
+

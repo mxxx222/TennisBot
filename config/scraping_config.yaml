@@ -1,0 +1,129 @@
+# 🎾 TENNIS BOT SCRAPING CONFIGURATION
+# ===================================
+# Configuration file for the live betting scraper
+
+# General Settings
+scraper:
+  version: "1.0.0"
+  max_retries: 3
+  timeout: 30
+  user_agent_rotation: true
+  respect_robots_txt: true
+
+# Rate Limiting (requests per minute)
+rate_limits:
+  flashscore.com: 10
+  sofascore.com: 12
+  livescore.com: 8
+  atptour.com: 15
+  tennisexplorer.com: 10
+  oddsportal.com: 6
+
+# Delays (in seconds)
+delays:
+  min_delay: 1.0
+  max_delay: 3.0
+  error_delay: 5.0
+  page_load_delay: 3.0
+
+# Browser Settings
+browser:
+  headless: true
+  window_width: 1920
+  window_height: 1080
+  disable_images: true
+  disable_javascript: false
+  disable_css: false
+
+# Data Sources Configuration
+data_sources:
+  tennis:
+    live_matches:
+      - url: "https://www.flashscore.com/tennis/"
+        priority: 1
+        type: "selenium"
+        enabled: true
+      - url: "https://www.sofascore.com/tennis"
+        priority: 2
+        type: "selenium"
+        enabled: true
+      - url: "https://www.livescore.com/tennis"
+        priority: 3
+        type: "selenium"
+        enabled: false  # Disabled by default due to aggressive anti-bot
+    
+    upcoming_matches:
+      - url: "https://www.atptour.com/en/scores/current"
+        priority: 1
+        type: "html"
+        enabled: true
+      - url: "https://www.flashscore.com/tennis/fixtures/"
+        priority: 2
+        type: "selenium"
+        enabled: true
+      - url: "https://www.tennisexplorer.com/matches/"
+        priority: 3
+        type: "html"
+        enabled: false  # Disabled by default
+
+# Proxy Configuration (optional)
+proxies:
+  enabled: false
+  rotation_interval: 20  # requests
+  providers: []
+  # Example proxy configuration:
+  # - host: "proxy1.example.com"
+  #   port: 8080
+  #   username: "user"
+  #   password: "pass"
+  #   protocol: "http"
+
+# Data Storage
+storage:
+  data_directory: "data"
+  auto_save: true
+  save_formats: ["json", "csv"]
+  max_file_size_mb: 50
+  cleanup_old_files: true
+  retention_days: 30
+
+# Validation Rules
+validation:
+  min_team_name_length: 2
+  max_team_name_length: 50
+  min_odds: 1.01
+  max_odds: 100.0
+  required_fields: ["home_team", "away_team", "sport"]
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  file: "data/scraping.log"
+  max_file_size_mb: 10
+  backup_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Performance Monitoring
+monitoring:
+  enabled: true
+  metrics_file: "data/scraping_metrics.json"
+  alert_thresholds:
+    success_rate_min: 0.8  # 80%
+    response_time_max: 30   # seconds
+    error_rate_max: 0.2     # 20%
+
+# Anti-Detection Settings
+anti_detection:
+  rotate_user_agents: true
+  randomize_delays: true
+  simulate_human_behavior: true
+  clear_cookies_interval: 100  # requests
+  restart_browser_interval: 500  # requests
+
+# Development/Testing
+development:
+  debug_mode: false
+  save_page_source: false
+  screenshot_on_error: false
+  test_mode: false
+  max_test_matches: 10

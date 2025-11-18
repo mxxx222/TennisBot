@@ -36,6 +36,7 @@ loguru==0.7.2
 # Browser Automation
 undetected-chromedriver==3.5.4
 webdriver-manager==4.0.1
+fake-useragent==1.4.0
 
 # Utilities
 click==8.1.7

@@ -153,7 +153,9 @@ class PrematchAnalyzer:
         
         # Configuration (can be set externally)
         self.config = {
-            'reddit_sentiment_enabled': True
+            'reddit_sentiment_enabled': True,
+            'discord_intelligence_enabled': True,
+            'twitter_intelligence_enabled': True
         }
         
         logger.info("✅ Prematch Analyzer initialized")
@@ -171,7 +173,8 @@ class PrematchAnalyzer:
             # 2. Statistical analysis
             statistical_edge = self._calculate_statistical_edge(team_stats, match_info)
             
-            # 2.5. Reddit sentiment enhancement (if enabled)
+            # 2.5. Multi-source intelligence enhancement
+            # Reddit sentiment enhancement
             if self.config.get('reddit_sentiment_enabled', True):
                 try:
                     import asyncio
@@ -179,7 +182,6 @@ class PrematchAnalyzer:
                     from config.reddit_config import RedditConfig
                     
                     sentiment_engine = RedditSentimentEngine(RedditConfig())
-                    # Run async function in sync context
                     try:
                         loop = asyncio.get_event_loop()
                     except RuntimeError:
@@ -195,12 +197,10 @@ class PrematchAnalyzer:
                     )
                     
                     if match_sentiment:
-                        # Enhance statistical edge with sentiment
                         if match_sentiment.contrarian_opportunity:
                             statistical_edge['confidence_score'] *= 1.2
                             statistical_edge['reddit_contrarian'] = True
                         elif match_sentiment.confidence > 0.5:
-                            # Boost confidence if sentiment aligns
                             sentiment_boost = 0.15 if match_sentiment.home_percentage > 60 or match_sentiment.away_percentage > 60 else 0.05
                             statistical_edge['confidence_score'] *= (1 + sentiment_boost)
                             statistical_edge['reddit_sentiment'] = {
@@ -210,6 +210,63 @@ class PrematchAnalyzer:
                             }
                 except Exception as e:
                     logger.debug(f"Reddit sentiment analysis failed: {e}")
+            
+            # Discord sharp money validation
+            if self.config.get('discord_intelligence_enabled', True):
+                try:
+                    import asyncio
+                    from src.discord_intelligence.discord_intelligence_scraper import DiscordIntelligenceScraper
+                    from config.discord_config import DiscordConfig
+                    
+                    discord_scraper = DiscordIntelligenceScraper(DiscordConfig())
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                    
+                    sharp_picks = loop.run_until_complete(discord_scraper.scan_premium_servers())
+                    
+                    # Check if any sharp picks match this match
+                    for pick in sharp_picks:
+                        if (pick.match_info.get('home_team', '').lower() == match_info.home_team.lower() and
+                            pick.match_info.get('away_team', '').lower() == match_info.away_team.lower()):
+                            from config.discord_config import DiscordConfig
+                            statistical_edge['confidence_score'] *= DiscordConfig.SHARP_AGREEMENT_BOOST
+                            statistical_edge['discord_sharp_validation'] = True
+                            break
+                except Exception as e:
+                    logger.debug(f"Discord intelligence failed: {e}")
+            
+            # Twitter verified capper validation
+            if self.config.get('twitter_intelligence_enabled', True):
+                try:
+                    import asyncio
+                    from src.twitter_intelligence.twitter_intelligence_scraper import TwitterIntelligenceScraper
+                    from config.twitter_config import TwitterConfig
+                    
+                    twitter_scraper = TwitterIntelligenceScraper(TwitterConfig())
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                    
+                    capper_picks = loop.run_until_complete(twitter_scraper.scrape_verified_cappers())
+                    
+                    # Check if any capper picks match this match
+                    for pick in capper_picks:
+                        if (pick.match_info.get('home_team', '').lower() == match_info.home_team.lower() and
+                            pick.match_info.get('away_team', '').lower() == match_info.away_team.lower()):
+                            from config.twitter_config import TwitterConfig
+                            boost = TwitterConfig.VERIFIED_CAPPER_BOOST
+                            if pick.engagement_rate > 0.1:
+                                boost = TwitterConfig.HIGH_ENGAGEMENT_BOOST
+                            statistical_edge['confidence_score'] *= boost
+                            statistical_edge['twitter_capper_validation'] = True
+                            break
+                except Exception as e:
+                    logger.debug(f"Twitter intelligence failed: {e}")
             
             # 3. Value betting identification
             value_bets = self._identify_value_bets(odds_data, statistical_edge)

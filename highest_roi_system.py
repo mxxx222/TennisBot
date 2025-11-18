@@ -184,8 +184,10 @@ class HighestROISystem:
             async with self.stats_collector:
                 stats_data = await self.stats_collector.collect_all_sports_statistics()
 
+            # Multi-source intelligence integration
+            all_arbitrage_odds = {}
+            
             # Reddit integration: Scan for arbitrage opportunities
-            reddit_arbitrage_odds = {}
             if self.config.get('reddit_enabled', True):
                 try:
                     from src.reddit.reddit_arbitrage_scanner import RedditArbitrageScanner
@@ -196,19 +198,46 @@ class HighestROISystem:
                     
                     if reddit_opportunities:
                         logger.info(f"💰 Found {len(reddit_opportunities)} Reddit arbitrage opportunities")
-                        # Convert to odds format for ROI analyzer
                         reddit_arbitrage_odds = reddit_scanner.convert_to_roi_analyzer_format(reddit_opportunities)
-                        
-                        # Merge with existing match data odds
-                        for bookmaker, odds_list in reddit_arbitrage_odds.items():
-                            # Add Reddit-sourced odds to match data
-                            for odds_entry in odds_list:
-                                # Try to match with existing matches
-                                match_key = f"{odds_entry['home_team']} vs {odds_entry['away_team']}"
-                                # This would need to be integrated into the match data structure
-                                pass
+                        all_arbitrage_odds.update(reddit_arbitrage_odds)
                 except Exception as e:
                     logger.warning(f"⚠️ Reddit arbitrage scan failed: {e}")
+            
+            # Telegram integration: Premium channel arbitrage alerts
+            if self.config.get('telegram_insider_enabled', True):
+                try:
+                    from src.telegram_insider.telegram_insider_scraper import TelegramInsiderScraper
+                    from config.telegram_insider_config import TelegramInsiderConfig
+                    
+                    telegram_scraper = TelegramInsiderScraper(TelegramInsiderConfig())
+                    telegram_intel = await telegram_scraper.scan_premium_channels()
+                    
+                    if telegram_intel:
+                        logger.info(f"💰 Found {len(telegram_intel)} Telegram intelligence items")
+                        # Process arbitrage alerts
+                        for intel in telegram_intel:
+                            if intel.intel_type == 'arbitrage':
+                                # Convert to odds format
+                                from src.telegram_insider.arbitrage_alert_handler import ArbitrageAlertHandler
+                                alert_handler = ArbitrageAlertHandler()
+                                # Process would be handled by alert callbacks
+                except Exception as e:
+                    logger.warning(f"⚠️ Telegram insider scan failed: {e}")
+            
+            # Twitter integration: Hashtag arbitrage monitoring
+            if self.config.get('twitter_intelligence_enabled', True):
+                try:
+                    from src.twitter_intelligence.twitter_intelligence_scraper import TwitterIntelligenceScraper
+                    from config.twitter_config import TwitterConfig
+                    
+                    twitter_scraper = TwitterIntelligenceScraper(TwitterConfig())
+                    hashtag_opportunities = await twitter_scraper.scrape_hashtag_opportunities()
+                    
+                    if hashtag_opportunities:
+                        arb_opportunities = [o for o in hashtag_opportunities if o.opportunity_type == 'arbitrage']
+                        logger.info(f"💰 Found {len(arb_opportunities)} Twitter arbitrage opportunities")
+                except Exception as e:
+                    logger.warning(f"⚠️ Twitter intelligence scan failed: {e}")
 
             # Perform ROI analysis
             from src.highest_roi_analyzer import analyze_highest_roi

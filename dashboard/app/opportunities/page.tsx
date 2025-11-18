@@ -24,6 +24,7 @@ export default function OpportunitiesPage() {
 
   useEffect(() => {
     filterAndSortOpportunities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opportunities, sortBy, sportFilter, minROI, minConfidence]);
 
   const fetchOpportunities = async () => {

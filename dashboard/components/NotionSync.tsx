@@ -121,7 +121,7 @@ export default function NotionSync() {
               <span className="text-sm text-gray-600">Databases Found</span>
               <span className="font-semibold">{databaseCount}</span>
             </div>
-            {status.lastSync && (
+            {status?.lastSync && (
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Last Sync</span>
                 <span className="text-sm font-medium">
@@ -129,7 +129,7 @@ export default function NotionSync() {
                 </span>
               </div>
             )}
-            {databaseCount > 0 && (
+            {databaseCount > 0 && status && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">Connected Databases:</p>
                 <div className="space-y-1">

@@ -1,8 +1,8 @@
-# 🤖 Telegram ROI Bot for Tennis Predictions
+# 🎾 ITF Tennis AI Pipeline
 
 ⚠️ **IMPORTANT DISCLAIMER**: This project is intended for **EDUCATIONAL AND RESEARCH PURPOSES ONLY**.
 
-- This system demonstrates AI-powered tennis prediction and ROI analysis
+- This system demonstrates AI-powered ITF tennis match analysis and ROI optimization
 - Users are responsible for complying with all applicable laws and terms of service
 - The authors disclaim any responsibility for misuse or violations
 - Use only with explicit permission from website owners
@@ -10,39 +10,30 @@
 
 ## 🎯 Overview
 
-The **Telegram ROI Bot** is an advanced AI-powered system that automatically analyzes live tennis matches and sends real-time notifications about the most profitable betting opportunities. Using machine learning models with 70%+ accuracy targets, the bot identifies high-ROI matches and provides comprehensive betting recommendations with risk assessments.
+The **ITF Tennis AI Pipeline** is a specialized system for analyzing ITF (International Tennis Federation) women's tournaments, focusing on W15, W35, and W50 level matches. The system uses a cost-optimized 3-stage pipeline to identify high-value betting opportunities.
 
 ### 🎾 Key Features
 
-- **🤖 AI-Powered Predictions**: Ensemble ML models (Random Forest, Gradient Boosting, Logistic Regression) for 70%+ accuracy
-- **💰 ROI Analysis**: Automated calculation of return on investment for all predictions
-- **📱 Telegram Integration**: Real-time notifications with beautiful formatted messages
-- **🛡️ Risk Assessment**: Color-coded risk levels and betting guidance
-- **🔄 Continuous Monitoring**: 24/7 analysis of live tennis matches
-- **🎨 Interactive Commands**: Multiple bot commands for on-demand analysis
-- **📊 Multi-Source Data**: Scraping from multiple tennis websites and APIs
-- **⚡ Real-Time Updates**: Automatic notifications for high-value opportunities
-- **🎯 Tennis AI Pipeline**: ROI-optimized AI betting tip generator for ITF W15 matches ([Documentation](scripts/tennis_ai/README.md) | [Notion](https://www.notion.so/Tennis-AI-ROI-Optimized-Scripts-752c52392d7c4ba997ce3640caa50383?pvs=21))
+- **🔍 FlashScore ITF Scraper**: Automated scraping of ITF tournament matches from FlashScore
+- **🤖 AI-Powered Analysis**: OpenAI GPT-4 analysis of filtered matches (~€0.03/match)
+- **💰 ROI Optimization**: 75% cost savings through intelligent pre-filtering
+- **📊 Notion Integration**: Automatic data sync to Notion databases
+- **📈 Backtesting System**: Historical match analysis and strategy testing
+- **🔔 Telegram Notifications**: Real-time alerts for high-value opportunities
+- **📉 Live Monitoring**: Track live matches and detect momentum shifts
 
 ## 📋 Requirements
 
 - **Python**: 3.11+
-- **Browser**: Chrome/Chromium (for web scraping)
-- **Telegram Bot Token**: Required for bot functionality
+- **Browser**: Chrome/Chromium (for Selenium web scraping)
+- **OpenAI API Key**: Required for AI analysis
+- **Notion API Token**: Required for database integration
 - **Dependencies**: See `requirements.txt`
-- **Optional**: Docker for containerized deployment
-- **Optional**: Mojo SDK for performance acceleration (100-1000x speedup)
 
-## ⚡ Quick Start (5 Minutes)
+## ⚡ Quick Start
 
-### 1. **Get Telegram Bot Token**
-```bash
-# Open Telegram, search for @BotFather
-# Send /newbot and follow instructions
-# Copy your bot token (format: 123456789:ABCdefGHI...)
-```
+### 1. **Environment Setup**
 
-### 2. **Setup Environment**
 ```bash
 # Clone repository
 git clone <repository>
@@ -51,371 +42,260 @@ cd TennisBot
 # Install dependencies
 pip install -r requirements.txt
 
-# Set bot token
-export TELEGRAM_BOT_TOKEN='your_bot_token_here'
+# Set environment variables
+cp telegram_secrets.env.example telegram_secrets.env
+# Edit telegram_secrets.env and add:
+# - OPENAI_API_KEY
+# - NOTION_API_KEY
+# - NOTION_TENNIS_PREMATCH_DB_ID
 ```
 
-### 3. **Start the Bot**
+### 2. **Run ITF Scraper**
+
 ```bash
-# Start Telegram ROI Bot
-python tennis_roi_telegram.py
+# Run the full ITF pipeline
+python run_itf_scraper.py
+
+# Or run individual components
+python scripts/tennis_ai/prefilter_w15_matches.py  # Pre-filter matches
+python scripts/tennis_ai/ai_analyzer.py            # AI analysis
+python scripts/tennis_ai/generate_bet_list.py      # Generate bet list
 ```
 
-### 4. **Subscribe to Notifications**
-- Find your bot on Telegram (search for the username you created)
-- Send `/start` command
-- Start receiving ROI notifications automatically! 🚀
+### 3. **Tennis AI Pipeline**
+
+The complete pipeline can be run with:
+
+```bash
+source telegram_secrets.env
+./scripts/tennis_ai/run_tennis_ai.sh
+```
+
+This executes:
+1. **Pre-filter**: Filters 100 matches → 20-30 best candidates (free)
+2. **AI Analyzer**: GPT-4 analysis of filtered matches (~€0.03/match)
+3. **Bet List Generator**: Creates actionable betting recommendations
+
+## 📁 Project Structure
+
+```
+TennisBot/
+├── scripts/tennis_ai/          # Tennis AI pipeline scripts
+│   ├── prefilter_w15_matches.py
+│   ├── ai_analyzer.py
+│   ├── generate_bet_list.py
+│   ├── save_to_notion.py
+│   └── run_tennis_ai.sh
+├── src/
+│   ├── scrapers/
+│   │   ├── flashscore_itf_scraper.py      # FlashScore match scraper
+│   │   ├── flashscore_itf_enhanced.py     # Enhanced FlashScore scraper
+│   │   ├── flashscore_itf_scraper_old.py  # Legacy version
+│   │   └── itf_player_scraper.py          # ITFTennis.com player scraper
+│   ├── pipelines/
+│   │   └── itf_notion_pipeline.py         # Notion integration
+│   ├── notion/
+│   │   ├── itf_database_updater.py        # Database updater
+│   │   └── create_itf_player_profiles.py  # Player profiles
+│   ├── analytics/
+│   │   ├── itf_backtester.py             # Backtesting
+│   │   └── itf_roi_tracker.py             # ROI tracking
+│   ├── ml/
+│   │   └── itf_match_predictor.py         # ML predictor
+│   ├── monitors/
+│   │   └── itf_live_monitor.py            # Live monitoring
+│   ├── notifiers/
+│   │   └── itf_telegram_notifier.py      # Telegram alerts
+│   └── trackers/
+│       └── itf_odds_tracker.py            # Odds tracking
+├── config/
+│   └── itf_scraper_config.yaml           # Scraper configuration
+├── data/
+│   └── tennis_ai/                         # Pipeline data
+├── run_itf_scraper.py                     # Main runner
+└── check_itf_matches.py                   # Match checker
+```
 
 ## 🔧 Configuration
 
+### ITF Scraper Config
+
+Edit `config/itf_scraper_config.yaml`:
+
+```yaml
+scraper:
+  target_tournaments: ['W15', 'W35', 'W50']
+  rate_limit: 2.5  # seconds between requests
+  use_selenium: true
+  headless: true
+
+notion:
+  tennis_prematch_db_id: "your_database_id"
+  rate_limit: 3  # requests per second
+```
+
 ### Environment Variables
+
 ```bash
 # Required
-TELEGRAM_BOT_TOKEN=your_bot_token_here
+OPENAI_API_KEY=sk-proj-...
+NOTION_API_KEY=secret_...
+NOTION_TENNIS_PREMATCH_DB_ID=...
 
 # Optional
-TELEGRAM_CHAT_ID=your_chat_id_here
+TELEGRAM_BOT_TOKEN=...  # For notifications
 DEBUG=true
-
-# Mojo Performance Layer (optional)
-USE_MOJO_LAYER=true          # Enable Mojo acceleration (default: true)
-MOJO_DEBUG=false             # Enable Mojo debug logging (default: false)
-MOJO_SDK_PATH=/path/to/mojo  # Path to Mojo SDK (if not in PATH)
 ```
 
-### Bot Settings (Default)
-```json
-{
-  "min_confidence": 0.25,        // 25% minimum confidence
-  "min_roi_percentage": 10.0,    // 10% minimum ROI
-  "max_risk_level": 0.3,         // 30% maximum risk
-  "notification_cooldown": 300    // 5 minutes between notifications
-}
+## 📊 Data Flow
+
+```
+┌─────────────────┐
+│  FlashScore.com │ → ITF Match Scraper → Pre-filter → AI Analyzer → Bet List
+└─────────────────┘                                                          ↓
+                                                                      Notion Database
+┌─────────────────┐                                                          ↓
+│ ITFTennis.com   │ → ITF Player Scraper → Player Profiles → ──────────────┘
+└─────────────────┘                                                          ↓
+                                                                    Telegram Notifications
 ```
 
-### Custom Configuration
-Create `config/telegram_config.json`:
-```json
-{
-  "bot_token": "your_bot_token_here",
-  "notification_settings": {
-    "min_confidence": 0.25,
-    "min_roi_percentage": 10.0,
-    "max_risk_level": 0.3,
-    "notification_cooldown_seconds": 300
-  },
-  "message_settings": {
-    "include_emojis": true,
-    "detailed_analysis": true,
-    "show_risk_warning": true
-  }
-}
-```
+**Two Data Sources:**
+1. **FlashScore.com**: Real-time match data, scores, schedules
+2. **ITFTennis.com**: Official player statistics, rankings, profiles
 
-## 📱 Bot Commands
+## 🎯 Tennis AI Pipeline Details
 
-| Command | Description |
-|---------|-------------|
-| `/start` | Subscribe to ROI notifications |
-| `/roi` | Get current best ROI matches |
-| `/predictions` | See all current predictions |
-| `/settings` | View bot configuration |
-| `/help` | Show help message |
-| `/stop` | Unsubscribe from notifications |
+### Stage 1: Pre-filter (Free)
+- Filters matches from Notion database
+- Applies basic criteria (tournament tier, player rankings, etc.)
+- Output: 20-30 best candidates from 100+ matches
 
-## 💰 ROI Analysis & Notifications
+### Stage 2: AI Analyzer (~€0.03/match)
+- Uses OpenAI GPT-4 for deep analysis
+- Analyzes player form, surface stats, head-to-head
+- Generates confidence scores and recommendations
+- Output: Detailed analysis for each candidate
 
-### 🎯 What Gets Notified
-The bot automatically sends notifications when it finds:
-- ✅ **High-confidence predictions** (≥25% confidence)
-- 💰 **High ROI potential** (≥10% return)
-- 🛡️ **Acceptable risk levels** (≤30% risk)
-- 🎯 **Clear betting recommendations**
+### Stage 3: Bet List Generator
+- Creates actionable betting recommendations
+- Filters by ROI and confidence thresholds
+- Output: High-value bet list
 
-### 📊 Sample ROI Notification
-```
-💰 BEST ROI TENNIS MATCHES
+**Cost Efficiency**: 75% savings vs analyzing all matches
 
-🏆 Match 1: Djokovic N vs Alcaraz C
-🎯 Predicted Winner: Djokovic N
-📊 Win Probability: 65.3%
-⭐ Confidence: 32.1%
-💰 ROI: 18.5%
-💵 Potential Profit: $185 (on $1000 stake)
-🎲 Odds: 1.85
-🛡️ Risk Level: 🟢 LOW
-🏟️ Surface: Hard
-🏆 Tournament: ATP Masters 1000
-💎 Recommendation: EXCELLENT BET
+## 📈 Features
 
-🎯 Target Accuracy: 70%+
-⚠️ Always bet responsibly and within your limits
-```
+### Scraping (Two Data Sources)
 
-### 🛡️ Risk Categories
-- 🟢 **LOW RISK**: ≤20% risk level
-- 🟡 **MEDIUM RISK**: 21-40% risk level
-- 🟠 **HIGH RISK**: 41-60% risk level
-- 🔴 **VERY HIGH RISK**: >60% risk level
+**1. FlashScore.com** - Match Data
+- **FlashScore ITF Scraper**: Scrapes W15/W35/W50 tournament matches
+- **Enhanced Scraper**: Improved reliability with Selenium for dynamic content
+- **Data**: Live scores, match schedules, tournament info, odds
 
-### 💎 Betting Recommendations
-- 💎 **EXCELLENT BET**: ROI ≥20%, Low Risk
-- 🔥 **STRONG BET**: ROI ≥15%, Low-Medium Risk
-- 💡 **GOOD BET**: ROI ≥10%, Medium Risk
-- ⚠️ **AVOID**: Low confidence or high risk
+**2. ITFTennis.com** - Player Data  
+- **ITF Player Scraper**: Collects player statistics from official ITF website
+- **Data**: Rankings, surface statistics, recent form, player profiles
+- **Updates**: Weekly player profile updates
 
-## 🚀 Deployment Options
+### Analysis
+- **AI Analysis**: GPT-4 powered match analysis
+- **Backtesting**: Historical strategy testing
+- **ROI Tracking**: Performance monitoring
+- **ML Predictor**: Machine learning model for match predictions
 
-### 🐳 Docker Deployment
+### Monitoring
+- **Live Monitor**: Real-time match tracking
+- **Odds Tracker**: Line movement detection
+- **Telegram Notifier**: Automated alerts
+
+### Notion Integration
+- **Tennis Prematch Database**: Match data storage
+- **Player Profiles**: Comprehensive player statistics
+- **Automated Updates**: Pipeline-driven data sync
+
+## 🚀 Deployment
+
+### Cron Job Setup
+
 ```bash
-# Build and run with Docker
-docker build -t tennis-roi-bot .
-docker run -e TELEGRAM_BOT_TOKEN=your_token_here tennis-roi-bot
+# Setup ITF scraper cron job
+./scripts/setup_itf_scraper_cron.sh
+
+# Or manually add to crontab
+# Run every 10 minutes
+*/10 * * * * cd /path/to/TennisBot && python run_itf_scraper.py
 ```
 
-### 🔄 Background Service (Linux)
+### API Deployment
+
+The system includes a Vercel API endpoint for cron-based execution:
+
 ```bash
-# Run deployment script
-./deploy_telegram_bot.sh
+# Deploy to Vercel
+vercel deploy
 
-# Or manually create systemd service
-sudo cp /tmp/tennis-roi-bot.service /etc/systemd/system/
-sudo systemctl enable tennis-roi-bot
-sudo systemctl start tennis-roi-bot
+# Set cron schedule in Vercel dashboard
 ```
 
-### ☁️ Cloud Deployment
-- **Vercel**: See `web/VERCEL_DEPLOYMENT_GUIDE.md`
-- **AWS/GCP**: Use Docker containers
-- **Heroku**: Standard Python deployment
+## 📊 Expected Results
 
-## 📊 System Architecture
+### Match Analysis
+- **Daily Matches**: 20-50 ITF matches per day (depending on tournament schedule)
+- **Pre-filtered**: 20-30 candidates after filtering
+- **AI Analyzed**: All pre-filtered matches analyzed
+- **High-Value Bets**: 0-5 recommendations per day
 
-### 🔄 Data Flow
-```
-Live Tennis Matches → Web Scraping → AI Predictions → ROI Analysis → Telegram Notifications
-```
-
-### 🤖 AI Models
-- **Random Forest**: Ensemble decision trees
-- **Gradient Boosting**: XGBoost implementation
-- **Logistic Regression**: Probability-based predictions
-- **Feature Engineering**: Match statistics, player rankings, surface analysis
-
-### ⚡ Mojo Performance Layer
-
-The system includes an optional **Mojo performance acceleration layer** that provides **100-1000x speedup** on critical compute operations:
-
-**Accelerated Operations:**
-- **ML Inference**: Batch predictions and ensemble aggregation (50-200x speedup)
-- **Feature Engineering**: Feature extraction and normalization (100-500x speedup)
-- **Batch Processing**: Vectorized data transformations (10-50x speedup)
-- **Statistical Calculations**: Performance metrics computation
-- **ROI Calculations**: Arbitrage detection, Kelly Criterion, expected ROI (50-200x speedup)
-
-**Architecture:**
-```
-Python Orchestration Layer (I/O, Business Logic)
-    ↕
-Mojo Performance Layer (Compute-Intensive Operations)
-    ↕
-Python Fallback (Always Available)
-```
-
-**Features:**
-- ✅ Automatic fallback to Python if Mojo unavailable
-- ✅ Feature flag control (`USE_MOJO_LAYER`)
-- ✅ Performance monitoring and benchmarking
-- ✅ Zero accuracy degradation vs Python implementation
-- ✅ Seamless integration with existing codebase
-
-**Enabling Mojo:**
-```bash
-# Option 1: Environment variable (recommended)
-export USE_MOJO_LAYER=true
-
-# Option 2: Install Mojo SDK and add to PATH
-# Download from: https://www.modular.com/max/mojo
-export MOJO_SDK_PATH=/path/to/mojo
-
-# Option 3: Build Mojo modules during Docker build
-# Set MOJO_SDK_PATH in Dockerfile
-docker build -t tennis-bot .
-```
-
-**Performance Monitoring:**
-```python
-from src.mojo_performance_monitor import get_monitor
-
-monitor = get_monitor()
-monitor.print_summary()  # Print performance stats
-monitor.save_report()    # Save detailed report
-```
-
-**Testing Mojo Integration:**
-```bash
-# Run comprehensive tests and benchmarks
-python test_mojo_integration.py
-```
-
-### 📈 Performance Metrics
-- **Prediction Accuracy**: 70%+ target
-- **ROI Identification**: High-value opportunities only
-- **Notification Quality**: 2-5 high-ROI matches per day
-- **Response Time**: <30 seconds for analysis (with Mojo: <1 second for batch operations)
-- **Mojo Speedup**: 50-200x for batch inference, 100-500x for feature engineering, 50-200x for ROI calculations
-
-## 🚀 Mojo Performance Benchmarks
-
-### Quick Start with Mojo
-
-1. **Install Mojo SDK** (optional):
-   ```bash
-   # Download from https://www.modular.com/max/mojo
-   # Extract and add to PATH
-   export PATH=$PATH:/path/to/mojo/bin
-   ```
-
-2. **Build Mojo modules**:
-   ```bash
-   cd mojo_layer
-   ./build.sh
-   ```
-
-3. **Enable Mojo acceleration**:
-   ```bash
-   export USE_MOJO_LAYER=true
-   python tennis_roi_telegram.py
-   ```
-
-4. **Monitor performance**:
-   ```python
-   from src.mojo_performance_monitor import get_monitor
-   
-   monitor = get_monitor()
-   # ... run your operations ...
-   monitor.print_summary()  # See speedup metrics
-   ```
-
-### Performance Benchmarks
-
-| Operation | Python (ms) | Mojo (ms) | Speedup |
-|-----------|-------------|-----------|---------|
-| Batch Inference (100 matches) | ~2000 | ~10-20 | 100-200x |
-| Feature Engineering | ~500/match | ~1/match | 500x |
-| Ensemble Aggregation | ~100/batch | ~1/batch | 100x |
-| Batch Processing (1000 rows) | ~5000 | ~100-500 | 10-50x |
-| ROI Calculations (100 bets) | ~500 | ~2-5 | 100-250x |
-| Arbitrage Detection (50 matches) | ~200 | ~1-2 | 100-200x |
-| Kelly Criterion (batch) | ~300 | ~1-3 | 100-300x |
-
-### Architecture Details
-
-See `mojo-performance-layer-integration.plan.md` for detailed architecture and implementation guide.
-
-## 🔧 Usage Examples
-
-### Start Bot and Monitor
-```bash
-# Terminal 1: Start the bot
-python tennis_roi_telegram.py
-
-# Terminal 2: Test predictions
-python demo_predictions.py
-```
-
-### Interactive Analysis
-```python
-from src.telegram_roi_bot import TennisROIBot
-
-# Initialize bot
-bot = TennisROIBot(token="your_token")
-
-# Get current ROI matches
-roi_matches = await bot.get_best_roi_matches()
-
-# Send notification
-await bot.send_roi_notification(roi_matches)
-```
-
-### Custom ROI Analysis
-```python
-from src.predict_winners import TennisWinnerPredictor
-
-# Initialize predictor
-predictor = TennisWinnerPredictor()
-predictor.setup()
-
-# Get predictions with custom criteria
-predictions = predictor.scrape_and_predict(
-    max_live_matches=20,
-    max_upcoming_matches=30
-)
-```
+### Cost Analysis
+- **Pre-filter**: Free (uses existing data)
+- **AI Analysis**: ~€0.03 per match
+- **Daily Cost**: ~€0.60-€0.90 (20-30 matches)
+- **Monthly Cost**: ~€18-€27
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-**Bot not responding?**
-```bash
-# Check if bot is running
-ps aux | grep tennis_roi_telegram
+**No matches found?**
+- Check if tournaments are active (ITF tournaments are seasonal)
+- Verify scraper configuration
+- Check FlashScore website structure hasn't changed
 
-# Check logs
-tail -f data/telegram_bot.log
-```
+**AI analysis failing?**
+- Verify OPENAI_API_KEY is set correctly
+- Check OpenAI account has credits
+- Review API rate limits
 
-**No notifications received?**
-1. Verify bot token is correct
-2. Ensure you sent `/start` to your bot
-3. Check bot has message sending permissions
-4. Review logs for errors
+**Notion sync issues?**
+- Verify NOTION_API_KEY and database ID
+- Check database permissions
+- Review rate limiting (max 3 req/s)
 
 **Import errors?**
 ```bash
 # Install missing packages
-pip install python-telegram-bot scikit-learn pandas numpy
-
-# Update requirements
 pip install -r requirements.txt
+
+# Verify Python version
+python --version  # Should be 3.11+
 ```
 
-### 📁 Important Files
-- **Bot logs**: `data/telegram_bot.log`
-- **Predictions**: `data/tennis_predictions_*.json`
-- **Config**: `config/telegram_config.json`
-- **Test results**: `data/telegram_bot_test_*.json`
-- **Mojo performance reports**: `data/mojo_performance_report_*.json`
-- **Mojo modules**: `mojo_layer/` (core, ml, features, batch)
+## 📝 Documentation
 
-## 📈 Expected Performance
-
-### 🎯 Accuracy Targets
-- **Prediction Accuracy**: 70%+ (ensemble ML models)
-- **ROI Identification**: High-value opportunities only
-- **Risk Assessment**: Conservative approach with warnings
-
-### 💰 ROI Expectations
-- **Excellent Bets**: 20%+ ROI, Low Risk (1-2 per day)
-- **Strong Bets**: 15%+ ROI, Low-Medium Risk (2-3 per day)
-- **Good Bets**: 10%+ ROI, Medium Risk (3-5 per day)
-
-### 📊 Notification Frequency
-- **High ROI matches**: 2-5 per day (depending on tennis schedule)
-- **Excellent opportunities**: 1-2 per day
-- **Spam prevention**: 5-minute cooldown between similar notifications
+- **Tennis AI Pipeline**: [scripts/tennis_ai/README.md](scripts/tennis_ai/README.md)
+- **ITF Pipeline Updates**: [ITF_PIPELINE_UPDATE.md](ITF_PIPELINE_UPDATE.md)
+- **Pipeline Test Results**: [PIPELINE_TEST_RESULTS.md](PIPELINE_TEST_RESULTS.md)
 
 ## ⚖️ Legal & Ethical Guidelines
 
-### 🛡️ Responsible Betting
+### 🛡️ Responsible Use
 - **Always bet responsibly** and within your limits
 - **Never bet more than you can afford to lose**
 - **Use predictions as guidance, not guarantees**
 - **Past performance doesn't guarantee future results**
 
 ### ⚖️ Legal Compliance
-1. **Rate Limiting**: Minimum 5-second delays between requests
+1. **Rate Limiting**: Minimum 2.5-second delays between requests
 2. **User-Agent**: Clear identification as research bot
 3. **Respect robots.txt**: Follow website crawling guidelines
 4. **Data Privacy**: Store only aggregated/anonymized data
@@ -423,12 +303,12 @@ pip install -r requirements.txt
 
 ## 🤝 Contributing
 
-Contributions welcome for educational improvements:
-- Documentation enhancements
-- AI model optimizations
-- Telegram bot features
-- Risk assessment improvements
-- Security enhancements
+Contributions welcome for:
+- Scraper improvements
+- AI analysis enhancements
+- Backtesting strategies
+- Documentation updates
+- Bug fixes
 
 ## 📝 License
 
@@ -442,4 +322,4 @@ This system is designed for learning and research. Any real-money gambling requi
 
 ---
 
-*Built for educational purposes • AI-powered predictions • ROI-focused analysis*
+*Built for ITF tennis analysis • AI-powered predictions • ROI-focused optimization*

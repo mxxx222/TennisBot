@@ -287,11 +287,16 @@ if __name__ == '__main__':
     
     estimated_cost = len(candidates) * 0.03
     print(f"💰 Estimated API cost: €{estimated_cost:.2f}")
-    proceed = input(f"\nProceed with AI analysis of {len(candidates)} matches? (y/n): ")
     
-    if proceed.lower() != 'y':
-        print("❌ Aborted")
-        exit()
+    # Check if running non-interactively (from script or pipe)
+    import sys
+    if sys.stdin.isatty():
+        proceed = input(f"\nProceed with AI analysis of {len(candidates)} matches? (y/n): ")
+        if proceed.lower() != 'y':
+            print("❌ Aborted")
+            exit()
+    else:
+        print(f"\n✅ Proceeding automatically (non-interactive mode)")
     
     print("\n🤖 Starting AI analysis...\n")
     

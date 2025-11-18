@@ -35,7 +35,8 @@ async def main():
     result = await pipeline.run_pipeline()
     
     if result.get('success'):
-        print(f"✅ Pipeline completed: {result['matches_created']} matches created")
+        matches_created = result.get('matches_created', 0)
+        print(f"✅ Pipeline completed: {matches_created} matches created")
         sys.exit(0)
     else:
         print(f"❌ Pipeline failed: {result.get('error')}")

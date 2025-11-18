@@ -1,0 +1,66 @@
+# Virtual Betting & ML Calibration Configuration
+
+# Virtual Bankroll Settings
+virtual_bankroll:
+  initial_amount: 10000.0
+  stake_method: "kelly"  # Options: kelly, fixed, confidence
+  max_stake_percentage: 5.0  # Maximum stake as % of bankroll
+  min_stake_amount: 10.0  # Minimum stake amount
+
+# Virtual Betting Criteria
+betting_criteria:
+  min_confidence_threshold: 0.60  # Minimum confidence to place virtual bet
+  min_odds: 1.50  # Minimum odds for virtual bet
+  max_odds: 10.0  # Maximum odds for virtual bet
+
+# Result Collection Settings
+result_collection:
+  check_interval_seconds: 300  # 5 minutes
+  max_retry_attempts: 10
+  retry_delay_seconds: 600  # 10 minutes
+  match_result_timeout_hours: 48  # Mark as void after this time
+
+# Calibration Settings
+calibration:
+  min_samples_for_analysis: 10
+  confidence_buckets:
+    - [0.50, 0.60]
+    - [0.60, 0.65]
+    - [0.65, 0.70]
+    - [0.70, 0.75]
+    - [0.75, 0.80]
+    - [0.80, 0.85]
+    - [0.85, 0.90]
+    - [0.90, 1.00]
+  brier_score_threshold: 0.25  # Alert if Brier score exceeds this
+  calibration_gap_threshold: 0.05  # Alert if gap exceeds this
+
+# Auto-Retraining Settings
+auto_retraining:
+  enabled: true
+  min_samples_for_retrain: 100
+  retrain_interval_days: 7
+  force_retrain_on_calibration_issues: true
+  save_model_versions: true
+
+# Reporting Settings
+reporting:
+  daily_report_enabled: true
+  weekly_report_enabled: true
+  export_reports: true
+  report_directory: "data/reports"
+  calibration_report_interval_days: 1
+
+# Data Retention
+data_retention:
+  keep_virtual_bets_days: 365  # Keep virtual bet records for 1 year
+  keep_calibration_data_days: 730  # Keep calibration data for 2 years
+  archive_old_data: true
+
+# Integration Settings
+integration:
+  auto_place_virtual_bets: true  # Automatically place virtual bets on predictions
+  update_on_result: true  # Automatically update bets when results available
+  trigger_calibration_on_update: true  # Run calibration analysis after updates
+  trigger_retraining_on_schedule: true  # Run retraining on schedule
+

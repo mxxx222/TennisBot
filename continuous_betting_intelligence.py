@@ -40,6 +40,8 @@ try:
     from prematch_analyzer import PrematchAnalyzer, ROIAnalysis
     from betting_strategy_engine import BettingStrategyEngine, BettingOpportunity, RiskLevel
     from multi_sport_prematch_scraper import MultiSportPrematchScraper, PrematchData
+    from virtual_betting_tracker import VirtualBettingTracker
+    from match_result_collector import MatchResultCollector
     CORE_MODULES_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Warning: Some modules not available: {e}")
@@ -149,6 +151,21 @@ class ContinuousBettingIntelligence:
             )
             self.scraper = MultiSportPrematchScraper()
             
+            # Initialize Virtual Betting Tracker for ML calibration
+            try:
+                self.virtual_tracker = VirtualBettingTracker(
+                    virtual_bankroll=self.config.get('virtual_bankroll', 10000.0)
+                )
+                self.result_collector = MatchResultCollector(
+                    virtual_tracker=self.virtual_tracker,
+                    check_interval=300  # 5 minutes
+                )
+                logger.info("✅ Virtual betting tracker initialized")
+            except Exception as e:
+                logger.warning(f"⚠️ Virtual betting tracker not available: {e}")
+                self.virtual_tracker = None
+                self.result_collector = None
+            
             # Initialize Odds API if key available
             try:
                 self.odds_api = OddsAPIIntegration()
@@ -221,6 +238,13 @@ class ContinuousBettingIntelligence:
         analysis_thread.start()
         notification_thread.start()
         
+        # Start result collection for virtual bets
+        if self.result_collector:
+            result_collection_task = asyncio.create_task(
+                self.result_collector.start_collecting()
+            )
+            logger.info("✅ Result collection started for virtual bets")
+        
         # Main analysis loop
         while self.running:
             try:
@@ -230,6 +254,8 @@ class ContinuousBettingIntelligence:
             except KeyboardInterrupt:
                 logger.info("🛑 Stopping continuous analysis...")
                 self.running = False
+                if self.result_collector:
+                    self.result_collector.stop_collecting()
                 break
             except Exception as e:
                 logger.error(f"❌ Error in analysis cycle: {e}")
@@ -597,6 +623,35 @@ class ContinuousBettingIntelligence:
                 expires_at=match_data['match_time'] - timedelta(minutes=30),
                 analysis_version="1.0"
             )
+            
+            # Automatically place virtual bet for ML calibration
+            if self.virtual_tracker:
+                try:
+                    # Extract odds for the prediction
+                    prediction_odds = roi_analysis['best_odds'].get('match_winner', 2.0)
+                    if isinstance(prediction_odds, dict):
+                        prediction_odds = prediction_odds.get(roi_analysis['best_selection'], 2.0)
+                    
+                    # Place virtual bet
+                    virtual_bet = self.virtual_tracker.place_virtual_bet(
+                        match_id=match_data['match_id'],
+                        prediction=roi_analysis['best_selection'],
+                        confidence=roi_analysis['confidence_score'],
+                        odds=float(prediction_odds),
+                        stake_method="kelly",
+                        surface=match_data.get('surface'),
+                        tournament=match_data.get('league', 'Unknown'),
+                        home_player=match_data.get('home_team') if match_data['sport'] == 'tennis' else None,
+                        away_player=match_data.get('away_team') if match_data['sport'] == 'tennis' else None
+                    )
+                    
+                    if virtual_bet:
+                        logger.info(
+                            f"✅ Virtual bet placed for calibration: "
+                            f"{roi_analysis['best_selection']} @ {prediction_odds:.2f}"
+                        )
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to place virtual bet: {e}")
             
             return opportunity
             

@@ -170,6 +170,10 @@ class EnhancedTennisPredictor:
             'logistic_regression': 0.2
         }
         
+        # Calibration adjustment (loaded from calibration data)
+        self.calibration_adjustment = None
+        self.calibration_loaded = False
+        
         logger.info("🎾 Enhanced Tennis Predictor initialized")
     
     def load_player_data(self, player_data_file: str = None) -> bool:
@@ -191,6 +195,64 @@ class EnhancedTennisPredictor:
         except Exception as e:
             logger.error(f"❌ Error loading player data: {e}")
             return False
+    
+    def _apply_calibration_adjustment(self, probability: float) -> float:
+        """
+        Apply calibration adjustment to probability based on calibration data
+        
+        Args:
+            probability: Raw predicted probability
+            
+        Returns:
+            Calibrated probability
+        """
+        if not self.calibration_loaded or self.calibration_adjustment is None:
+            return probability
+        
+        # Simple linear adjustment based on calibration gap
+        # In production, this would use more sophisticated calibration methods
+        # like Platt scaling or isotonic regression
+        try:
+            # Get adjustment factor for this probability range
+            adjustment = self.calibration_adjustment.get('adjustment_factor', 1.0)
+            calibrated_prob = probability * adjustment
+            
+            # Clamp to valid range
+            return max(0.0, min(1.0, calibrated_prob))
+        except Exception:
+            return probability
+    
+    def load_calibration_adjustment(self, calibration_data: Dict[str, Any]):
+        """
+        Load calibration adjustment from calibration analysis
+        
+        Args:
+            calibration_data: Calibration analysis results
+        """
+        try:
+            overall_metrics = calibration_data.get('overall_metrics', {})
+            calibration_gap = overall_metrics.get('calibration_gap', 0)
+            avg_confidence = overall_metrics.get('avg_confidence', 0.5)
+            actual_accuracy = overall_metrics.get('overall_accuracy', 0.5)
+            
+            if calibration_gap > 0.01 and avg_confidence > 0:
+                # Calculate adjustment factor
+                adjustment_factor = actual_accuracy / avg_confidence if avg_confidence > 0 else 1.0
+                
+                self.calibration_adjustment = {
+                    'adjustment_factor': adjustment_factor,
+                    'calibration_gap': calibration_gap,
+                    'last_updated': datetime.now().isoformat()
+                }
+                self.calibration_loaded = True
+                
+                logger.info(
+                    f"✅ Calibration adjustment loaded: "
+                    f"factor={adjustment_factor:.3f}, gap={calibration_gap:.4f}"
+                )
+        except Exception as e:
+            logger.error(f"❌ Error loading calibration adjustment: {e}")
+            self.calibration_loaded = False
     
     def _create_sample_player_data(self):
         """Create sample player data for demonstration"""
@@ -525,7 +587,9 @@ class EnhancedTennisPredictor:
             predicted_winner = away_player
             win_probability = away_win_prob
         
-        # Calculate confidence score (higher for more decisive predictions)
+        # Apply calibration adjustment if available
+        win_probability = self._apply_calibration_adjustment(win_probability)
+        
         # Calculate confidence score (higher for more decisive predictions)
         confidence_score = abs(home_win_prob - 0.5) * 2
 
@@ -542,7 +606,6 @@ class EnhancedTennisPredictor:
 
         # Cap confidence at 1.0
         confidence_score = min(confidence_score, 1.0)
-        confidence_score = abs(home_win_prob - 0.5) * 2
         
         # Calculate contributing factors
         ranking_advantage = features['ranking_advantage'] - 0.5

@@ -22,6 +22,7 @@ The **Telegram ROI Bot** is an advanced AI-powered system that automatically ana
 - **🎨 Interactive Commands**: Multiple bot commands for on-demand analysis
 - **📊 Multi-Source Data**: Scraping from multiple tennis websites and APIs
 - **⚡ Real-Time Updates**: Automatic notifications for high-value opportunities
+- **🎯 Tennis AI Pipeline**: ROI-optimized AI betting tip generator for ITF W15 matches ([Documentation](scripts/tennis_ai/README.md) | [Notion](https://www.notion.so/Tennis-AI-ROI-Optimized-Scripts-752c52392d7c4ba997ce3640caa50383?pvs=21))
 
 ## 📋 Requirements
 

@@ -13,6 +13,15 @@
       "schedule": "0 6,18 * * *"
     }
   ],
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.9",
+      "maxDuration": 300
+    },
+    "api/**/*.js": {
+      "maxDuration": 300
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",

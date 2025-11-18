@@ -2,7 +2,7 @@ name: 🔒 Security Validation & Deployment
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   schedule:
@@ -40,7 +40,7 @@ jobs:
           echo "Security report generated"
           
       - name: 📤 Upload Security Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-report
           path: security_report.md

@@ -89,3 +89,11 @@ discord.py==2.3.2  # Discord API wrapper
 
 # Twitter Intelligence Integration
 tweepy==4.14.0  # Twitter API wrapper
+
+# Notion Integration
+notion-client==2.2.1  # Notion API client for bet logging
+
+# TennisExplorer Scraper Dependencies
+playwright==1.40.0  # Alternative to Selenium for dynamic content
+apscheduler==3.10.4  # Job scheduling
+geopy==2.4.1  # Geocoding for weather locations

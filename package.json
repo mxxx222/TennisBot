@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "python -m http.server 3000",
     "build": "echo 'Static site - no build needed'",
-    "start": "python -m http.server 8000"
+    "start": "python -m http.server 8000",
+    "claude:version": "npx -p @anthropic-ai/claude-code claude --version",
+    "claude:refactor": "npx -p @anthropic-ai/claude-code claude -p \"Refactor the selected code to improve readability and maintainability\"",
+    "claude:explain": "npx -p @anthropic-ai/claude-code claude -p \"Explain this code in detail\"",
+    "claude:patch": "npx -p @anthropic-ai/claude-code claude -p \"Review and suggest improvements for this code\""
   },
   "keywords": [
     "educational",
@@ -16,5 +20,8 @@
     "sports"
   ],
   "author": "Betfury.io Educational Research System",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@anthropic-ai/claude-code": "^2.0.44"
+  }
 }

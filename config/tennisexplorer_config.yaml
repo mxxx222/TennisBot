@@ -1,0 +1,92 @@
+# TennisExplorer Scraper Configuration
+# ====================================
+
+# Scraper Settings
+scraper:
+  request_delay: 2.0  # Seconds between requests
+  use_selenium: true
+  headless: true
+  user_agent_rotation: true
+  max_retries: 3
+  timeout: 30
+
+# Database Configuration
+database:
+  type: sqlite  # 'postgresql' or 'sqlite'
+  # PostgreSQL settings (if type is postgresql)
+  postgresql:
+    host: localhost
+    port: 5432
+    database: tennisbot
+    user: your_user
+    password: your_password
+  # SQLite settings (if type is sqlite)
+  sqlite:
+    path: data/tennisexplorer.db
+
+# API Keys
+api_keys:
+  tennis_abstract_api_key: null  # Set if available
+  openweather_api_key: null  # Set if available
+
+# Notion Integration
+notion:
+  api_key: null  # Set via environment variable NOTION_API_KEY
+  tennisexplorer_db_id: null  # Set via environment variable NOTION_TENNISEXPLORER_DB_ID
+
+# Alerting
+alerts:
+  discord:
+    webhook_url: null  # Set via environment variable DISCORD_WEBHOOK_URL
+    enabled: true
+  telegram:
+    bot_token: null  # Set via environment variable TELEGRAM_BOT_TOKEN
+    chat_id: null  # Set via environment variable TELEGRAM_CHAT_ID
+    enabled: true
+  min_ev_pct: 15.0  # Minimum EV% to send alert
+  min_odds_movement: 25.0  # Minimum odds movement % to send alert
+  cooldown_seconds: 300  # 5 minutes between alerts for same match
+
+# ROI Detection
+roi_detection:
+  momentum:
+    favorite_odds_threshold: 1.50
+    value_odds_threshold: 1.80
+    min_3set_win_rate: 0.70
+  fatigue:
+    high_risk_hours: 12
+    medium_risk_hours: 24
+  h2h:
+    min_dominance: 4  # Min wins with 0 losses
+    min_win_rate: 0.75  # 75% win rate
+
+# Kelly Calculator
+kelly:
+  kelly_fraction: 0.25  # Fractional Kelly (25%)
+  max_stake_pct: 5.0  # Max 5% of bankroll
+  min_stake_pct: 0.5  # Min 0.5% of bankroll
+
+# Scheduler Settings
+scheduler:
+  live_matches_interval_seconds: 30
+  tournament_calendar_interval_hours: 4
+  rankings_hour: 6  # Daily at 6:00 AM
+  roi_detection_interval_seconds: 30
+  weather_update_interval_hours: 2
+
+# Enrichment Settings
+enrichment:
+  elo:
+    k_factor: 32
+    initial_elo: 1500.0
+  stats:
+    default_period: last_10  # 'career', 'last_10', 'last_30'
+  tiebreak:
+    default_period: last_12_months  # 'career', 'last_12_months'
+
+# Monitoring
+monitoring:
+  log_level: INFO
+  metrics_interval_seconds: 60
+  error_log_max_size: 100
+

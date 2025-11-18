@@ -1,0 +1,48 @@
+# ITF Scraper Configuration
+# Configuration for FlashScore ITF Women scraper and Notion pipeline
+
+scraper:
+  interval_minutes: 10  # How often to run scraper
+  target_tournaments: [W15, W35, W50]  # Priority tournaments
+  rate_limit: 2.5  # seconds between requests
+  use_selenium: true  # Use Selenium for dynamic content
+  headless: true  # Run browser in headless mode
+
+notion:
+  tennis_prematch_db_id: ""  # From env: NOTION_TENNIS_PREMATCH_DB_ID
+  itf_player_profiles_db_id: ""  # From env: NOTION_ITF_PLAYER_PROFILES_DB_ID
+  live_stats_db_id: ""  # From env: NOTION_LIVE_STATS_DB_ID
+  parent_page_id: ""  # From env: NOTION_PARENT_PAGE_ID
+  batch_size: 3  # Max requests per second
+  batch_delay: 1.0  # Seconds between batches
+
+ml_model:
+  min_training_matches: 200  # Minimum matches for training
+  target_roi: 0.10  # Target ROI (10%)
+  edge_threshold: 0.05  # 5% edge to qualify bet
+  high_edge_threshold: 0.08  # 8% edge for 2× stake
+  features:
+    - ranking_delta
+    - surface_win_delta
+    - recent_form_score
+    - tournament_tier
+    - h2h_history
+
+alerts:
+  telegram_enabled: true  # Enable Telegram alerts
+  min_edge_for_alert: 0.05  # Minimum edge to send alert
+  min_ranking_for_momentum: 200  # Minimum ranking for momentum alerts
+
+backtest:
+  min_matches: 200  # Minimum matches for backtest
+  max_matches: 500  # Maximum matches to scrape
+  strategies:
+    - momentum_shift  # Bet after losing first set 6-2, win in 3
+    - underdog_upset  # Ranked >200 player upsets
+    - retirement_pattern  # Retirement patterns
+
+player_scraper:
+  target_players: 200  # Top N players to scrape
+  update_interval_days: 7  # Update player data weekly
+  itf_website: "https://www.itftennis.com"
+

@@ -1,133 +1,125 @@
-# ✅ NOTION SETUP - VALMIS KÄYTTÖÖNOTTOON!
+# ✅ NOTION INTEGRATION SETUP COMPLETE
 
-## 🎉 YHTEENVETO
+## 🎯 Yhteenveto
 
-Kaikki Notion-integrationin setup-tiedostot ovat nyt valmiina!
+Notion-token on nyt konfiguroitu ja kaikki tietokannat on yhdistetty Tennisbot-integraatioon.
 
----
+## ✅ Tehdyt asiat
 
-## 📁 LUODUT TIEDOSTOT
+### 1. Token konfiguroitu
+- ✅ Token lisätty `telegram_secrets.env`:ään
+  - `NOTION_API_KEY=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`
+  - `NOTION_TOKEN=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`
+- ✅ Token päivitetty `config/notion_config.json`:iin
 
-### **Core Integration**
-- ✅ `src/notion_mcp_integration.py` - Pääintegraatio
-- ✅ `create_notion_databases.py` - Automaattinen tietokantojen luonti
-- ✅ `setup_notion_integration.py` - Interaktiivinen setup
+### 2. Yhteys testattu
+- ✅ Notion API -yhteys toimii
+- ✅ Löydetty **24 tietokantaa** joihin integraatiolla on pääsy
 
-### **Dokumentaatio**
-- ✅ `NOTION_INTEGRATION_SETUP_PROMPTS.md` - Täydelliset promptit
-- ✅ `NOTION_DATABASE_PROMPTS.md` - Tietokantapromptit
-- ✅ `NOTION_API_TOKEN_GUIDE.md` - Tokenin hakeminen
-- ✅ `NOTION_QUICK_SETUP.md` - Nopea käyttöönotto
-- ✅ `QUICK_START_NOTION_MCP.md` - Käyttöohje
+### 3. Database ID:t konfiguroitu
 
----
+#### Core Databases (päivitetty):
+- ✅ **Players DB** (`NOTION_PLAYERS_DB_ID`)
+  - ID: `c36772ce9e25419abe4e1b8cd6b710aa`
+  - Nimi: 🎾 ITF Player Profiles
 
-## 🚀 NOPEA KÄYTTÖÖNOTTO
+- ✅ **Live Feed** (`NOTION_LIVE_FEED_DB_ID`)
+  - ID: `0acc63aada5b452ebc3524476f017a6f`
+  - Nimi: 🎾 TennisExplorer Live Feed
 
-### **1. Luo Integration**
+- ✅ **Analytics Base** (`analytics_base`)
+  - ID: `919ef8d8b5c047a58c166716f151a28e`
+  - Nimi: Pelaajatilastot (Tennis)
 
-```
-1. Mene: https://www.notion.so/my-integrations
-2. Klikkaa: "+ New integration"
-3. Nimi: "TennisBot ROI System"
-4. Työtila: [Oma työtilasi]
-5. Tyyppi: Internal
-6. Kopioi token
-```
+- ✅ **Tennis Prematch** (`NOTION_TENNIS_PREMATCH_DB_ID`)
+  - ID: `81a70fea5de140d384c77abee225436d`
+  - Nimi: 🎾 Tennis Prematch – Analyysi
 
-### **2. Linkitä Sivulle**
+#### Bets & Signals:
+- ✅ **Bets** (`NOTION_BETS_DATABASE_ID`)
+  - ID: `6ece5ace2d02498eb2060dd81515eaf3`
+  - Nimi: Tennis Vihjeet
 
-```
-1. Avaa Notion-sivu
-2. Klikkaa "..." → "Connections"
-3. Lisää "TennisBot ROI System"
-4. Kopioi page ID
-```
+- ✅ **Signals** (`NOTION_SIGNALS_DB_ID`)
+  - ID: `2b46015ee4e0492c9fec11f97b2fe32b`
+  - Nimi: LiveTennis – Signaalit
 
-### **3. Luo Tietokannat**
+## 📁 Konfiguraatiotiedostot
 
+### `telegram_secrets.env`
 ```bash
-# Automaattinen tila
-python create_notion_databases.py --interactive
+# Notion API
+NOTION_API_KEY=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
+NOTION_TOKEN=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
 
-# TAI suoraan
-python create_notion_databases.py --token YOUR_TOKEN --page-id YOUR_PAGE_ID
+# Notion Database IDs
+NOTION_LIVE_FEED_DB_ID=0acc63aada5b452ebc3524476f017a6f
+NOTION_PLAYERS_DB_ID=c36772ce9e25419abe4e1b8cd6b710aa
+NOTION_BETS_DATABASE_ID=6ece5ace2d02498eb2060dd81515eaf3
+NOTION_TENNIS_PREMATCH_DB_ID=81a70fea5de140d384c77abee225436d
+NOTION_SIGNALS_DB_ID=2b46015ee4e0492c9fec11f97b2fe32b
 ```
 
----
-
-## 📊 MITÄ LUODAAN
-
-Automaattisesti luodaan **5 tietokantaa**:
-
-1. 🎾 **Tennis Matches & ROI Analysis**
-2. ⚽ **Football Matches & ROI Analysis**
-3. 🏀 **Basketball Matches & ROI Analysis**
-4. 🏒 **Ice Hockey Matches & ROI Analysis**
-5. 💰 **ROI Analysis & Performance**
-
----
-
-## 💻 KÄYTTÖ ESIMERKKI
-
-```python
-from src.notion_mcp_integration import NotionMCPIntegration
-
-# Initialize
-integration = NotionMCPIntegration()
-integration.initialize_notion_client("secret_abc123...")
-
-# Sync match data
-match_data = {
-    'match_id': 'm1',
-    'home_team': 'Manchester United',
-    'away_team': 'Liverpool',
-    'league': 'Premier League',
-    'date': '2025-11-08',
-    'odds': {'home': 2.50, 'draw': 3.20, 'away': 2.80},
-    'edge': 0.08,
-    'expected_value': 0.15,
-    'roi': 0.20
+### `config/notion_config.json`
+```json
+{
+  "notion_token": "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",
+  "databases": {
+    "players": "be1fecc842744f61b427cef844aa2676",
+    "live_feed": "0acc63aada5b452ebc3524476f017a6f",
+    "analytics_base": "919ef8d8b5c047a58c166716f151a28e",
+    "bets": "6ece5ace2d02498eb2060dd81515eaf3",
+    "signals": "2b46015ee4e0492c9fec11f97b2fe32b",
+    "tennis_prematch": "81a70fea5de140d384c77abee225436d"
+  }
 }
-
-integration.sync_match_to_notion(match_data, 'football')
-
-# Sync ROI analysis
-roi_data = {
-    'date': '2025-11-08',
-    'sport': 'Football',
-    'total_trades': 10,
-    'winning_trades': 7,
-    'roi': 0.15,
-    'net_profit': 150.0
-}
-
-integration.sync_roi_analysis(roi_data)
 ```
 
----
+## 🧪 Testaus
 
-## 🔒 TURVALLISUUS
+Testaa yhteys:
+```bash
+source venv/bin/activate
+python3 test_notion_connection.py
+```
 
-✅ Token on `.gitignore`-listalla  
-✅ Konfiguraatiotiedostot eivät commitoitu  
-✅ Käytä `.env`-tiedostoa tuotannossa  
+## 📊 Kaikki löydetyt tietokannat (24 kpl)
 
----
+1. 🎾 TennisExplorer Live Feed
+2. 🎾 ITF Player Profiles
+3. Tennis Vihjeet
+4. Pelaajatilastot (Tennis)
+5. 🎾 Tennis Prematch – Analyysi
+6. By Market
+7. 🎾 Tennis Vihjeet – EV Table
+8. 📊 Pelaajatilastot – Players
+9. LiveTennis – Signaalit
+10. LiveTennis – Kokeet
+11. ... ja 14 muuta tietokantaa
 
-## ✅ VALMIS!
+## 🚀 Seuraavat vaiheet
 
-**Kun olet:**
-1. ✅ Luonut integrationin
-2. ✅ Linkittänyt sen sivulle
-3. ✅ Suorittanut `create_notion_databases.py`
+1. **Testaa betin kirjaus:**
+   ```bash
+   python3 notion_bet_logger.py
+   ```
 
-**Tietokannat ovat valmiina Notionissa ja voit aloittaa datan synkronoinnin!**
+2. **Käytä ITF-pipelinea:**
+   ```bash
+   python3 check_itf_matches.py
+   ```
 
-**🎾 Onnea ROI-seurantaan! 💰**
+3. **Päivitä muita database ID:itä tarvittaessa:**
+   ```bash
+   python3 update_notion_databases.py
+   ```
 
+## ✅ Status
 
+- ✅ Token konfiguroitu ja testattu
+- ✅ 24 tietokantaa löydetty ja yhdistetty
+- ✅ Core databases konfiguroitu
+- ✅ Ympäristömuuttujat asetettu
+- ✅ Konfiguraatiotiedostot päivitetty
 
-
-
-
+**Notion-integraatio on nyt valmis käyttöön! 🎉**

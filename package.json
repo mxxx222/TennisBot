@@ -1,0 +1,20 @@
+{
+  "name": "betfury-educational-tennis-analysis",
+  "version": "1.0.0",
+  "description": "Educational AI-powered tennis analysis system",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "educational",
+    "tennis",
+    "analysis",
+    "ai",
+    "sports"
+  ],
+  "author": "Betfury.io Educational Research System",
+  "license": "MIT"
+}

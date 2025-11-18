@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎾 Betfury.io Educational AI Tennis Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Educational Disclaimer Banner -->
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm">
+                    <strong>⚠️ EDUCATIONAL PURPOSES ONLY - NO REAL MONEY</strong><br>
+                    This is an educational system for learning AI-powered sports analysis methodology. 
+                    No real money is involved in any analysis or recommendations.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-600 mb-4">🎾 AI Tennis Analysis System</h1>
+            <p class="text-xl text-gray-600 mb-2">Educational Edition - Powered by OpenAI GPT-4</p>
+            <p class="text-lg text-green-600">🔐 GitHub Secrets Protected • 🤖 AI-Powered Analysis • 📚 Educational Focus</p>
+        </header>
+
+        <!-- Main Dashboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- AI Tennis Analysis Panel -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">🎯 AI Tennis Analysis</h2>
+                
+                <!-- Match Input Form -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Player 1</label>
+                        <input type="text" id="player1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                               placeholder="e.g., Novak Djokovic" value="Novak Djokovic">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Player 2</label>
+                        <input type="text" id="player2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                               placeholder="e.g., Carlos Alcaraz" value="Carlos Alcaraz">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Surface</label>
+                            <select id="surface" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option value="Hard">Hard Court</option>
+                                <option value="Clay">Clay Court</option>
+                                <option value="Grass">Grass Court</option>
+                                <option value="Indoor">Indoor</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Confidence Threshold</label>
+                            <select id="threshold" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option value="0.65">65%</option>
+                                <option value="0.70">70%</option>
+                                <option value="0.75">75%</option>
+                                <option value="0.80">80%</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button onclick="analyzeMatch()" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                        🔍 Analyze with AI
+                    </button>
+                </div>
+                
+                <!-- Analysis Results -->
+                <div id="analysisResults" class="mt-6 hidden">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🎾 Analysis Results</h3>
+                    <div id="resultsContent" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- System Statistics Panel -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">📊 System Statistics</h2>
+                
+                <!-- Key Metrics -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600" id="totalMatches">1,247</div>
+                        <div class="text-sm text-gray-600">Total Matches Analyzed</div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-green-600" id="averageConfidence">73.2%</div>
+                        <div class="text-sm text-gray-600">Average Confidence</div>
+                    </div>
+                    
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-purple-600" id="highConfidenceTips">89</div>
+                        <div class="text-sm text-gray-600">High-Confidence Tips</div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-yellow-600" id="educationalSuccess">68.5%</div>
+                        <div class="text-sm text-gray-600">Educational Success Rate</div>
+                    </div>
+                </div>
+                
+                <!-- Learning Progress -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🎓 Learning Progress</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-sm">
+                                <span>AI Analysis Methodology</span>
+                                <span>89%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm">
+                                <span>Risk Management</span>
+                                <span>76%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 76%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm">
+                                <span>Kelly Criterion Mastery</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-600 h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Status -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🔐 System Status</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            GitHub Secrets: SECURE
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            OpenAI Integration: ACTIVE
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            Educational Mode: ENABLED
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            Security Validation: PASSED
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Content Section -->
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">📚 Educational Resources</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- AI Methodology -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-lg mb-3">🤖 AI Analysis Methodology</h3>
+                    <ul class="text-sm space-y-2 text-gray-600">
+                        <li>• OpenAI GPT-4 powered analysis</li>
+                        <li>• Surface-based performance evaluation</li>
+                        <li>• Head-to-head statistical analysis</li>
+                        <li>• Mental toughness assessment</li>
+                        <li>• Risk-reward optimization</li>
+                    </ul>
+                </div>
+                
+                <!-- Risk Management -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-lg mb-3">⚠️ Risk Management</h3>
+                    <ul class="text-sm space-y-2 text-gray-600">
+                        <li>• Kelly Criterion mathematical formula</li>
+                        <li>• 2% bankroll management rule</li>
+                        <li>• Conservative position sizing</li>
+                        <li>• Stop-loss implementation</li>
+                        <li>• Emotional discipline training</li>
+                    </ul>
+                </div>
+                
+                <!-- Responsible Gambling -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-lg mb-3">🚨 Responsible Gambling</h3>
+                    <ul class="text-sm space-y-2 text-gray-600">
+                        <li>• Educational purpose only</li>
+                        <li>• No real money involved</li>
+                        <li>• Mental health awareness</li>
+                        <li>• Legal compliance emphasis</li>
+                        <li>• Professional help resources</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Analyses -->
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">📈 Recent Educational Analyses</h2>
+            
+            <div class="space-y-4">
+                <!-- Sample Analysis 1 -->
+                <div class="border rounded-lg p-4 hover:shadow-md transition duration-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold">Novak Djokovic vs Carlos Alcaraz</h3>
+                            <p class="text-sm text-gray-600">ATP Masters 1000 Paris • Hard Court</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">70% Confidence</span>
+                    </div>
+                    <div class="mt-3 grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <span class="font-medium">Prediction:</span><br>
+                            Djokovic to win
+                        </div>
+                        <div>
+                            <span class="font-medium">Value Rating:</span><br>
+                            MEDIUM
+                        </div>
+                        <div>
+                            <span class="font-medium">Risk Level:</span><br>
+                            CONSERVATIVE
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Analysis 2 -->
+                <div class="border rounded-lg p-4 hover:shadow-md transition duration-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold">Iga Swiatek vs Aryna Sabalenka</h3>
+                            <p class="text-sm text-gray-600">WTA Finals • Hard Court</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">68% Confidence</span>
+                    </div>
+                    <div class="mt-3 grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <span class="font-medium">Prediction:</span><br>
+                            Swiatek to win
+                        </div>
+                        <div>
+                            <span class="font-medium">Value Rating:</span><br>
+                            MEDIUM
+                        </div>
+                        <div>
+                            <span class="font-medium">Risk Level:</span><br>
+                            MODERATE
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
+                    View All Analyses
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg font-semibold mb-2">🎾 Betfury.io Educational AI Tennis Analysis System</p>
+            <p class="text-gray-400 mb-4">Powered by OpenAI GPT-4 • GitHub Secrets Protected • Educational Purpose Only</p>
+            <div class="flex justify-center space-x-6 text-sm">
+                <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white">Educational Disclaimer</a>
+                <a href="#" class="text-gray-400 hover:text-white">Responsible Gambling</a>
+                <a href="#" class="text-gray-400 hover:text-white">API Documentation</a>
+            </div>
+            <p class="text-xs text-gray-500 mt-4">
+                This system is for educational purposes only. No real money is involved in any analysis or recommendations.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    

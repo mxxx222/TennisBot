@@ -1,0 +1,35 @@
+# Vercel deployment ignore file
+# Exclude git-secret files and sensitive data
+
+.gitsecret/
+.secret_key
+*.secret
+secrets.encrypted
+telegram_secrets.env*
+
+# Python cache and logs
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.db
+
+# Development files
+.env
+.env.local
+venv/
+.venv/
+
+# Large data files
+data/models/
+data/scraping.log
+data/telegram_bot.log
+*.pkl
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore

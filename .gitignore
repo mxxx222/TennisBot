@@ -32,7 +32,10 @@ models/*.pkl
 .env.local
 .DS_Store
 Thumbs.db
-.gitsecret/keys/random_seed
+# Git secrets - exclude all
+.gitsecret/
+.secret_key
+*.secret
 !*.secret
 telegram_secrets.env
 
@@ -41,3 +44,4 @@ config/notion_databases.json
 config/notion_token.txt
 *.notion_token
 NOTION_TOKEN
+.vercel

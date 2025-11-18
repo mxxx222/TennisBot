@@ -184,6 +184,32 @@ class HighestROISystem:
             async with self.stats_collector:
                 stats_data = await self.stats_collector.collect_all_sports_statistics()
 
+            # Reddit integration: Scan for arbitrage opportunities
+            reddit_arbitrage_odds = {}
+            if self.config.get('reddit_enabled', True):
+                try:
+                    from src.reddit.reddit_arbitrage_scanner import RedditArbitrageScanner
+                    from config.reddit_config import RedditConfig
+                    
+                    reddit_scanner = RedditArbitrageScanner(RedditConfig())
+                    reddit_opportunities = await reddit_scanner.scan_for_arbitrage_opportunities()
+                    
+                    if reddit_opportunities:
+                        logger.info(f"💰 Found {len(reddit_opportunities)} Reddit arbitrage opportunities")
+                        # Convert to odds format for ROI analyzer
+                        reddit_arbitrage_odds = reddit_scanner.convert_to_roi_analyzer_format(reddit_opportunities)
+                        
+                        # Merge with existing match data odds
+                        for bookmaker, odds_list in reddit_arbitrage_odds.items():
+                            # Add Reddit-sourced odds to match data
+                            for odds_entry in odds_list:
+                                # Try to match with existing matches
+                                match_key = f"{odds_entry['home_team']} vs {odds_entry['away_team']}"
+                                # This would need to be integrated into the match data structure
+                                pass
+                except Exception as e:
+                    logger.warning(f"⚠️ Reddit arbitrage scan failed: {e}")
+
             # Perform ROI analysis
             from src.highest_roi_analyzer import analyze_highest_roi
             analysis_result = await analyze_highest_roi(match_data, stats_data, self.config)

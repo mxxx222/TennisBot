@@ -24,6 +24,19 @@ from dataclasses import dataclass, asdict
 import pandas as pd
 import numpy as np
 
+# Mojo performance layer imports
+try:
+    from src.mojo_bindings import (
+        kelly_criterion,
+        expected_roi,
+        batch_kelly_criterion,
+        batch_expected_roi,
+        should_use_mojo
+    )
+    MOJO_BINDINGS_AVAILABLE = True
+except ImportError:
+    MOJO_BINDINGS_AVAILABLE = False
+
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -138,6 +151,11 @@ class PrematchAnalyzer:
             'news': ['espn', 'bbc_sport', 'sky_sports']
         }
         
+        # Configuration (can be set externally)
+        self.config = {
+            'reddit_sentiment_enabled': True
+        }
+        
         logger.info("✅ Prematch Analyzer initialized")
     
     def analyze_match(self, match_info: MatchInfo) -> ROIAnalysis:
@@ -152,6 +170,46 @@ class PrematchAnalyzer:
             
             # 2. Statistical analysis
             statistical_edge = self._calculate_statistical_edge(team_stats, match_info)
+            
+            # 2.5. Reddit sentiment enhancement (if enabled)
+            if self.config.get('reddit_sentiment_enabled', True):
+                try:
+                    import asyncio
+                    from src.reddit.reddit_sentiment_engine import RedditSentimentEngine
+                    from config.reddit_config import RedditConfig
+                    
+                    sentiment_engine = RedditSentimentEngine(RedditConfig())
+                    # Run async function in sync context
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                    
+                    match_sentiment = loop.run_until_complete(
+                        sentiment_engine.get_match_sentiment(
+                            home_team=match_info.home_team,
+                            away_team=match_info.away_team,
+                            sport=match_info.sport
+                        )
+                    )
+                    
+                    if match_sentiment:
+                        # Enhance statistical edge with sentiment
+                        if match_sentiment.contrarian_opportunity:
+                            statistical_edge['confidence_score'] *= 1.2
+                            statistical_edge['reddit_contrarian'] = True
+                        elif match_sentiment.confidence > 0.5:
+                            # Boost confidence if sentiment aligns
+                            sentiment_boost = 0.15 if match_sentiment.home_percentage > 60 or match_sentiment.away_percentage > 60 else 0.05
+                            statistical_edge['confidence_score'] *= (1 + sentiment_boost)
+                            statistical_edge['reddit_sentiment'] = {
+                                'home_percentage': match_sentiment.home_percentage,
+                                'away_percentage': match_sentiment.away_percentage,
+                                'label': match_sentiment.sentiment_label
+                            }
+                except Exception as e:
+                    logger.debug(f"Reddit sentiment analysis failed: {e}")
             
             # 3. Value betting identification
             value_bets = self._identify_value_bets(odds_data, statistical_edge)
@@ -457,22 +515,98 @@ class PrematchAnalyzer:
     
     def _calculate_roi(self, value_bets: List[Dict], match_info: MatchInfo, 
                       statistical_edge: Dict[str, float]) -> List[Dict]:
-        """Calculate ROI for each value bet"""
+        """Calculate ROI for each value bet (Mojo-accelerated)"""
         logger.info("📊 Calculating ROI...")
         
+        # Use Mojo-accelerated batch ROI calculations if available
+        if MOJO_BINDINGS_AVAILABLE and should_use_mojo() and len(value_bets) > 1:
+            try:
+                # Prepare batch arrays
+                top_bets = value_bets[:5]  # Top 5 value bets
+                probabilities = np.array([bet['true_probability'] for bet in top_bets], dtype=np.float64)
+                odds_array = np.array([bet['odds'] for bet in top_bets], dtype=np.float64)
+                bankroll = self.roi_params.get('bankroll', 1000.0)
+                bankrolls = np.array([bankroll] * len(top_bets), dtype=np.float64)
+                kelly_fraction = self.roi_params['kelly_fraction']
+                
+                # Use Mojo-accelerated batch Kelly Criterion
+                optimal_stakes = batch_kelly_criterion(
+                    probabilities, odds_array, bankrolls, kelly_fraction
+                )
+                
+                # Clip optimal stakes
+                max_stake_pct = self.roi_params['max_stake_pct']
+                optimal_stakes = np.clip(optimal_stakes, 0.01, bankroll * max_stake_pct)
+                
+                # Calculate expected ROI for each stake
+                expected_rois = batch_expected_roi(probabilities, odds_array, optimal_stakes)
+                
+                # Build results
+                roi_calculations = []
+                for i, bet in enumerate(top_bets):
+                    optimal_stake = float(optimal_stakes[i])
+                    expected_roi_val = float(expected_rois[i])
+                    
+                    # Risk assessment
+                    risk_factors = self._assess_bet_risk(bet, match_info, statistical_edge)
+                    
+                    roi_calculations.append({
+                        'market': bet['market'],
+                        'bookmaker': bet['bookmaker'],
+                        'odds': bet['odds'],
+                        'optimal_stake_pct': (optimal_stake / bankroll) * 100,
+                        'expected_roi': expected_roi_val,
+                        'value': bet['value'] * 100,
+                        'confidence': bet['confidence'] * 100,
+                        'risk_score': risk_factors['overall_risk'],
+                        'risk_factors': risk_factors
+                    })
+                
+                return roi_calculations
+            except Exception as e:
+                logger.debug(f"Mojo ROI calculation failed, using Python fallback: {e}")
+        
+        # Python fallback implementation
         roi_calculations = []
+        bankroll = self.roi_params.get('bankroll', 1000.0)
         
         for bet in value_bets[:5]:  # Top 5 value bets
-            # Kelly Criterion for optimal stake
-            kelly_fraction = (bet['true_probability'] * bet['odds'] - 1) / (bet['odds'] - 1)
-            
-            # Conservative Kelly (use fraction of Kelly)
-            optimal_stake = kelly_fraction * self.roi_params['kelly_fraction']
-            optimal_stake = max(0.01, min(optimal_stake, self.roi_params['max_stake_pct']))
-            
-            # Expected ROI calculation
-            expected_roi = (bet['true_probability'] * (bet['odds'] - 1) - 
-                          (1 - bet['true_probability'])) * optimal_stake
+            # Kelly Criterion for optimal stake - use Mojo if available for single calculations
+            if MOJO_BINDINGS_AVAILABLE and should_use_mojo():
+                try:
+                    optimal_stake = kelly_criterion(
+                        bet['true_probability'],
+                        bet['odds'],
+                        bankroll
+                    )
+                    # Apply conservative fraction
+                    optimal_stake = optimal_stake * self.roi_params['kelly_fraction']
+                    optimal_stake = max(0.01, min(optimal_stake, bankroll * self.roi_params['max_stake_pct']))
+                    
+                    # Calculate expected ROI using Mojo
+                    expected_roi_val = expected_roi(
+                        bet['true_probability'],
+                        bet['odds'],
+                        optimal_stake
+                    )
+                except Exception:
+                    # Fallback to Python calculation
+                    kelly_fraction = (bet['true_probability'] * bet['odds'] - 1) / (bet['odds'] - 1)
+                    optimal_stake = kelly_fraction * self.roi_params['kelly_fraction'] * bankroll
+                    optimal_stake = max(0.01, min(optimal_stake, bankroll * self.roi_params['max_stake_pct']))
+                    
+                    expected_roi_val = (bet['true_probability'] * (bet['odds'] - 1) - 
+                                      (1 - bet['true_probability'])) * optimal_stake
+                    expected_roi_val = (expected_roi_val / optimal_stake) * 100.0 if optimal_stake > 0 else 0.0
+            else:
+                # Pure Python implementation
+                kelly_fraction = (bet['true_probability'] * bet['odds'] - 1) / (bet['odds'] - 1)
+                optimal_stake = kelly_fraction * self.roi_params['kelly_fraction'] * bankroll
+                optimal_stake = max(0.01, min(optimal_stake, bankroll * self.roi_params['max_stake_pct']))
+                
+                expected_roi_val = (bet['true_probability'] * (bet['odds'] - 1) - 
+                                  (1 - bet['true_probability'])) * optimal_stake
+                expected_roi_val = (expected_roi_val / optimal_stake) * 100.0 if optimal_stake > 0 else 0.0
             
             # Risk assessment
             risk_factors = self._assess_bet_risk(bet, match_info, statistical_edge)
@@ -481,8 +615,8 @@ class PrematchAnalyzer:
                 'market': bet['market'],
                 'bookmaker': bet['bookmaker'],
                 'odds': bet['odds'],
-                'optimal_stake_pct': optimal_stake * 100,
-                'expected_roi': expected_roi * 100,
+                'optimal_stake_pct': (optimal_stake / bankroll) * 100,
+                'expected_roi': expected_roi_val,
                 'value': bet['value'] * 100,
                 'confidence': bet['confidence'] * 100,
                 'risk_score': risk_factors['overall_risk'],

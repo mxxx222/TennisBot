@@ -1,0 +1,359 @@
+2025-11-18 01:51:11,497 - storage.odds_database - INFO - Initialized odds database at live_odds.db
+2025-11-18 01:51:11,497 - live_odds_monitor - INFO - Initialized Live Odds Monitor
+2025-11-18 01:51:11,497 - live_odds_monitor - INFO - Target leagues: 7
+2025-11-18 01:51:11,497 - live_odds_monitor - INFO - Update interval: 5s
+2025-11-18 01:51:11,497 - live_odds_monitor - INFO - Test mode: True
+2025-11-18 01:51:11,497 - live_odds_monitor - INFO - 🚀 Starting Live Odds Monitor...
+2025-11-18 01:51:12,157 - live_odds_monitor - WARNING - No odds data fetched in this cycle
+2025-11-18 01:51:20,302 - live_odds_monitor - WARNING - No odds data fetched in this cycle
+2025-11-18 01:51:21,499 - storage.odds_database - INFO - Database connection closed
+2025-11-18 01:51:21,499 - live_odds_monitor - INFO - 🛑 Live Odds Monitor stopped
+2025-11-18 01:51:21,499 - live_odds_monitor - INFO - 🛑 Stop requested...
+2025-11-18 02:32:27,420 - ai_analysis.cost_tracker - INFO - Loaded 10 cost entries from venice_ai_costs.json
+2025-11-18 02:32:27,420 - monitors.value_detector - INFO - AI-enhanced value detection initialized (Venice AI)
+2025-11-18 02:32:27,504 - storage.odds_database - INFO - Initialized odds database at live_odds.db
+2025-11-18 02:32:27,504 - __main__ - INFO - Initialized Live Odds Monitor
+2025-11-18 02:32:27,504 - __main__ - INFO - Target leagues: 7
+2025-11-18 02:32:27,504 - __main__ - INFO - Update interval: 30s
+2025-11-18 02:32:27,504 - __main__ - INFO - Test mode: False
+2025-11-18 02:32:27,505 - __main__ - INFO - 🚀 Starting Live Odds Monitor...
+2025-11-18 02:32:27,771 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 02:32:27,772 - __main__ - INFO - 📱 Sent startup notification
+2025-11-18 02:32:28,423 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:32:58,354 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:33:28,694 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:33:58,419 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:34:28,361 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:34:58,348 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:35:28,340 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:35:58,352 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:36:28,372 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:36:58,354 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:37:28,363 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:37:58,357 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:38:28,401 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:38:58,375 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:39:28,640 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:39:58,367 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:40:28,425 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:40:58,381 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:41:28,373 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:41:58,400 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:42:28,423 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:42:58,377 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:43:28,382 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:43:58,394 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:44:28,689 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:44:58,400 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:45:28,420 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:45:58,398 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:46:28,424 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:46:58,398 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:47:28,409 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:47:58,411 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:48:28,444 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:48:58,527 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:49:28,670 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:49:58,416 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:50:28,460 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:50:58,420 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:51:28,410 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:51:58,451 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:52:28,465 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:52:58,433 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:53:28,440 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:53:58,429 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:54:28,533 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:54:58,454 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:55:28,445 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:55:58,441 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:56:28,523 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:56:58,464 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:57:28,502 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:57:58,535 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:58:28,488 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:58:58,521 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:59:28,473 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 02:59:58,495 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:00:28,567 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:00:58,510 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:01:28,495 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:01:58,496 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:02:28,574 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:02:58,539 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:03:28,586 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:03:58,540 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:04:28,572 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:04:58,518 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:05:28,520 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:05:58,504 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:06:28,533 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:06:58,505 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:07:28,501 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:07:58,536 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:08:28,562 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:08:58,827 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:09:28,549 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:09:58,530 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:10:28,818 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:10:58,534 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:11:28,549 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:11:58,527 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:12:29,004 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:12:58,528 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:13:28,548 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:13:58,569 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:14:28,604 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:14:58,559 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:15:28,559 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:15:58,552 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:16:28,607 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:16:58,556 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:17:28,567 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:17:58,577 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:18:28,638 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:18:58,598 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:19:28,596 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:19:58,804 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:20:28,747 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:20:58,588 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:21:28,604 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:21:58,653 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:22:29,076 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:22:58,614 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:23:28,639 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:23:58,648 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:24:28,662 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:24:58,640 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:25:28,637 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:25:58,686 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:26:28,698 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:26:58,637 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:27:28,616 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:27:58,808 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:28:28,742 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:28:59,121 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:29:28,744 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:29:58,665 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:30:28,778 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:30:58,717 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:31:28,705 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:31:58,695 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:32:28,760 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:32:28,760 - __main__ - INFO - 🧹 Performing maintenance cleanup...
+2025-11-18 03:32:28,760 - monitors.odds_tracker - INFO - Cleaned up 0 old matches and 0 old alerts
+2025-11-18 03:32:28,764 - storage.odds_database - INFO - Cleaned up old data: 0 snapshots, 0 movements, 0 opportunities
+2025-11-18 03:32:58,749 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:33:28,739 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:33:58,698 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:34:28,743 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:34:58,714 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:35:29,017 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:35:58,753 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:36:28,788 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:36:58,733 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:37:28,746 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:37:58,793 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:38:29,097 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:38:58,744 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:39:28,741 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:39:58,747 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:40:28,836 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:40:58,778 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:41:28,851 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:41:58,767 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:42:28,816 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:42:58,784 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:43:28,766 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:43:58,803 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:44:29,069 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:44:58,785 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:45:29,106 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:45:58,810 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:46:28,822 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:46:58,857 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:47:28,789 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:47:58,799 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:48:28,244 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_england_league2: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_france_ligue_two: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_england_league1: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,246 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_germany_bundesliga2: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,246 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_spain_segunda_division: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,246 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_italy_serie_b: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,246 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_efl_champ: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:28,246 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:48:58,243 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_france_ligue_two: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_germany_bundesliga2: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_italy_serie_b: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_spain_segunda_division: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_england_league1: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_england_league2: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - monitors.odds_tracker - ERROR - Error fetching odds for soccer_efl_champ: Cannot connect to host api.the-odds-api.com:443 ssl:default [nodename nor servname provided, or not known]
+2025-11-18 03:48:58,245 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:49:29,262 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:49:58,775 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:50:28,802 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:50:58,757 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:51:28,800 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:51:58,778 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:52:28,957 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:52:59,004 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:53:29,233 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:54:00,012 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:54:28,777 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:54:58,810 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:55:29,246 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:55:58,806 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:56:29,182 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:56:58,976 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:57:28,844 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:57:58,744 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:58:28,707 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:58:58,743 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:59:28,788 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 03:59:58,961 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:00:28,965 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:00:58,947 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:01:28,801 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:01:58,761 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:02:28,852 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:02:58,798 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:03:28,774 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:03:59,005 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:04:30,054 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:04:58,746 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:05:28,871 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:05:59,140 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:06:30,139 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:06:58,805 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:07:28,855 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:07:58,794 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:08:28,813 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:08:58,775 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:09:29,566 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:09:58,790 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:10:28,831 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:10:58,854 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:11:28,951 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:11:58,804 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:12:28,799 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:12:58,822 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:13:29,912 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:13:58,807 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:14:28,831 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:14:59,062 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:15:28,892 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:15:58,898 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:16:28,910 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:16:59,311 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:17:29,078 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:17:59,084 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:18:29,058 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:18:59,038 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:19:28,933 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:19:58,980 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:20:29,139 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:20:58,920 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:21:29,330 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:21:58,878 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:22:28,932 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:22:58,912 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:23:29,112 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:23:59,125 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:24:29,136 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:24:58,954 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:25:29,137 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:25:59,115 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:26:29,159 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:26:59,320 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:27:29,051 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:27:59,086 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:28:29,282 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:28:58,930 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:29:29,141 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:29:59,186 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:30:28,975 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:30:59,034 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:31:29,064 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:31:58,984 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:32:29,021 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:32:29,023 - __main__ - INFO - 🧹 Performing maintenance cleanup...
+2025-11-18 04:32:29,026 - monitors.odds_tracker - INFO - Cleaned up 0 old matches and 0 old alerts
+2025-11-18 04:32:29,042 - storage.odds_database - INFO - Cleaned up old data: 0 snapshots, 0 movements, 0 opportunities
+2025-11-18 04:32:59,035 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:33:28,966 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:33:59,013 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:34:29,252 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:34:59,033 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:35:28,987 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:35:58,998 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:36:29,041 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:36:59,107 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:37:28,987 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:37:58,997 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:38:29,013 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:38:59,072 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:39:29,013 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:39:59,039 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:40:29,050 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:40:59,031 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:41:29,375 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:41:59,044 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:42:29,053 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:42:59,406 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:43:29,102 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:43:59,172 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:44:29,081 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:44:59,074 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:45:29,078 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:45:59,060 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:46:29,064 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:46:59,130 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:47:29,058 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:47:59,067 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:48:29,078 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:48:59,096 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:49:29,081 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:49:59,158 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:50:29,122 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:50:59,140 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:51:29,110 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:51:59,494 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:52:29,115 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:52:59,173 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:53:29,143 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:53:59,133 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:54:29,127 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:54:59,157 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:55:29,197 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:55:59,120 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:56:29,085 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:56:59,197 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:57:29,141 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:57:59,166 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:58:29,134 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:58:59,230 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:59:29,117 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 04:59:59,151 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:00:29,138 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:00:59,247 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:01:29,158 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:01:59,138 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:02:29,531 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:02:59,199 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:03:29,157 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:03:59,168 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:04:29,149 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:04:59,212 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:05:29,142 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:05:59,180 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:06:29,164 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:06:59,236 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:07:29,172 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:07:59,180 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:08:29,499 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:08:59,518 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:09:29,209 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:09:59,285 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:10:29,206 - __main__ - WARNING - No odds data fetched in this cycle
+2025-11-18 05:10:59,210 - __main__ - WARNING - No odds data fetched in this cycle

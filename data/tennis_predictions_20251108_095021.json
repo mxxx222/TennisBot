@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "timestamp": "2025-11-08T09:50:21.553451",
+    "total_predictions": 15,
+    "target_accuracy": "70%",
+    "system_version": "1.0.0"
+  },
+  "predictions": [
+    {
+      "match": "Djokovic N vs Musetti L",
+      "predicted_winner": "Djokovic N",
+      "win_probability": 0.557,
+      "confidence_score": 0.113,
+      "home_win_prob": 0.557,
+      "away_win_prob": 0.443,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.557
+      }
+    },
+    {
+      "match": "Norrie C vs Tien L",
+      "predicted_winner": "Norrie C",
+      "win_probability": 0.55,
+      "confidence_score": 0.101,
+      "home_win_prob": 0.55,
+      "away_win_prob": 0.45,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.55
+      }
+    },
+    {
+      "match": "Sabalenka A vs Rybakina E",
+      "predicted_winner": "Sabalenka A",
+      "win_probability": 0.554,
+      "confidence_score": 0.108,
+      "home_win_prob": 0.554,
+      "away_win_prob": 0.446,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.554
+      }
+    },
+    {
+      "match": "Gonzalez S vs Pel D",
+      "predicted_winner": "Pel D",
+      "win_probability": 0.521,
+      "confidence_score": 0.041,
+      "home_win_prob": 0.479,
+      "away_win_prob": 0.521,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.479
+      }
+    },
+    {
+      "match": "Andreozzi G vs Guinard M",
+      "predicted_winner": "Andreozzi G",
+      "win_probability": 0.516,
+      "confidence_score": 0.032,
+      "home_win_prob": 0.516,
+      "away_win_prob": 0.484,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.516
+      }
+    },
+    {
+      "match": "Babos T vs Stefani L",
+      "predicted_winner": "Babos T",
+      "win_probability": 0.551,
+      "confidence_score": 0.102,
+      "home_win_prob": 0.551,
+      "away_win_prob": 0.449,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.551
+      }
+    },
+    {
+      "match": "Kypson P vs Travaglia S",
+      "predicted_winner": "Kypson P",
+      "win_probability": 0.501,
+      "confidence_score": 0.002,
+      "home_win_prob": 0.501,
+      "away_win_prob": 0.499,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.501
+      }
+    },
+    {
+      "match": "Virtanen O vs Gueymard Wayenburg S",
+      "predicted_winner": "Gueymard Wayenburg S",
+      "win_probability": 0.616,
+      "confidence_score": 0.233,
+      "home_win_prob": 0.384,
+      "away_win_prob": 0.616,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.384
+      }
+    },
+    {
+      "match": "Glinka D vs Mitsui S",
+      "predicted_winner": "Mitsui S",
+      "win_probability": 0.514,
+      "confidence_score": 0.029,
+      "home_win_prob": 0.486,
+      "away_win_prob": 0.514,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.486
+      }
+    },
+    {
+      "match": "Krueger M vs Stebe C",
+      "predicted_winner": "Krueger M",
+      "win_probability": 0.514,
+      "confidence_score": 0.028,
+      "home_win_prob": 0.514,
+      "away_win_prob": 0.486,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.514
+      }
+    },
+    {
+      "match": "Glinka D vs Blanch Dar",
+      "predicted_winner": "Blanch Dar",
+      "win_probability": 0.519,
+      "confidence_score": 0.039,
+      "home_win_prob": 0.481,
+      "away_win_prob": 0.519,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.481
+      }
+    },
+    {
+      "match": "Burruchaga R A vs Guillen Meza A",
+      "predicted_winner": "Burruchaga R A",
+      "win_probability": 0.55,
+      "confidence_score": 0.1,
+      "home_win_prob": 0.55,
+      "away_win_prob": 0.45,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.55
+      }
+    },
+    {
+      "match": "Bueno G vs Garin C",
+      "predicted_winner": "Bueno G",
+      "win_probability": 0.585,
+      "confidence_score": 0.171,
+      "home_win_prob": 0.585,
+      "away_win_prob": 0.415,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.585
+      }
+    },
+    {
+      "match": "Reis Da Silva J vs Olivieri G A",
+      "predicted_winner": "Reis Da Silva J",
+      "win_probability": 0.516,
+      "confidence_score": 0.032,
+      "home_win_prob": 0.516,
+      "away_win_prob": 0.484,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.516
+      }
+    },
+    {
+      "match": "Barrios Vera T vs Guillen Meza A",
+      "predicted_winner": "Barrios Vera T",
+      "win_probability": 0.533,
+      "confidence_score": 0.065,
+      "home_win_prob": 0.533,
+      "away_win_prob": 0.467,
+      "surface": "hard",
+      "tournament": "ATP/WTA",
+      "factors": {
+        "ranking_advantage": 0.0,
+        "form_advantage": 0.0,
+        "surface_advantage": 0.0
+      },
+      "model_predictions": {
+        "statistical": 0.533
+      }
+    }
+  ]
+}

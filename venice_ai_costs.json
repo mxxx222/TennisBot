@@ -1,0 +1,120 @@
+{
+  "entries": [
+    {
+      "timestamp": "2025-11-18T02:05:16.526618",
+      "feature": "test_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 1000,
+      "output_tokens": 500,
+      "venice_cost": 0.00045,
+      "openai_equivalent_cost": 0.0125,
+      "savings": 0.01205,
+      "request_id": "test_001"
+    },
+    {
+      "timestamp": "2025-11-18T02:05:40.270085",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 410,
+      "output_tokens": 715,
+      "venice_cost": 0.0005,
+      "openai_equivalent_cost": 0.012775,
+      "savings": 0.012275,
+      "request_id": "Test FC_020540"
+    },
+    {
+      "timestamp": "2025-11-18T02:06:00.209545",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 401,
+      "output_tokens": 707,
+      "venice_cost": 0.0005,
+      "openai_equivalent_cost": 0.01261,
+      "savings": 0.01211,
+      "request_id": "Speed Test FC_020600"
+    },
+    {
+      "timestamp": "2025-11-18T02:16:21.141608",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 396,
+      "output_tokens": 655,
+      "venice_cost": 0.0005,
+      "openai_equivalent_cost": 0.011805,
+      "savings": 0.011304999999999999,
+      "request_id": "Cost Test FC_021621"
+    },
+    {
+      "timestamp": "2025-11-18T02:17:00.337982",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 399,
+      "output_tokens": 573,
+      "venice_cost": 0.0004,
+      "openai_equivalent_cost": 0.01059,
+      "savings": 0.010190000000000001,
+      "request_id": "Batch FC 3_021700"
+    },
+    {
+      "timestamp": "2025-11-18T02:17:00.489303",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 399,
+      "output_tokens": 583,
+      "venice_cost": 0.0004,
+      "openai_equivalent_cost": 0.01074,
+      "savings": 0.01034,
+      "request_id": "Batch FC 1_021700"
+    },
+    {
+      "timestamp": "2025-11-18T02:17:01.785487",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 399,
+      "output_tokens": 626,
+      "venice_cost": 0.0004,
+      "openai_equivalent_cost": 0.011385000000000001,
+      "savings": 0.010985000000000002,
+      "request_id": "Batch FC 4_021701"
+    },
+    {
+      "timestamp": "2025-11-18T02:17:06.974032",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 399,
+      "output_tokens": 732,
+      "venice_cost": 0.0005,
+      "openai_equivalent_cost": 0.012975,
+      "savings": 0.012475,
+      "request_id": "Batch FC 2_021706"
+    },
+    {
+      "timestamp": "2025-11-18T02:17:33.900076",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 395,
+      "output_tokens": 602,
+      "venice_cost": 0.0004,
+      "openai_equivalent_cost": 0.011005000000000001,
+      "savings": 0.010605000000000002,
+      "request_id": "Performance FC_021733"
+    },
+    {
+      "timestamp": "2025-11-18T02:19:11.279397",
+      "feature": "match_analysis",
+      "model_used": "llama-3.3-70b",
+      "input_tokens": 399,
+      "output_tokens": 514,
+      "venice_cost": 0.0004,
+      "openai_equivalent_cost": 0.009705,
+      "savings": 0.009305,
+      "request_id": "Integration FC_021911"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-18T02:19:11.279891",
+    "total_entries": 10,
+    "total_requests": 7,
+    "total_savings": 0.075205
+  }
+}

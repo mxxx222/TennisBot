@@ -1,0 +1,286 @@
+{
+  "report_generated": "2025-11-18T02:06:00.212568",
+  "summary": {
+    "total_requests": 1,
+    "total_savings": 0.01205,
+    "total_entries": 1
+  },
+  "daily_summary": {
+    "period_start": "2025-11-18T00:00:00",
+    "period_end": "2025-11-19T00:00:00",
+    "total_requests": 1,
+    "total_venice_cost": 0.00045,
+    "total_openai_equivalent": 0.0125,
+    "total_savings": 0.01205,
+    "savings_percentage": 96.39999999999999,
+    "feature_breakdown": {
+      "test_analysis": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    },
+    "model_breakdown": {
+      "llama-3.3-70b": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205,
+        "avg_input_tokens": 1000.0,
+        "avg_output_tokens": 500.0
+      }
+    },
+    "daily_costs": [
+      {
+        "date": "2025-11-18",
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    ]
+  },
+  "weekly_summary": {
+    "period_start": "2025-11-11T02:06:00.212629",
+    "period_end": "2025-11-18T02:06:00.212629",
+    "total_requests": 1,
+    "total_venice_cost": 0.00045,
+    "total_openai_equivalent": 0.0125,
+    "total_savings": 0.01205,
+    "savings_percentage": 96.39999999999999,
+    "feature_breakdown": {
+      "test_analysis": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    },
+    "model_breakdown": {
+      "llama-3.3-70b": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205,
+        "avg_input_tokens": 1000.0,
+        "avg_output_tokens": 500.0
+      }
+    },
+    "daily_costs": [
+      {
+        "date": "2025-11-11",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-12",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-13",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-14",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-15",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-16",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-17",
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    ]
+  },
+  "monthly_summary": {
+    "period_start": "2025-11-01T00:00:00",
+    "period_end": "2025-11-18T02:06:00.212695",
+    "total_requests": 1,
+    "total_venice_cost": 0.00045,
+    "total_openai_equivalent": 0.0125,
+    "total_savings": 0.01205,
+    "savings_percentage": 96.39999999999999,
+    "feature_breakdown": {
+      "test_analysis": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    },
+    "model_breakdown": {
+      "llama-3.3-70b": {
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205,
+        "avg_input_tokens": 1000.0,
+        "avg_output_tokens": 500.0
+      }
+    },
+    "daily_costs": [
+      {
+        "date": "2025-11-01",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-02",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-03",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-04",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-05",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-06",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-07",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-08",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-09",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-10",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-11",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-12",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-13",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-14",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-15",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-16",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-17",
+        "requests": 0,
+        "venice_cost": 0,
+        "openai_equivalent": 0,
+        "savings": 0
+      },
+      {
+        "date": "2025-11-18",
+        "requests": 1,
+        "venice_cost": 0.00045,
+        "openai_equivalent": 0.0125,
+        "savings": 0.01205
+      }
+    ]
+  },
+  "budget_status": {
+    "daily_budgets": {
+      "match_analysis": 5.0,
+      "pattern_detection": 2.0,
+      "optimization": 1.0
+    },
+    "monthly_budget": 50.0,
+    "current_month_usage": 0.00045
+  }
+}

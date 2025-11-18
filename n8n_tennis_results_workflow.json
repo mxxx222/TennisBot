@@ -1,0 +1,293 @@
+{
+  "name": "Tennis Results Workflow v2.9.4",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            },
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        },
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyDay",
+              "hour": 7,
+              "minute": 30
+            },
+            {
+              "mode": "everyDay",
+              "hour": 11,
+              "minute": 30
+            },
+            {
+              "mode": "everyDay",
+              "hour": 15,
+              "minute": 30
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.api-tennis.com/tennis/?method=get_fixtures&APIkey={{$env.TENNIS_API_KEY}}&date_start={{$now.format('YYYY-MM-DD')}}&date_stop={{$now.format('YYYY-MM-DD')}}&event_type_key=281&timezone=Europe/Helsinki",
+        "options": {}
+      },
+      "id": "get-fixtures",
+      "name": "Get Fixtures",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract fixtures from API response\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const response = item.json;\n  \n  if (response.success === 1 && response.result) {\n    for (const fixture of response.result) {\n      // Filter for ITF/Challenger Singles\n      const eventType = fixture.event_type_type || '';\n      if (eventType.includes('ITF') || eventType.includes('Challenger')) {\n        if (eventType.includes('Singles') && !eventType.includes('Doubles')) {\n          results.push({\n            json: {\n              event_key: fixture.event_key,\n              event_date: fixture.event_date,\n              event_time: fixture.event_time,\n              event_first_player: fixture.event_first_player,\n              first_player_key: fixture.first_player_key,\n              event_second_player: fixture.event_second_player,\n              second_player_key: fixture.second_player_key,\n              event_final_result: fixture.event_final_result,\n              event_game_result: fixture.event_game_result,\n              event_status: fixture.event_status,\n              event_type_type: fixture.event_type_type,\n              tournament_name: fixture.tournament_name,\n              tournament_key: fixture.tournament_key,\n              tournament_round: fixture.tournament_round,\n              tournament_season: fixture.tournament_season,\n              event_live: fixture.event_live,\n              scheduledUtc: new Date().toISOString()\n            }\n          });\n        }\n      }\n    }\n  }\n}\n\nreturn results;"
+      },
+      "id": "filter-fixtures",
+      "name": "Filter Fixtures",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-batches",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.api-tennis.com/tennis/?method=get_odds&APIkey={{$env.TENNIS_API_KEY}}&match_key={{$json.event_key}}",
+        "options": {}
+      },
+      "id": "get-odds",
+      "name": "Get Odds",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 200],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.api-tennis.com/tennis/?method=get_H2H&APIkey={{$env.TENNIS_API_KEY}}&first_player_key={{$json.first_player_key}}&second_player_key={{$json.second_player_key}}",
+        "options": {}
+      },
+      "id": "get-h2h",
+      "name": "Get H2H",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 300],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.api-tennis.com/tennis/?method=get_players&APIkey={{$env.TENNIS_API_KEY}}&player_key={{$json.first_player_key}}",
+        "options": {}
+      },
+      "id": "get-player1",
+      "name": "Get Player 1 Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 400],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.api-tennis.com/tennis/?method=get_players&APIkey={{$env.TENNIS_API_KEY}}&player_key={{$json.second_player_key}}",
+        "options": {}
+      },
+      "id": "get-player2",
+      "name": "Get Player 2 Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 500],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine all data and perform ROI analysis\nconst items = $input.all();\n\n// Get data from previous nodes\nconst fixtureData = items.find(item => item.json.event_key)?.json || {};\nconst oddsData = items.find(item => item.json.result && item.json.result[fixtureData.event_key])?.json || {};\nconst h2hData = items.find(item => item.json.result && item.json.result.H2H)?.json || {};\nconst player1Data = items.find(item => item.json.result && item.json.result[0] && item.json.result[0].player_key === fixtureData.first_player_key)?.json || {};\nconst player2Data = items.find(item => item.json.result && item.json.result[0] && item.json.result[0].player_key === fixtureData.second_player_key)?.json || {};\n\n// Extract odds\nlet odds = [];\nif (oddsData.result && oddsData.result[fixtureData.event_key]) {\n  const matchOdds = oddsData.result[fixtureData.event_key];\n  if (matchOdds['Home/Away']) {\n    const homeOdds = matchOdds['Home/Away'].Home || {};\n    const awayOdds = matchOdds['Home/Away'].Away || {};\n    \n    // Aggregate odds from multiple bookmakers\n    const homeOddsValues = Object.values(homeOdds).map(v => parseFloat(v)).filter(v => !isNaN(v));\n    const awayOddsValues = Object.values(awayOdds).map(v => parseFloat(v)).filter(v => !isNaN(v));\n    \n    if (homeOddsValues.length > 0) {\n      const homeMean = homeOddsValues.reduce((a, b) => a + b, 0) / homeOddsValues.length;\n      const homeBest = Math.max(...homeOddsValues);\n      odds.push({\n        outcome: 'Home',\n        odd: homeMean.toFixed(2),\n        bestPrice: homeBest.toFixed(2),\n        books: homeOddsValues.length\n      });\n    }\n    \n    if (awayOddsValues.length > 0) {\n      const awayMean = awayOddsValues.reduce((a, b) => a + b, 0) / awayOddsValues.length;\n      const awayBest = Math.max(...awayOddsValues);\n      odds.push({\n        outcome: 'Away',\n        odd: awayMean.toFixed(2),\n        bestPrice: awayBest.toFixed(2),\n        books: awayOddsValues.length\n      });\n    }\n  }\n}\n\n// Extract player stats (simplified - adjust based on actual API response)\nconst stats = {\n  homeService: {\n    firstServeSuccess: 0,\n    breakPointsConverted: 0\n  },\n  awayService: {\n    firstServeSuccess: 0,\n    breakPointsConverted: 0\n  }\n};\n\n// Try to extract stats from player data\nif (player1Data.result && player1Data.result[0] && player1Data.result[0].stats) {\n  const playerStats = player1Data.result[0].stats[0] || {};\n  // Map stats if available (adjust field names based on actual API)\n  stats.homeService.firstServeSuccess = 70; // Default, replace with actual data\n  stats.homeService.breakPointsConverted = 0;\n}\n\n// Calculate ROI and insights\nconst impliedHome = odds.find(o => o.outcome === 'Home')?.odd || null;\nconst profitabilityFlag = impliedHome && stats.homeService.firstServeSuccess > 70;\n\nconst insight = {\n  edgeSummary: profitabilityFlag ? 'Home serve edge' : 'No statistical edge',\n  roiEst: profitabilityFlag ? (parseFloat(impliedHome) - 1).toFixed(2) : '0.00',\n  keyDrivers: [\n    `1st serve %: ${stats.homeService.firstServeSuccess || 'N/A'}`,\n    `Break conversions: ${stats.homeService.breakPointsConverted || 'N/A'}`\n  ],\n  riskNotes: [\n    fixtureData.event_status !== 'Finished' ? 'Live score may change' : 'Final result confirmed',\n    odds.length === 0 ? 'Missing odds; ROI approximated' : null\n  ].filter(Boolean)\n};\n\n// Build final output\nreturn [{\n  json: {\n    event_key: fixtureData.event_key,\n    match: `${fixtureData.event_first_player} vs ${fixtureData.event_second_player}`,\n    score: fixtureData.event_final_result || '-',\n    status: fixtureData.event_status || 'Scheduled',\n    tournament: fixtureData.tournament_name,\n    round: fixtureData.tournament_round,\n    date: fixtureData.event_date,\n    time: fixtureData.event_time,\n    odds: odds,\n    stats: stats,\n    h2h: h2hData.result || {},\n    insight: insight\n  }\n}];"
+      },
+      "id": "roi-analysis",
+      "name": "ROI Analysis & Data Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "reportGenerated",
+              "value": "={{$now}}"
+            },
+            {
+              "name": "context",
+              "value": "={{ {\n  \"dateRange\": $json.scheduledUtc || $now,\n  \"source\": \"API-Sports Tennis\",\n  \"refreshPolicy\": \"Scheduled 3x daily\"\n} }}"
+            },
+            {
+              "name": "matches",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-output",
+      "name": "Format Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Fixtures",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Fixtures": {
+      "main": [
+        [
+          {
+            "node": "Filter Fixtures",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Fixtures": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Get Odds",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get H2H",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Player 1 Stats",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Player 2 Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Odds": {
+      "main": [
+        [
+          {
+            "node": "ROI Analysis & Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get H2H": {
+      "main": [
+        [
+          {
+            "node": "ROI Analysis & Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Player 1 Stats": {
+      "main": [
+        [
+          {
+            "node": "ROI Analysis & Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Player 2 Stats": {
+      "main": [
+        [
+          {
+            "node": "ROI Analysis & Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ROI Analysis & Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-08T12:00:00.000Z",
+  "versionId": "1"
+}
+

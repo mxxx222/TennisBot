@@ -1,0 +1,355 @@
+2025-11-08 09:45:37,530 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 09:45:37,530 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 09:45:45,108 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 09:45:45,109 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 09:45:45,109 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:45:51,103 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:45:53,300 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 09:45:53,300 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 09:45:53,412 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 09:45:53,412 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 09:45:53,412 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 09:45:53,903 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 09:45:53,903 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 09:45:53,903 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 09:46:05,582 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 09:46:13,832 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 09:46:20,542 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 09:46:24,327 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 09:46:24,327 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 09:46:24,418 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 09:46:24,418 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 09:46:24,418 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 09:46:24,766 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 09:46:24,766 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 09:46:24,767 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:46:30,559 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:46:32,930 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 09:46:32,930 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 09:46:32,930 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 09:46:32,931 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 09:46:44,374 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 09:46:51,771 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 09:46:57,704 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 09:47:00,083 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 09:47:00,083 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 09:47:00,107 - live_betting_scraper - INFO - 💾 Saved 20 matches to /Users/herbspotturku/sportsbot/TennisBot/data/demo_all_matches.csv
+2025-11-08 09:47:00,108 - live_betting_scraper - INFO - 💾 Saved 20 matches to /Users/herbspotturku/sportsbot/TennisBot/data/demo_all_matches.json
+2025-11-08 09:47:00,218 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 09:49:44,715 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 09:49:44,716 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 09:49:44,716 - ai_predictor_enhanced - WARNING - ⚠️ No saved models found
+2025-11-08 09:49:44,716 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 09:49:44,716 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 09:49:44,716 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 09:49:46,052 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 09:49:46,052 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 09:49:46,052 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:49:52,800 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:49:55,845 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 09:49:55,846 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 09:49:55,847 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 09:49:55,847 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 09:50:06,867 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 09:50:14,108 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 09:50:18,499 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 09:50:21,433 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 09:50:21,433 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 09:50:21,553 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 09:53:00,743 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 09:53:00,744 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 09:53:00,744 - ai_predictor_enhanced - WARNING - ⚠️ No saved models found
+2025-11-08 09:53:00,781 - ai_predictor_enhanced - INFO - ✅ Created 2000 training samples
+2025-11-08 09:53:00,786 - ai_predictor_enhanced - INFO - ℹ️ XGBoost not available, using scikit-learn models only
+2025-11-08 09:53:00,786 - ai_predictor_enhanced - INFO - 🔧 Training random_forest...
+2025-11-08 09:53:00,987 - ai_predictor_enhanced - INFO - ✅ random_forest accuracy: 0.590
+2025-11-08 09:53:00,987 - ai_predictor_enhanced - INFO - 🔧 Training gradient_boosting...
+2025-11-08 09:53:01,291 - ai_predictor_enhanced - INFO - ✅ gradient_boosting accuracy: 0.603
+2025-11-08 09:53:01,291 - ai_predictor_enhanced - INFO - 🔧 Training logistic_regression...
+2025-11-08 09:53:01,299 - ai_predictor_enhanced - INFO - ✅ logistic_regression accuracy: 0.613
+2025-11-08 09:53:01,304 - ai_predictor_enhanced - INFO - 🎯 Ensemble accuracy: 0.588
+2025-11-08 09:53:01,315 - ai_predictor_enhanced - INFO - ✅ Models saved to /Users/herbspotturku/sportsbot/TennisBot/data/models
+2025-11-08 09:53:01,315 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 09:53:01,315 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 09:53:02,697 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 09:53:02,697 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 09:53:02,697 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:53:09,251 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 09:53:11,310 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 09:53:11,311 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 09:53:11,351 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 09:53:11,351 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 09:53:21,643 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 09:53:28,316 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 09:53:34,760 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 09:53:38,738 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 09:53:38,738 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 09:53:38,851 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:00:17,180 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:00:17,180 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:00:17,185 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 10:00:17,185 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 10:00:17,187 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 10:00:17,187 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 10:00:17,187 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:00:17,187 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:00:18,538 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:00:18,538 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:00:18,538 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:00:25,725 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:00:27,870 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:00:27,870 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:00:27,916 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:00:27,916 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:00:40,122 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:00:48,673 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:00:55,769 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:00:57,835 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:00:57,835 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:00:57,940 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:17:43,571 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:17:43,572 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:17:43,578 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 10:17:43,579 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 10:17:43,580 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 10:17:43,581 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 10:17:43,581 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:17:43,581 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:17:44,934 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:17:44,934 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:17:44,934 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:17:51,193 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:17:54,240 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:17:54,240 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:17:54,273 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:17:54,274 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:18:06,861 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:18:14,310 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:18:19,901 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:18:23,828 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:18:23,828 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:18:23,946 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:19:12,697 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:19:12,700 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:19:12,701 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:19:12,701 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:19:12,701 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:19:12,701 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:19:14,316 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:19:14,317 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:19:14,317 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:19:20,261 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:19:23,568 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:19:23,568 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:19:23,570 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:19:23,570 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:19:32,834 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:19:40,044 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:19:51,660 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:19:55,055 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:19:55,055 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:19:55,166 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:26:28,689 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:26:28,692 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:26:28,693 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:26:28,693 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:26:28,693 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:26:28,693 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:26:30,041 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:26:30,042 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:26:30,042 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:26:36,381 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:26:40,329 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:26:40,330 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:26:40,333 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:26:40,333 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:26:49,753 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:26:58,191 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:27:03,204 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:27:05,425 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:27:05,425 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:27:05,536 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:42:53,250 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:42:53,252 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:42:53,253 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:42:53,253 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:42:53,253 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:42:53,253 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:42:54,667 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:42:54,667 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:42:54,667 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:43:00,221 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:43:03,918 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:43:03,919 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:43:03,920 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:43:03,920 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:43:07,337 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:43:07,338 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:43:07,339 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:43:07,339 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:43:07,339 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:43:07,339 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:43:07,922 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:43:07,922 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:43:07,922 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:43:14,439 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:43:16,503 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:43:16,503 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:43:16,504 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:43:16,504 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:43:36,332 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:43:43,610 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:43:48,662 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:43:52,419 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:43:52,419 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:43:52,531 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:49:10,938 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:49:10,940 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:49:10,941 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:49:10,941 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:49:10,941 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:49:10,941 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:49:12,274 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:49:12,274 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:49:12,274 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:49:18,928 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:49:22,822 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:49:22,823 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:49:22,824 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:49:22,824 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 10:49:33,345 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 10:49:39,804 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 10:49:44,865 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 10:49:46,912 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 10:49:46,913 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 10:49:47,024 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 10:59:49,724 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 10:59:49,725 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 10:59:49,726 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 10:59:49,726 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 10:59:49,726 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 10:59:49,726 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 10:59:50,377 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 10:59:50,377 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 10:59:50,377 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:59:57,164 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 10:59:59,756 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 10:59:59,756 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 10:59:59,758 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 10:59:59,758 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 11:00:09,449 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 11:00:17,935 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 11:00:23,286 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 11:00:25,603 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 11:00:25,604 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 11:00:26,712 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 11:06:18,809 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 11:06:18,811 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 11:06:18,812 - ai_predictor_enhanced - ERROR - ❌ Error loading models: No module named 'sklearn'
+2025-11-08 11:06:18,812 - ai_predictor_enhanced - ERROR - ❌ Machine learning libraries not available
+2025-11-08 11:06:18,812 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 11:06:18,812 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 11:06:19,943 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 11:06:19,944 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 11:06:19,944 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:06:28,159 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:06:31,116 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 11:06:31,117 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 11:06:31,118 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 11:06:31,119 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 11:06:40,875 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 11:06:46,950 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 11:06:52,345 - live_betting_scraper - ERROR - ❌ Unexpected error scraping https://www.tennisexplorer.com/matches/: 'LiveBettingScraper' object has no attribute '_parse_tennisexplorer_upcoming'
+2025-11-08 11:06:55,232 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 11:06:55,233 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 11:06:55,337 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 11:08:30,271 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 11:08:30,272 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 11:08:30,278 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 11:08:30,278 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 11:08:30,280 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 11:08:30,280 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 11:08:30,280 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 11:08:30,280 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 11:08:30,947 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 11:08:30,947 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 11:08:30,949 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:08:36,672 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:08:40,202 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 11:08:40,203 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 11:08:40,264 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 11:08:40,264 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 11:08:49,390 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 11:08:57,912 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 11:09:04,963 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 11:09:04,965 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 11:09:05,082 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 11:09:37,793 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 11:09:37,793 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 11:09:37,799 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 11:09:37,799 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 11:09:37,801 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 11:09:37,801 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 11:09:37,801 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 11:09:37,801 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 11:09:38,328 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 11:09:38,328 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 11:09:38,328 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:09:43,406 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:09:46,632 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 11:09:46,632 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 11:09:46,665 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 11:09:46,665 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 11:09:57,214 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 11:10:03,619 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 11:10:12,142 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 11:10:12,144 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 11:10:12,249 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 11:10:35,290 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 11:10:35,291 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 11:10:35,298 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 11:10:35,299 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 11:10:35,301 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 11:10:35,301 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 11:19:42,136 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 11:19:42,137 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 11:19:42,147 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 11:19:42,147 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 11:19:42,149 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 11:19:42,149 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 11:19:42,149 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 11:19:42,149 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 11:19:42,980 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 11:19:42,980 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 11:19:42,980 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:19:48,231 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 11:19:51,051 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 11:19:51,052 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 11:19:51,120 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 11:19:51,120 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 11:20:01,895 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 11:20:10,989 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 11:20:19,783 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 11:20:19,784 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 11:20:19,896 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up
+2025-11-08 12:20:44,248 - ai_predictor_enhanced - INFO - 🎾 Enhanced Tennis Predictor initialized
+2025-11-08 12:20:44,250 - ai_predictor_enhanced - INFO - ✅ Created sample player data for demonstration
+2025-11-08 12:20:44,255 - ai_predictor_enhanced - INFO - ✅ Loaded random_forest model
+2025-11-08 12:20:44,256 - ai_predictor_enhanced - INFO - ✅ Loaded logistic_regression model
+2025-11-08 12:20:44,257 - ai_predictor_enhanced - INFO - ✅ Loaded gradient_boosting model
+2025-11-08 12:20:44,257 - ai_predictor_enhanced - INFO - ✅ Loaded 3 trained models
+2025-11-08 12:20:44,257 - live_betting_scraper - INFO - 🎾 LiveBettingScraper initialized
+2025-11-08 12:20:44,257 - live_betting_scraper - INFO - 🔧 Setting up regular Chrome driver...
+2025-11-08 12:20:46,177 - live_betting_scraper - INFO - ✅ WebDriver setup complete
+2025-11-08 12:20:46,177 - live_betting_scraper - INFO - 🔴 Starting live matches scraping...
+2025-11-08 12:20:46,179 - live_betting_scraper - INFO - 📊 Scraping live matches from https://www.flashscore.com/tennis/
+2025-11-08 12:20:51,419 - live_betting_scraper - INFO - ✅ Found 20 live matches from https://www.flashscore.com/tennis/
+2025-11-08 12:20:54,363 - live_betting_scraper - INFO - 🔄 Deduplicated: 20 -> 20 matches
+2025-11-08 12:20:54,363 - live_betting_scraper - INFO - ✅ Scraped 20 validated live matches
+2025-11-08 12:20:54,400 - live_betting_scraper - INFO - ⏰ Starting upcoming matches scraping...
+2025-11-08 12:20:54,400 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.atptour.com/en/scores/current
+2025-11-08 12:21:04,543 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.flashscore.com/tennis/fixtures/
+2025-11-08 12:21:13,252 - live_betting_scraper - INFO - 📊 Scraping upcoming matches from https://www.tennisexplorer.com/matches/
+2025-11-08 12:21:20,332 - live_betting_scraper - INFO - 🔄 Deduplicated: 0 -> 0 matches
+2025-11-08 12:21:20,338 - live_betting_scraper - INFO - ✅ Scraped 0 validated upcoming matches
+2025-11-08 12:21:20,443 - live_betting_scraper - INFO - 🧹 WebDriver cleaned up

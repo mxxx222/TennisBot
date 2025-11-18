@@ -1,0 +1,21 @@
+match_id,sport,league,home_team,away_team,status,start_time,venue,home_odds,away_odds,draw_odds,score,minute,source,last_updated,confidence_score
+7f8b8ad7f41d,tennis,ATP/WTA,Djokovic N,Musetti L,live,17:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.556593,0.0
+b551f89f9905,tennis,ATP/WTA,Norrie C,Tien L,live,17:30,,,,,-,,flashscore.com,2025-11-08T09:46:30.556763,0.0
+3ab3d96ee26a,tennis,ATP/WTA,Sabalenka A,Rybakina E,live,18:00,,,,,,,flashscore.com,2025-11-08T09:46:30.556861,0.0
+21f9d7ec05b3,tennis,ATP/WTA,Gonzalez S,Pel D,live,13:30,,,,,-,,flashscore.com,2025-11-08T09:46:30.556986,0.0
+47555cb645f6,tennis,ATP/WTA,Andreozzi G,Guinard M,live,15:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.557110,0.0
+caa7acfb61cb,tennis,ATP/WTA,Babos T,Stefani L,live,15:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.557261,0.0
+b5256ffa694d,tennis,ATP/WTA,Kypson P,Travaglia S,live,13:30,,,,,-,,flashscore.com,2025-11-08T09:46:30.557419,0.0
+367f636280e1,tennis,ATP/WTA,Virtanen O,Gueymard Wayenburg S,live,15:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.557539,0.0
+d55a17141d6c,tennis,ATP/WTA,Glinka D,Mitsui S,live,,,,,,2,,flashscore.com,2025-11-08T09:46:30.557703,0.0
+cd96e1c53ca1,tennis,ATP/WTA,Krueger M,Stebe C,live,19:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.557800,0.0
+0803a319f1b8,tennis,ATP/WTA,Glinka D,Blanch Dar,live,20:30,,,,,-,,flashscore.com,2025-11-08T09:46:30.557891,0.0
+d3e3494db68d,tennis,ATP/WTA,Burruchaga R A,Guillen Meza A,live,,,,,,1,,flashscore.com,2025-11-08T09:46:30.558030,0.0
+6d699c72df59,tennis,ATP/WTA,Bueno G,Garin C,live,,,,,,2,,flashscore.com,2025-11-08T09:46:30.558186,0.0
+d7bc437b19c5,tennis,ATP/WTA,Reis Da Silva J,Olivieri G A,live,,,,,,2,,flashscore.com,2025-11-08T09:46:30.558308,0.0
+5672c7f534d6,tennis,ATP/WTA,Barrios Vera T,Guillen Meza A,live,20:30,,,,,-,,flashscore.com,2025-11-08T09:46:30.558413,0.0
+d500404bf427,tennis,ATP/WTA,Bueno G,Reis Da Silva J,live,22:00,,,,,-,,flashscore.com,2025-11-08T09:46:30.558518,0.0
+4a0f06ed0bdc,tennis,ATP/WTA,Rocha H,Ferreira Silva F,live,,,,,,2,,flashscore.com,2025-11-08T09:46:30.558636,0.0
+c0f4f8fb245c,tennis,ATP/WTA,Peniston R,Shimabukuro S,live,,,,,,0,,flashscore.com,2025-11-08T09:46:30.558765,0.0
+cf343756e652,tennis,ATP/WTA,McCabe J,Nishioka Y,live,,,,,,1,,flashscore.com,2025-11-08T09:46:30.558898,0.0
+02454eb1c443,tennis,ATP/WTA,Duckworth J,Wong C,live,,,,,,0,,flashscore.com,2025-11-08T09:46:30.559050,0.0

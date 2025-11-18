@@ -1,0 +1,78 @@
+2025-11-18 01:39:16,769 - telegram.Bot - DEBUG - Set Bot API URL: https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM
+2025-11-18 01:39:16,769 - telegram.Bot - DEBUG - Set Bot API File URL: https://api.telegram.org/file/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM
+2025-11-18 01:39:16,850 - __main__ - INFO - Initialized Soccer Screener (test_mode=True)
+2025-11-18 01:39:16,850 - __main__ - INFO - Target leagues: 7
+2025-11-18 01:39:16,850 - __main__ - INFO - Bankroll: $1000.00
+2025-11-18 01:39:16,850 - asyncio - DEBUG - Using selector: KqueueSelector
+2025-11-18 01:39:16,851 - __main__ - INFO - Starting Soccer screening process...
+2025-11-18 01:39:16,851 - __main__ - INFO - Fetching soccer matches from target leagues...
+2025-11-18 01:39:17,852 - __main__ - INFO - Fetched 12 matches from soccer_england_league2
+2025-11-18 01:39:17,935 - __main__ - INFO - Fetched 11 matches from soccer_spain_segunda_division
+2025-11-18 01:39:17,937 - __main__ - INFO - Fetched 12 matches from soccer_england_league1
+2025-11-18 01:39:17,947 - __main__ - INFO - Fetched 10 matches from soccer_italy_serie_b
+2025-11-18 01:39:17,948 - __main__ - INFO - Fetched 9 matches from soccer_france_ligue_two
+2025-11-18 01:39:17,951 - __main__ - INFO - Fetched 9 matches from soccer_germany_bundesliga2
+2025-11-18 01:39:17,974 - __main__ - INFO - Fetched 12 matches from soccer_efl_champ
+2025-11-18 01:39:17,975 - __main__ - INFO - Total matches fetched: 75
+2025-11-18 01:39:17,975 - __main__ - INFO - Analyzing opportunities and calculating bet sizes...
+2025-11-18 01:39:17,976 - __main__ - INFO - Found 11 total opportunities, selected top 5 for today
+2025-11-18 01:39:17,976 - __main__ - INFO - Found 5 qualified opportunities
+2025-11-18 01:39:17,976 - __main__ - INFO - Test mode - skipping notifications
+2025-11-18 01:39:17,976 - __main__ - INFO - Soccer screening process completed successfully
+2025-11-18 01:39:17,976 - __main__ - INFO - === SOCCER SCREENING SUMMARY ===
+2025-11-18 01:39:17,976 - __main__ - INFO - Opportunities found: 5
+2025-11-18 01:39:17,976 - __main__ - INFO - Total recommended stake: $40.0
+2025-11-18 01:39:17,976 - __main__ - INFO - Average odds: 1.6
+2025-11-18 01:39:17,976 - __main__ - INFO - Average edge: +1.88%
+2025-11-18 01:39:17,976 - __main__ - INFO - --- OPPORTUNITIES ---
+2025-11-18 01:39:17,976 - __main__ - INFO - 1. Hertha Berlin @ 1.56 ($8.0, Medium)
+2025-11-18 01:39:17,976 - __main__ - INFO - 2. SV Darmstadt 98 @ 1.57 ($8.0, Medium)
+2025-11-18 01:39:17,976 - __main__ - INFO - 3. Ipswich Town @ 1.58 ($8.0, Medium)
+2025-11-18 01:39:17,976 - __main__ - INFO - 4. Saint Etienne @ 1.63 ($8.0, High)
+2025-11-18 01:39:17,976 - __main__ - INFO - 5. Oldham Athletic @ 1.64 ($8.0, High)
+2025-11-18 01:39:27,345 - __main__ - INFO - Initialized Soccer Screener (test_mode=False)
+2025-11-18 01:39:27,345 - __main__ - INFO - Target leagues: 7
+2025-11-18 01:39:27,345 - __main__ - INFO - Bankroll: $1000.00
+2025-11-18 01:39:27,345 - __main__ - INFO - Starting Soccer screening process...
+2025-11-18 01:39:27,345 - __main__ - INFO - Fetching soccer matches from target leagues...
+2025-11-18 01:39:28,376 - __main__ - INFO - Fetched 9 matches from soccer_france_ligue_two
+2025-11-18 01:39:28,402 - __main__ - INFO - Fetched 12 matches from soccer_efl_champ
+2025-11-18 01:39:28,404 - __main__ - INFO - Fetched 12 matches from soccer_england_league1
+2025-11-18 01:39:28,410 - __main__ - INFO - Fetched 12 matches from soccer_england_league2
+2025-11-18 01:39:28,411 - __main__ - INFO - Fetched 10 matches from soccer_italy_serie_b
+2025-11-18 01:39:28,425 - __main__ - INFO - Fetched 11 matches from soccer_spain_segunda_division
+2025-11-18 01:39:28,425 - __main__ - INFO - Fetched 9 matches from soccer_germany_bundesliga2
+2025-11-18 01:39:28,426 - __main__ - INFO - Total matches fetched: 75
+2025-11-18 01:39:28,426 - __main__ - INFO - Analyzing opportunities and calculating bet sizes...
+2025-11-18 01:39:28,427 - __main__ - INFO - Found 11 total opportunities, selected top 5 for today
+2025-11-18 01:39:28,427 - __main__ - INFO - Found 5 qualified opportunities
+2025-11-18 01:39:28,427 - __main__ - INFO - Sending notifications...
+2025-11-18 01:39:28,723 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 01:39:28,725 - utils.notifiers - INFO - Sent Telegram alert for Hertha Berlin
+2025-11-18 01:39:28,812 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 01:39:28,814 - utils.notifiers - INFO - Sent Telegram alert for SV Darmstadt 98
+2025-11-18 01:39:28,911 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 01:39:28,912 - utils.notifiers - INFO - Sent Telegram alert for Ipswich Town
+2025-11-18 01:39:28,989 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 400 Bad Request"
+2025-11-18 01:39:28,990 - utils.notifiers - ERROR - Failed to send Telegram message: Can't parse entities: can't find end of the entity starting at byte offset 364
+2025-11-18 01:39:29,086 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 01:39:29,086 - utils.notifiers - INFO - Sent Telegram alert for Oldham Athletic
+2025-11-18 01:39:29,167 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8481385860:AAGBRbsDA8--t373COn2mgM4_c1ngc2fGRM/sendMessage "HTTP/1.1 200 OK"
+2025-11-18 01:39:29,169 - utils.notifiers - INFO - Sent daily summary to Telegram
+2025-11-18 01:39:29,169 - utils.notifiers - WARNING - Notion credentials not configured, skipping logging
+2025-11-18 01:39:29,169 - utils.notifiers - WARNING - Notion credentials not configured, skipping logging
+2025-11-18 01:39:29,169 - utils.notifiers - WARNING - Notion credentials not configured, skipping logging
+2025-11-18 01:39:29,169 - utils.notifiers - WARNING - Notion credentials not configured, skipping logging
+2025-11-18 01:39:29,169 - utils.notifiers - WARNING - Notion credentials not configured, skipping logging
+2025-11-18 01:39:29,169 - __main__ - INFO - Soccer screening process completed successfully
+2025-11-18 01:39:29,169 - __main__ - INFO - === SOCCER SCREENING SUMMARY ===
+2025-11-18 01:39:29,169 - __main__ - INFO - Opportunities found: 5
+2025-11-18 01:39:29,169 - __main__ - INFO - Total recommended stake: $40.0
+2025-11-18 01:39:29,169 - __main__ - INFO - Average odds: 1.6
+2025-11-18 01:39:29,170 - __main__ - INFO - Average edge: +1.88%
+2025-11-18 01:39:29,170 - __main__ - INFO - --- OPPORTUNITIES ---
+2025-11-18 01:39:29,170 - __main__ - INFO - 1. Hertha Berlin @ 1.56 ($8.0, Medium)
+2025-11-18 01:39:29,170 - __main__ - INFO - 2. SV Darmstadt 98 @ 1.57 ($8.0, Medium)
+2025-11-18 01:39:29,170 - __main__ - INFO - 3. Ipswich Town @ 1.58 ($8.0, Medium)
+2025-11-18 01:39:29,170 - __main__ - INFO - 4. Saint Etienne @ 1.63 ($8.0, High)
+2025-11-18 01:39:29,170 - __main__ - INFO - 5. Oldham Athletic @ 1.64 ($8.0, High)

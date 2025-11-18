@@ -1,0 +1,218 @@
+{
+  "237f7b1159a9": {
+    "home_team": "Manchester United",
+    "away_team": "Arsenal",
+    "match_date": "2025-11-08",
+    "roi": 6.20230307928018,
+    "sent_at": "2025-11-08T12:10:04.492193",
+    "match_string": "Manchester United vs Arsenal"
+  },
+  "bb5fa660fa41": {
+    "home_team": "Barcelona",
+    "away_team": "Real Madrid",
+    "match_date": "2025-11-09",
+    "roi": 3.666736757958633,
+    "sent_at": "2025-11-08T12:10:07.579656",
+    "match_string": "Barcelona vs Real Madrid"
+  },
+  "08f1c26b2a3e": {
+    "home_team": "Bayern Munich",
+    "away_team": "Borussia Dortmund",
+    "match_date": "2025-11-08",
+    "roi": 22.827662938672056,
+    "sent_at": "2025-11-08T12:10:10.703876",
+    "match_string": "Bayern Munich vs Borussia Dortmund"
+  },
+  "5793ffc887f6": {
+    "home_team": "Juventus",
+    "away_team": "Inter Milan",
+    "match_date": "2025-11-14",
+    "roi": 7.636437297758825,
+    "sent_at": "2025-11-08T12:10:13.803785",
+    "match_string": "Juventus vs Inter Milan"
+  },
+  "70eff851a9b7": {
+    "home_team": "PSG",
+    "away_team": "Lyon",
+    "match_date": "2025-11-08",
+    "roi": 16.37510440148464,
+    "sent_at": "2025-11-08T12:10:16.944769",
+    "match_string": "PSG vs Lyon"
+  },
+  "024cf71485ed": {
+    "home_team": "Novak Djokovic",
+    "away_team": "Rafael Nadal",
+    "match_date": "2025-11-09",
+    "roi": 2.752827435254157,
+    "sent_at": "2025-11-08T12:10:20.092971",
+    "match_string": "Novak Djokovic vs Rafael Nadal"
+  },
+  "9e20683c3d62": {
+    "home_team": "Iga Swiatek",
+    "away_team": "Coco Gauff",
+    "match_date": "2025-11-08",
+    "roi": 13.137393523329244,
+    "sent_at": "2025-11-08T12:10:23.190535",
+    "match_string": "Iga Swiatek vs Coco Gauff"
+  },
+  "7d9e03703d71": {
+    "home_team": "Carlos Alcaraz",
+    "away_team": "Stefanos Tsitsipas",
+    "match_date": "2025-11-10",
+    "roi": 13.831146886222678,
+    "sent_at": "2025-11-08T12:10:26.392372",
+    "match_string": "Carlos Alcaraz vs Stefanos Tsitsipas"
+  },
+  "b36cf7c71732": {
+    "home_team": "Los Angeles Lakers",
+    "away_team": "Boston Celtics",
+    "match_date": "2025-11-08",
+    "roi": 7.931357057912081,
+    "sent_at": "2025-11-08T12:10:29.506096",
+    "match_string": "Los Angeles Lakers vs Boston Celtics"
+  },
+  "b7d345b41245": {
+    "home_team": "Golden State Warriors",
+    "away_team": "Miami Heat",
+    "match_date": "2025-11-10",
+    "roi": 12.711932351033273,
+    "sent_at": "2025-11-08T12:10:32.602514",
+    "match_string": "Golden State Warriors vs Miami Heat"
+  },
+  "f7da5c9389bf": {
+    "home_team": "Boston Bruins",
+    "away_team": "New York Rangers",
+    "match_date": "2025-11-08",
+    "roi": 9.131162224728751,
+    "sent_at": "2025-11-08T12:10:35.744610",
+    "match_string": "Boston Bruins vs New York Rangers"
+  },
+  "dc3ba18bf16d": {
+    "home_team": "Toronto Maple Leafs",
+    "away_team": "Montreal Canadiens",
+    "match_date": "2025-11-08",
+    "roi": 1.3988394666972603,
+    "sent_at": "2025-11-08T12:10:38.870215",
+    "match_string": "Toronto Maple Leafs vs Montreal Canadiens"
+  },
+  "9307a0bc1ba3": {
+    "home_team": "Liverpool",
+    "away_team": "Chelsea",
+    "match_date": "2025-11-14",
+    "roi": 10.743077692478497,
+    "sent_at": "2025-11-08T12:10:42.057171",
+    "match_string": "Liverpool vs Chelsea"
+  },
+  "a72ab3b16b4d": {
+    "home_team": "AC Milan",
+    "away_team": "Napoli",
+    "match_date": "2025-11-09",
+    "roi": 5.065056217847353,
+    "sent_at": "2025-11-08T12:10:45.163961",
+    "match_string": "AC Milan vs Napoli"
+  },
+  "8c7d814ebf3e": {
+    "home_team": "Daniil Medvedev",
+    "away_team": "Alexander Zverev",
+    "match_date": "2025-11-09",
+    "roi": 1.0439394159928783,
+    "sent_at": "2025-11-08T12:10:48.368658",
+    "match_string": "Daniil Medvedev vs Alexander Zverev"
+  },
+  "8d9f30fcadd1": {
+    "home_team": "Manchester United",
+    "away_team": "Arsenal",
+    "match_date": "2025-11-10",
+    "roi": 12.956933401734716,
+    "sent_at": "2025-11-08T12:12:19.215331",
+    "match_string": "Manchester United vs Arsenal"
+  },
+  "fcab084daa53": {
+    "home_team": "Barcelona",
+    "away_team": "Real Madrid",
+    "match_date": "2025-11-14",
+    "roi": 14.813748804546567,
+    "sent_at": "2025-11-08T12:12:22.380195",
+    "match_string": "Barcelona vs Real Madrid"
+  },
+  "6424e09200b0": {
+    "home_team": "Bayern Munich",
+    "away_team": "Borussia Dortmund",
+    "match_date": "2025-11-10",
+    "roi": 7.683052468648421,
+    "sent_at": "2025-11-08T12:12:25.494530",
+    "match_string": "Bayern Munich vs Borussia Dortmund"
+  },
+  "a6687ef17af7": {
+    "home_team": "Juventus",
+    "away_team": "Inter Milan",
+    "match_date": "2025-11-09",
+    "roi": 6.185744775129298,
+    "sent_at": "2025-11-08T12:12:28.587104",
+    "match_string": "Juventus vs Inter Milan"
+  },
+  "19ce7a905d9a": {
+    "home_team": "PSG",
+    "away_team": "Lyon",
+    "match_date": "2025-11-15",
+    "roi": 1.22907520324812,
+    "sent_at": "2025-11-08T12:12:31.669918",
+    "match_string": "PSG vs Lyon"
+  },
+  "5783fb090728": {
+    "home_team": "Novak Djokovic",
+    "away_team": "Rafael Nadal",
+    "match_date": "2025-11-08",
+    "roi": 24.54259985556947,
+    "sent_at": "2025-11-08T12:12:34.762544",
+    "match_string": "Novak Djokovic vs Rafael Nadal"
+  },
+  "d52b0e770574": {
+    "home_team": "Los Angeles Lakers",
+    "away_team": "Boston Celtics",
+    "match_date": "2025-11-10",
+    "roi": 17.720720552749047,
+    "sent_at": "2025-11-08T12:12:37.873137",
+    "match_string": "Los Angeles Lakers vs Boston Celtics"
+  },
+  "7d54b2a3be2f": {
+    "home_team": "Golden State Warriors",
+    "away_team": "Miami Heat",
+    "match_date": "2025-11-08",
+    "roi": 16.56472188425282,
+    "sent_at": "2025-11-08T12:12:40.994063",
+    "match_string": "Golden State Warriors vs Miami Heat"
+  },
+  "4015082b2781": {
+    "home_team": "Boston Bruins",
+    "away_team": "New York Rangers",
+    "match_date": "2025-11-09",
+    "roi": 3.253486191683075,
+    "sent_at": "2025-11-08T12:12:44.094883",
+    "match_string": "Boston Bruins vs New York Rangers"
+  },
+  "e4d97093d72c": {
+    "home_team": "Toronto Maple Leafs",
+    "away_team": "Montreal Canadiens",
+    "match_date": "2025-11-10",
+    "roi": 11.512058887470978,
+    "sent_at": "2025-11-08T12:12:47.260905",
+    "match_string": "Toronto Maple Leafs vs Montreal Canadiens"
+  },
+  "1c17c7973437": {
+    "home_team": "Liverpool",
+    "away_team": "Chelsea",
+    "match_date": "2025-11-10",
+    "roi": 22.30863702679129,
+    "sent_at": "2025-11-08T12:12:50.349375",
+    "match_string": "Liverpool vs Chelsea"
+  },
+  "585f26c1fd4f": {
+    "home_team": "Daniil Medvedev",
+    "away_team": "Alexander Zverev",
+    "match_date": "2025-11-11",
+    "roi": 4.507164458567892,
+    "sent_at": "2025-11-08T12:12:53.505780",
+    "match_string": "Daniil Medvedev vs Alexander Zverev"
+  }
+}

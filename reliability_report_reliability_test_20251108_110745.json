@@ -1,0 +1,614 @@
+{
+  "report": {
+    "test_session_id": "reliability_test_20251108_110745",
+    "start_time": "2025-11-08 11:07:45.432603",
+    "end_time": "2025-11-08 11:11:10.525696",
+    "total_tests": 43,
+    "passed_tests": 34,
+    "failed_tests": 9,
+    "success_rate": 0.7906976744186046,
+    "average_response_time": 5.542957591043936,
+    "performance_metrics": {
+      "average_response_time": 5.542957591043936,
+      "max_response_time": 204.37820100784302,
+      "min_response_time": 9.5367431640625e-07,
+      "total_response_times": 37,
+      "memory_usage_samples": 0,
+      "message_generation_times": 5
+    },
+    "error_summary": {
+      "Unknown": 3
+    },
+    "recommendations": [
+      "\ud83d\udd27 Improve error handling - success rate below 95%",
+      "\u26a1 Optimize performance - average response time above 3 seconds"
+    ]
+  },
+  "detailed_results": [
+    {
+      "test_name": "Telegram Bot Initialization",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "component_status": "initialized"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432617"
+    },
+    {
+      "test_name": "Minute Scanner Initialization",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "component_status": "initialized"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432624"
+    },
+    {
+      "test_name": "Betfury Integration",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "component_status": "initialized"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432626"
+    },
+    {
+      "test_name": "Analyzer Initialization",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "component_status": "initialized"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432627"
+    },
+    {
+      "test_name": "Strategy Engine Initialization",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "component_status": "initialized"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432629"
+    },
+    {
+      "test_name": "Opportunity Creation 1",
+      "success": true,
+      "duration": 1.0967254638671875e-05,
+      "details": {
+        "roi": 10.0,
+        "confidence": 0.7
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432645"
+    },
+    {
+      "test_name": "Opportunity Creation 2",
+      "success": true,
+      "duration": 3.814697265625e-06,
+      "details": {
+        "roi": 11.0,
+        "confidence": 0.72
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432650"
+    },
+    {
+      "test_name": "Opportunity Creation 3",
+      "success": true,
+      "duration": 2.86102294921875e-06,
+      "details": {
+        "roi": 12.0,
+        "confidence": 0.74
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432653"
+    },
+    {
+      "test_name": "Opportunity Creation 4",
+      "success": true,
+      "duration": 2.1457672119140625e-06,
+      "details": {
+        "roi": 13.0,
+        "confidence": 0.76
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432656"
+    },
+    {
+      "test_name": "Opportunity Creation 5",
+      "success": true,
+      "duration": 2.1457672119140625e-06,
+      "details": {
+        "roi": 14.0,
+        "confidence": 0.7799999999999999
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432658"
+    },
+    {
+      "test_name": "Opportunity Creation 6",
+      "success": true,
+      "duration": 9.5367431640625e-07,
+      "details": {
+        "roi": 15.0,
+        "confidence": 0.7999999999999999
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432660"
+    },
+    {
+      "test_name": "Opportunity Creation 7",
+      "success": true,
+      "duration": 9.5367431640625e-07,
+      "details": {
+        "roi": 16.0,
+        "confidence": 0.82
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432662"
+    },
+    {
+      "test_name": "Opportunity Creation 8",
+      "success": true,
+      "duration": 1.1920928955078125e-06,
+      "details": {
+        "roi": 17.0,
+        "confidence": 0.84
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432664"
+    },
+    {
+      "test_name": "Opportunity Creation 9",
+      "success": true,
+      "duration": 9.5367431640625e-07,
+      "details": {
+        "roi": 18.0,
+        "confidence": 0.86
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432666"
+    },
+    {
+      "test_name": "Opportunity Creation 10",
+      "success": true,
+      "duration": 1.1920928955078125e-06,
+      "details": {
+        "roi": 19.0,
+        "confidence": 0.8799999999999999
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432669"
+    },
+    {
+      "test_name": "Data Filtering Consistency",
+      "success": true,
+      "duration": 8.106231689453125e-06,
+      "details": {
+        "original_count": 10,
+        "filtered_count": 10
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432679"
+    },
+    {
+      "test_name": "Message Generation 1",
+      "success": true,
+      "duration": 1.3113021850585938e-05,
+      "details": {
+        "message_length": 316,
+        "has_required_elements": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432699"
+    },
+    {
+      "test_name": "Message Generation 2",
+      "success": true,
+      "duration": 4.0531158447265625e-06,
+      "details": {
+        "message_length": 316,
+        "has_required_elements": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432706"
+    },
+    {
+      "test_name": "Message Generation 3",
+      "success": true,
+      "duration": 2.86102294921875e-06,
+      "details": {
+        "message_length": 316,
+        "has_required_elements": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432711"
+    },
+    {
+      "test_name": "Message Generation 4",
+      "success": true,
+      "duration": 2.1457672119140625e-06,
+      "details": {
+        "message_length": 316,
+        "has_required_elements": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432715"
+    },
+    {
+      "test_name": "Message Generation 5",
+      "success": true,
+      "duration": 3.0994415283203125e-06,
+      "details": {
+        "message_length": 316,
+        "has_required_elements": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432718"
+    },
+    {
+      "test_name": "ROI Analysis Performance",
+      "success": false,
+      "duration": 7.903575897216797e-06,
+      "details": {
+        "avg_time": 7.903575897216797e-06,
+        "max_time": 2.288818359375e-05,
+        "min_time": 5.7220458984375e-06,
+        "success_rate": 0.0,
+        "iterations": 20
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.432966"
+    },
+    {
+      "test_name": "Betfury Link Generation Performance",
+      "success": true,
+      "duration": 1.0609626770019531e-05,
+      "details": {
+        "avg_time": 1.0609626770019531e-05,
+        "max_time": 0.00010800361633300781,
+        "min_time": 3.814697265625e-06,
+        "success_rate": 1.0,
+        "iterations": 20
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.433207"
+    },
+    {
+      "test_name": "Message Creation Performance",
+      "success": true,
+      "duration": 4.255771636962891e-06,
+      "details": {
+        "avg_time": 4.255771636962891e-06,
+        "max_time": 1.621246337890625e-05,
+        "min_time": 2.86102294921875e-06,
+        "success_rate": 1.0,
+        "iterations": 20
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.433310"
+    },
+    {
+      "test_name": "Opportunity Filtering Performance",
+      "success": true,
+      "duration": 2.3543834686279297e-05,
+      "details": {
+        "avg_time": 2.3543834686279297e-05,
+        "max_time": 4.8160552978515625e-05,
+        "min_time": 1.6927719116210938e-05,
+        "success_rate": 1.0,
+        "iterations": 20
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.433805"
+    },
+    {
+      "test_name": "Invalid Opportunity Data",
+      "success": true,
+      "duration": 5.9604644775390625e-06,
+      "details": {
+        "error_handling": "graceful"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:45.433822"
+    },
+    {
+      "test_name": "Network Timeout Simulation",
+      "success": true,
+      "duration": 0.707427978515625,
+      "details": {
+        "error_handling": "graceful"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.141259"
+    },
+    {
+      "test_name": "API Rate Limit Handling",
+      "success": true,
+      "duration": 9.059906005859375e-06,
+      "details": {
+        "error_handling": "graceful"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.141285"
+    },
+    {
+      "test_name": "Memory Pressure Handling",
+      "success": true,
+      "duration": 0.0032320022583007812,
+      "details": {
+        "error_handling": "graceful"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144522"
+    },
+    {
+      "test_name": "Malformed Message Handling",
+      "success": true,
+      "duration": 3.910064697265625e-05,
+      "details": {
+        "error_handling": "graceful"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144571"
+    },
+    {
+      "test_name": "Telegram Message Formatting",
+      "success": true,
+      "duration": 1.1920928955078125e-05,
+      "details": {
+        "message_length": 326,
+        "has_required_elements": true,
+        "elements_found": [
+          "ROI:",
+          "Confidence:",
+          "BETFURY.IO",
+          "Expires:",
+          "Real Madrid",
+          "Barcelona"
+        ]
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144598"
+    },
+    {
+      "test_name": "Telegram Demo Mode",
+      "success": true,
+      "duration": 7.867813110351562e-06,
+      "details": {
+        "demo_mode": true
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144609"
+    },
+    {
+      "test_name": "Betfury Links - Manchester City vs Arsenal",
+      "success": false,
+      "duration": 5.817413330078125e-05,
+      "details": {
+        "main_link_valid": false,
+        "market_links_count": 5,
+        "market_links_valid": true,
+        "main_link": "https://betfury.io/sports/football/england/premier-league/manchester-city-vs-arsenal?ref=reliability_test",
+        "sport": "football"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144679"
+    },
+    {
+      "test_name": "Betfury Links - Novak Djokovic vs Rafael Nadal",
+      "success": false,
+      "duration": 3.1948089599609375e-05,
+      "details": {
+        "main_link_valid": false,
+        "market_links_count": 5,
+        "market_links_valid": true,
+        "main_link": "https://betfury.io/sports/tennis/atp/novak-djokovic-vs-rafael-nadal?ref=reliability_test",
+        "sport": "tennis"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144717"
+    },
+    {
+      "test_name": "Betfury Links - Los Angeles Lakers vs Boston Celtics",
+      "success": false,
+      "duration": 3.2901763916015625e-05,
+      "details": {
+        "main_link_valid": false,
+        "market_links_count": 5,
+        "market_links_valid": true,
+        "main_link": "https://betfury.io/sports/basketball/usa/nba/los-angeles-lakers-vs-boston-celtics?ref=reliability_test",
+        "sport": "basketball"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144753"
+    },
+    {
+      "test_name": "Betfury Links - Team With Spaces vs Team-With-Dashes",
+      "success": false,
+      "duration": 3.600120544433594e-05,
+      "details": {
+        "main_link_valid": false,
+        "market_links_count": 5,
+        "market_links_valid": true,
+        "main_link": "https://betfury.io/sports/football/team-with-spaces-vs-team-with-dashes?ref=reliability_test",
+        "sport": "football"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144792"
+    },
+    {
+      "test_name": "Betfury Links - Special@Characters vs Numbers123",
+      "success": false,
+      "duration": 3.0994415283203125e-05,
+      "details": {
+        "main_link_valid": false,
+        "market_links_count": 5,
+        "market_links_valid": true,
+        "main_link": "https://betfury.io/sports/tennis/specialcharacters-vs-numbers123?ref=reliability_test",
+        "sport": "tennis"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:07:46.144826"
+    },
+    {
+      "test_name": "ROI Calculation - High ROI Scenario",
+      "success": false,
+      "duration": 7.200241088867188e-05,
+      "details": {},
+      "error_message": "No analysis returned",
+      "timestamp": "2025-11-08 11:07:46.144903"
+    },
+    {
+      "test_name": "ROI Calculation - Low ROI Scenario",
+      "success": false,
+      "duration": 1.71661376953125e-05,
+      "details": {},
+      "error_message": "No analysis returned",
+      "timestamp": "2025-11-08 11:07:46.144923"
+    },
+    {
+      "test_name": "ROI Calculation - Moderate ROI Scenario",
+      "success": false,
+      "duration": 1.1920928955078125e-05,
+      "details": {},
+      "error_message": "No analysis returned",
+      "timestamp": "2025-11-08 11:07:46.144937"
+    },
+    {
+      "test_name": "Continuous Operation",
+      "success": true,
+      "duration": 204.37820100784302,
+      "details": {
+        "total_operations": 8,
+        "errors": 0,
+        "success_rate": 1.0,
+        "error_messages": []
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:11:10.523261"
+    },
+    {
+      "test_name": "Odds API Integration",
+      "success": true,
+      "duration": 9.799003601074219e-05,
+      "details": {
+        "requests_made": 0,
+        "requests_remaining": 500,
+        "last_request": "2025-11-08T11:07:45.432557",
+        "usage_percentage": 0.0
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:11:10.523614"
+    },
+    {
+      "test_name": "Memory Usage",
+      "success": true,
+      "duration": 0.0,
+      "details": {
+        "status": "psutil_not_available"
+      },
+      "error_message": "",
+      "timestamp": "2025-11-08 11:11:10.525683"
+    }
+  ],
+  "performance_metrics": {
+    "response_times": [
+      2.288818359375e-05,
+      1.4066696166992188e-05,
+      1.0013580322265625e-05,
+      8.106231689453125e-06,
+      5.9604644775390625e-06,
+      5.9604644775390625e-06,
+      6.9141387939453125e-06,
+      6.198883056640625e-06,
+      6.9141387939453125e-06,
+      6.198883056640625e-06,
+      6.9141387939453125e-06,
+      5.9604644775390625e-06,
+      7.152557373046875e-06,
+      5.7220458984375e-06,
+      5.9604644775390625e-06,
+      7.152557373046875e-06,
+      6.9141387939453125e-06,
+      6.198883056640625e-06,
+      6.9141387939453125e-06,
+      5.9604644775390625e-06,
+      0.00010800361633300781,
+      8.821487426757812e-06,
+      5.245208740234375e-06,
+      1.6927719116210938e-05,
+      1.0013580322265625e-05,
+      5.9604644775390625e-06,
+      5.0067901611328125e-06,
+      4.0531158447265625e-06,
+      3.814697265625e-06,
+      4.291534423828125e-06,
+      3.814697265625e-06,
+      4.0531158447265625e-06,
+      4.0531158447265625e-06,
+      3.814697265625e-06,
+      4.291534423828125e-06,
+      3.814697265625e-06,
+      4.0531158447265625e-06,
+      4.0531158447265625e-06,
+      3.814697265625e-06,
+      4.291534423828125e-06,
+      1.621246337890625e-05,
+      7.867813110351562e-06,
+      5.245208740234375e-06,
+      3.814697265625e-06,
+      4.0531158447265625e-06,
+      3.0994415283203125e-06,
+      3.814697265625e-06,
+      3.0994415283203125e-06,
+      3.0994415283203125e-06,
+      2.86102294921875e-06,
+      3.0994415283203125e-06,
+      3.0994415283203125e-06,
+      2.86102294921875e-06,
+      3.0994415283203125e-06,
+      3.0994415283203125e-06,
+      3.814697265625e-06,
+      3.0994415283203125e-06,
+      3.0994415283203125e-06,
+      2.86102294921875e-06,
+      3.814697265625e-06,
+      2.5033950805664062e-05,
+      1.8835067749023438e-05,
+      1.7881393432617188e-05,
+      2.4080276489257812e-05,
+      2.47955322265625e-05,
+      1.9311904907226562e-05,
+      1.6927719116210938e-05,
+      1.71661376953125e-05,
+      2.1696090698242188e-05,
+      2.4080276489257812e-05,
+      2.4080276489257812e-05,
+      2.3126602172851562e-05,
+      4.673004150390625e-05,
+      2.5033950805664062e-05,
+      2.002716064453125e-05,
+      4.8160552978515625e-05,
+      1.8835067749023438e-05,
+      1.8835067749023438e-05,
+      1.9073486328125e-05,
+      1.71661376953125e-05
+    ],
+    "memory_usage": [],
+    "cpu_usage": [],
+    "api_call_times": [],
+    "message_generation_times": [
+      1.3113021850585938e-05,
+      4.0531158447265625e-06,
+      2.86102294921875e-06,
+      2.1457672119140625e-06,
+      3.0994415283203125e-06
+    ]
+  }
+}

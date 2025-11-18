@@ -35,3 +35,9 @@ Thumbs.db
 .gitsecret/keys/random_seed
 !*.secret
 telegram_secrets.env
+
+# Notion integration secrets
+config/notion_databases.json
+config/notion_token.txt
+*.notion_token
+NOTION_TOKEN

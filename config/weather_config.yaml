@@ -1,0 +1,65 @@
+# WeatherAPI.com Configuration
+# Weather-based betting edge detection system
+
+# API Configuration
+weather_api:
+  api_key: "${WEATHER_API_KEY}"  # Set via environment variable
+  base_url: "http://api.weatherapi.com/v1"
+  timeout: 10
+  retry_attempts: 3
+  
+# Monitoring Settings
+monitoring:
+  active_interval_seconds: 120         # Check every 2 minutes during active matches
+  inactive_interval_seconds: 600      # Check every 10 minutes when no matches
+  
+# Edge Detection Thresholds
+edge_detection:
+  minimum_edge_strength: 0.05          # 5% minimum edge to consider
+  critical_edge_strength: 0.15        # 15% edge = critical alert
+  maximum_daily_edges: 50             # Prevent alert spam
+  minimum_time_between_same_edge: 300 # 5 minutes between same edge type
+  
+# Betting Configuration
+betting:
+  bankroll: 5000.0                     # Your betting bankroll
+  max_weather_edge_stake_percent: 0.04 # 4% max stake per weather edge
+  weather_edge_bankroll_percent: 0.15  # 15% of bankroll for weather edges
+  minimum_stake: 10.0                  # Minimum bet size
+  maximum_stake: 500.0                 # Maximum bet size
+  
+# Weather Specific Settings
+weather_settings:
+  api_call_cooldown_seconds: 90        # Don't call API too frequently
+  cache_weather_data_minutes: 5        # Cache weather data for 5 minutes
+  storm_alert_distance_km: 25          # Alert when storm within 25km
+  heavy_rain_threshold_mm: 8           # 8mm+ = heavy rain
+  strong_wind_threshold_mph: 15        # 15mph+ = strong wind
+  temperature_shock_threshold_c: 6    # 6°C sudden change = shock
+  
+# Alert Configuration
+alerts:
+  webhooks:
+    discord: "${DISCORD_WEBHOOK_URL}"    # Optional Discord webhook
+    slack: "${SLACK_WEBHOOK_URL}"       # Optional Slack webhook
+  
+  telegram:
+    enabled: false                      # Use existing Telegram bot
+    chat_id: "${TELEGRAM_CHAT_ID}"
+  
+  critical_alert_threshold: 0.15        # 15%+ edge = critical alert
+  
+# Performance Tracking
+performance_tracking:
+  track_edge_accuracy: true
+  track_profit_by_edge_type: true
+  generate_daily_reports: true
+  alert_on_poor_performance: true
+  
+# Logging
+logging:
+  log_level: "INFO"
+  log_weather_api_calls: true
+  log_edge_detection: true
+  log_betting_recommendations: true
+

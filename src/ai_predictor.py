@@ -21,6 +21,19 @@ import pickle
 import json
 from pathlib import Path
 
+# Mojo performance layer imports
+try:
+    from src.mojo_bindings import (
+        feature_transform,
+        normalize_features,
+        compute_statistics,
+        get_performance_stats,
+        should_use_mojo
+    )
+    MOJO_BINDINGS_AVAILABLE = True
+except ImportError:
+    MOJO_BINDINGS_AVAILABLE = False
+
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -394,9 +407,24 @@ class SportsPredictionModel:
             # Convert to array
             feature_array = self._features_to_array(features)
             
-            # Scale if needed
+            # Scale if needed - use Mojo-accelerated transformation if available
             if self.best_model_name == 'logistic_regression':
-                feature_array = self.scaler.transform(feature_array.reshape(1, -1))
+                if MOJO_BINDINGS_AVAILABLE and should_use_mojo() and hasattr(self.scaler, 'mean_') and hasattr(self.scaler, 'scale_'):
+                    try:
+                        # Use Mojo-accelerated feature transformation
+                        mean_array = np.array(self.scaler.mean_)
+                        std_array = np.array(self.scaler.scale_)
+                        feature_array_scaled = feature_transform(
+                            feature_array.reshape(1, -1),
+                            mean_array,
+                            std_array
+                        )
+                        feature_array = feature_array_scaled
+                    except Exception as e:
+                        logger.debug(f"Mojo feature transform failed, using Python scaler: {e}")
+                        feature_array = self.scaler.transform(feature_array.reshape(1, -1))
+                else:
+                    feature_array = self.scaler.transform(feature_array.reshape(1, -1))
             
             # Make prediction
             prediction_encoded = self.best_model.predict(feature_array)[0]

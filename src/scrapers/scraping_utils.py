@@ -497,6 +497,21 @@ class ROIAnalyzer:
     def __init__(self):
         self.arbitrage_threshold = 0.02  # 2% minimum arbitrage margin
         self.value_threshold = 0.05  # 5% minimum value edge
+        
+        # Mojo performance layer imports
+        try:
+            from src.mojo_bindings import (
+                calculate_arbitrage as mojo_calculate_arbitrage,
+                batch_calculate_roi,
+                should_use_mojo
+            )
+            self.mojo_available = True
+            self._mojo_calculate_arbitrage = mojo_calculate_arbitrage
+            self._batch_calculate_roi = batch_calculate_roi
+        except ImportError:
+            self.mojo_available = False
+            self._mojo_calculate_arbitrage = None
+            self._batch_calculate_roi = None
 
     def find_arbitrage_opportunities(self, odds_data: Dict[str, List[Dict]]) -> List[Dict]:
         """Find arbitrage opportunities across bookmakers"""
@@ -521,23 +536,68 @@ class ROIAnalyzer:
         return opportunities
 
     def calculate_arbitrage(self, bookmakers: Dict[str, Dict]) -> Optional[Dict]:
-        """Calculate if arbitrage opportunity exists"""
+        """Calculate if arbitrage opportunity exists (Mojo-accelerated)"""
         try:
             # Extract 1X2 odds from each bookmaker
-            home_odds = []
-            draw_odds = []
-            away_odds = []
+            home_odds_list = []
+            draw_odds_list = []
+            away_odds_list = []
+            bookmaker_names = []
 
             for bookmaker, match in bookmakers.items():
+                bookmaker_names.append(bookmaker)
                 if 'home_odds' in match:
-                    home_odds.append((bookmaker, match['home_odds']))
+                    home_odds_list.append(match['home_odds'])
                 if 'draw_odds' in match:
-                    draw_odds.append((bookmaker, match['draw_odds']))
+                    draw_odds_list.append(match['draw_odds'])
                 if 'away_odds' in match:
-                    away_odds.append((bookmaker, match['away_odds']))
+                    away_odds_list.append(match['away_odds'])
 
-            if not (home_odds and away_odds):
+            if not (home_odds_list and away_odds_list):
                 return None
+
+            # Use Mojo-accelerated arbitrage calculation if available
+            if self.mojo_available and should_use_mojo() and self._mojo_calculate_arbitrage:
+                try:
+                    import numpy as np
+                    home_odds_array = np.array(home_odds_list, dtype=np.float64)
+                    away_odds_array = np.array(away_odds_list, dtype=np.float64)
+                    draw_odds_array = np.array(draw_odds_list, dtype=np.float64) if draw_odds_list else np.array([], dtype=np.float64)
+                    
+                    arbitrage_result = self._mojo_calculate_arbitrage(home_odds_array, draw_odds_array, away_odds_array)
+                    
+                    if arbitrage_result.get('has_arbitrage', False):
+                        # Find bookmaker names for best odds
+                        best_home_idx = int(np.argmax(home_odds_array))
+                        best_away_idx = int(np.argmax(away_odds_array))
+                        best_draw_idx = int(np.argmax(draw_odds_array)) if len(draw_odds_array) > 0 else None
+                        
+                        return {
+                            'match': list(bookmakers.values())[0]['home_team'] + ' vs ' + list(bookmakers.values())[0]['away_team'],
+                            'margin': arbitrage_result['margin'],
+                            'profit_percentage': arbitrage_result['profit_percentage'],
+                            'best_odds': {
+                                'home': {'bookmaker': bookmaker_names[best_home_idx] if best_home_idx < len(bookmaker_names) else 'unknown', 
+                                        'odds': float(home_odds_array[best_home_idx])},
+                                'away': {'bookmaker': bookmaker_names[best_away_idx] if best_away_idx < len(bookmaker_names) else 'unknown', 
+                                        'odds': float(away_odds_array[best_away_idx])},
+                                'draw': {'bookmaker': bookmaker_names[best_draw_idx] if best_draw_idx is not None and best_draw_idx < len(bookmaker_names) else 'unknown', 
+                                        'odds': float(draw_odds_array[best_draw_idx])} if best_draw_idx is not None else None
+                            },
+                            'stake_distribution': arbitrage_result['stake_distribution'],
+                            'guaranteed_profit': arbitrage_result['guaranteed_profit']
+                        }
+                    return None
+                except Exception as e:
+                    logging.debug(f"Mojo arbitrage calculation failed, using Python fallback: {e}")
+
+            # Python fallback implementation
+            home_odds = [(bookmaker_names[i] if i < len(bookmaker_names) else f"bm_{i}", home_odds_list[i]) 
+                        for i in range(len(home_odds_list))]
+            away_odds = [(bookmaker_names[i] if i < len(bookmaker_names) else f"bm_{i}", away_odds_list[i]) 
+                        for i in range(len(away_odds_list))]
+            draw_odds = [(bookmaker_names[i] if i < len(bookmaker_names) else f"bm_{i}", draw_odds_list[i]) 
+                        for i in range(len(draw_odds_list))] if draw_odds_list else []
 
             # Find best odds for each outcome
             best_home = max(home_odds, key=lambda x: x[1])

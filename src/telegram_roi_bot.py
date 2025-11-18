@@ -396,7 +396,7 @@ Thanks for using Tennis ROI Bot! 🎾
             return []
     
     def calculate_roi(self, prediction: MatchPrediction) -> Optional[Dict[str, Any]]:
-        """Calculate ROI for a prediction - FIXED VERSION"""
+        """Calculate ROI for a prediction (Mojo-accelerated)"""
         try:
             win_prob = prediction.win_probability
             confidence = prediction.confidence_score
@@ -413,11 +413,23 @@ Thanks for using Tennis ROI Bot! 🎾
                 # Underdogs get better odds from bookmakers
                 market_odds = fair_odds * 0.92  # 8% margin for underdogs
 
-            # Calculate potential ROI correctly
+            # Calculate potential ROI - use Mojo if available
             stake = 100  # $100 stake for calculation
-            potential_return = stake * market_odds
-            profit = potential_return - stake
-            roi_percentage = (profit / stake) * 100
+            
+            # Try Mojo-accelerated expected ROI calculation
+            try:
+                from src.mojo_bindings import expected_roi, should_use_mojo
+                if should_use_mojo():
+                    # Use Mojo for ROI calculation
+                    roi_percentage = expected_roi(win_prob, market_odds, stake)
+                    profit = (roi_percentage / 100.0) * stake
+                else:
+                    raise ImportError("Mojo not enabled")
+            except (ImportError, Exception):
+                # Python fallback
+                potential_return = stake * market_odds
+                profit = potential_return - stake
+                roi_percentage = (profit / stake) * 100
 
             # CORRECTED: Risk assessment - higher confidence = lower risk
             risk_level = 1 - confidence  # High confidence = low risk

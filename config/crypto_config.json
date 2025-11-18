@@ -1,0 +1,27 @@
+{
+  "monitored_cryptos": {
+    "BTC": {
+      "buy_threshold": 50000,
+      "sell_threshold": 60000,
+      "enabled": true
+    },
+    "ETH": {
+      "buy_threshold": 3000,
+      "sell_threshold": 4000,
+      "enabled": true
+    },
+    "SOL": {
+      "buy_threshold": 100,
+      "sell_threshold": 150,
+      "enabled": false
+    }
+  },
+  "update_interval": 60,
+  "api_provider": "coingecko",
+  "notifications": {
+    "enabled": true,
+    "min_change_percent": 5.0,
+    "cooldown_seconds": 300
+  }
+}
+

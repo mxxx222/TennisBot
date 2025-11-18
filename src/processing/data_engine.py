@@ -41,6 +41,18 @@ import queue
 import re
 from collections import defaultdict, Counter
 
+# Mojo performance layer imports
+try:
+    from src.mojo_bindings import (
+        vectorized_transforms,
+        compute_statistics as mojo_compute_statistics,
+        get_performance_stats,
+        should_use_mojo
+    )
+    MOJO_BINDINGS_AVAILABLE = True
+except ImportError:
+    MOJO_BINDINGS_AVAILABLE = False
+
 @dataclass
 class DataQualityReport:
     source: str
@@ -655,7 +667,7 @@ class AdvancedDataProcessor:
             return self._calculate_general_metrics(data)
     
     def _calculate_general_metrics(self, data: pd.DataFrame) -> Dict[str, Any]:
-        """Calculate general performance metrics"""
+        """Calculate general performance metrics (Mojo-accelerated)"""
         numeric_data = data.select_dtypes(include=[np.number])
         
         metrics = {
@@ -668,22 +680,69 @@ class AdvancedDataProcessor:
             col_data = numeric_data[column].dropna()
             
             if len(col_data) > 0:
-                # Efficiency (normalized by max)
-                efficiency = col_data.mean() / col_data.max() if col_data.max() != 0 else 0
-                metrics['efficiency_scores'][column] = efficiency
-                
-                # Consistency (inverse of coefficient of variation)
-                cv = col_data.std() / col_data.mean() if col_data.mean() != 0 else 0
-                consistency = 1 / (1 + cv)
-                metrics['consistency_scores'][column] = consistency
+                # Use Mojo-accelerated statistics if available
+                if MOJO_BINDINGS_AVAILABLE and should_use_mojo():
+                    try:
+                        col_array = col_data.values.astype(np.float64)
+                        stats = mojo_compute_statistics(col_array)
+                        
+                        # Efficiency (normalized by max)
+                        efficiency = stats['mean'] / stats['max'] if stats['max'] != 0 else 0
+                        metrics['efficiency_scores'][column] = efficiency
+                        
+                        # Consistency (inverse of coefficient of variation)
+                        cv = stats['std'] / stats['mean'] if stats['mean'] != 0 else 0
+                        consistency = 1 / (1 + cv)
+                        metrics['consistency_scores'][column] = consistency
+                    except Exception as e:
+                        self.logger.debug(f"Mojo statistics failed for {column}, using Python: {e}")
+                        # Fallback to Python implementation
+                        efficiency = col_data.mean() / col_data.max() if col_data.max() != 0 else 0
+                        metrics['efficiency_scores'][column] = efficiency
+                        cv = col_data.std() / col_data.mean() if col_data.mean() != 0 else 0
+                        consistency = 1 / (1 + cv)
+                        metrics['consistency_scores'][column] = consistency
+                else:
+                    # Python fallback
+                    efficiency = col_data.mean() / col_data.max() if col_data.max() != 0 else 0
+                    metrics['efficiency_scores'][column] = efficiency
+                    cv = col_data.std() / col_data.mean() if col_data.mean() != 0 else 0
+                    consistency = 1 / (1 + cv)
+                    metrics['consistency_scores'][column] = consistency
         
         return metrics
     
     # PARALLEL PROCESSING
     async def process_data_parallel(self, data_list: List[pd.DataFrame], sport: str, max_workers: int = 4) -> List[pd.DataFrame]:
-        """Process multiple datasets in parallel"""
+        """Process multiple datasets in parallel (Mojo-accelerated batch processing)"""
         self.logger.info(f"Processing {len(data_list)} datasets in parallel with {max_workers} workers")
         
+        # Use Mojo-accelerated vectorized transforms for batch operations if available
+        if MOJO_BINDINGS_AVAILABLE and should_use_mojo() and len(data_list) > 0:
+            try:
+                # Try to use Mojo for batch processing of numeric transformations
+                processed_list = []
+                for data in data_list:
+                    # Apply Mojo vectorized transforms to numeric columns
+                    numeric_data = data.select_dtypes(include=[np.number])
+                    if not numeric_data.empty:
+                        for col in numeric_data.columns:
+                            col_array = data[col].dropna().values.astype(np.float64)
+                            if len(col_array) > 0:
+                                # Use Mojo vectorized transform for normalization
+                                normalized = vectorized_transforms(col_array, "normalize")
+                                data = data.copy()
+                                data.loc[data[col].notna(), col] = normalized[:len(data[data[col].notna()])]
+                    
+                    # Process with existing pipeline
+                    processed = self._process_single_dataset(data, sport)
+                    processed_list.append(processed)
+                
+                return processed_list
+            except Exception as e:
+                self.logger.debug(f"Mojo batch processing failed, using Python fallback: {e}")
+        
+        # Python fallback with parallel processing
         loop = asyncio.get_event_loop()
         
         with ProcessPoolExecutor(max_workers=max_workers) as executor:

@@ -1,0 +1,38 @@
+{
+  "trading": {
+    "initial_capital": 10000,
+    "risk_per_trade": 0.02,
+    "max_positions": 5,
+    "enabled": true
+  },
+  "indicators": {
+    "rsi_period": 14,
+    "macd_fast": 12,
+    "macd_slow": 26,
+    "macd_signal": 9,
+    "sma_periods": [20, 50, 200],
+    "bollinger_period": 20,
+    "bollinger_std": 2,
+    "atr_period": 14
+  },
+  "signals": {
+    "min_confidence": 0.6,
+    "min_risk_reward": 2.0,
+    "max_position_size": 0.1,
+    "use_kelly": true,
+    "kelly_fraction": 0.25
+  },
+  "risk_management": {
+    "stop_loss_percent": 0.02,
+    "take_profit_ratio": 3.0,
+    "trailing_stop": true,
+    "trailing_stop_percent": 0.01
+  },
+  "notifications": {
+    "enabled": true,
+    "send_signals": true,
+    "send_portfolio_updates": true,
+    "update_interval_hours": 6
+  }
+}
+

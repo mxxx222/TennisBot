@@ -28,6 +28,19 @@ import pickle
 import os
 from pathlib import Path
 
+# Mojo performance layer imports
+try:
+    from src.mojo_bindings import (
+        ensemble_aggregate,
+        batch_predict,
+        get_performance_stats,
+        should_use_mojo
+    )
+    MOJO_BINDINGS_AVAILABLE = True
+except ImportError:
+    MOJO_BINDINGS_AVAILABLE = False
+    # Logger will be initialized later, safe to ignore
+
 # Machine Learning imports
 try:
     from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -527,9 +540,41 @@ class EnhancedTennisPredictor:
             return False
     
     def _ensemble_predict(self, X, X_scaled) -> np.ndarray:
-        """Make ensemble predictions using weighted voting"""
-        predictions = []
+        """Make ensemble predictions using weighted voting (Mojo-accelerated)"""
+        # Get predictions from each model
+        predictions_list = []
+        model_names = []
         
+        for name, model in self.models.items():
+            if name == 'logistic_regression':
+                pred_proba = model.predict_proba(X_scaled)[:, 1]
+            else:
+                pred_proba = model.predict_proba(X)[:, 1]
+            
+            predictions_list.append(pred_proba)
+            model_names.append(name)
+        
+        # Use Mojo-accelerated ensemble aggregation if available
+        if MOJO_BINDINGS_AVAILABLE and should_use_mojo() and len(predictions_list) > 0:
+            try:
+                # Convert to numpy arrays if needed
+                preds_array = [np.array(p) for p in predictions_list]
+                
+                # Create weights array matching model order
+                weights = np.array([
+                    self.model_weights.get(name, 0.25) for name in model_names
+                ])
+                
+                # Use Mojo-accelerated ensemble aggregation
+                ensemble_proba = ensemble_aggregate(preds_array, weights)
+                
+                # Convert to binary predictions
+                return (ensemble_proba > 0.5).astype(int)
+            except Exception as e:
+                logger.warning(f"Mojo ensemble aggregation failed, using Python fallback: {e}")
+        
+        # Python fallback implementation
+        predictions = []
         for name, model in self.models.items():
             if name == 'logistic_regression':
                 pred_proba = model.predict_proba(X_scaled)[:, 1]

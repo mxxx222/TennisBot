@@ -7,7 +7,18 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     xvfb \
+    build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Mojo SDK (optional - will skip if unavailable)
+# Mojo SDK can be installed from https://www.modular.com/max/mojo
+# For production, download and install Mojo SDK manually or via package manager
+RUN if [ -n "$MOJO_SDK_PATH" ] && [ -f "$MOJO_SDK_PATH/mojo" ]; then \
+    echo "Mojo SDK detected at $MOJO_SDK_PATH"; \
+    else \
+    echo "Mojo SDK not found - Python fallback will be used"; \
+    fi
 
 # Install Chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -36,12 +47,22 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p logs data config
+RUN mkdir -p logs data config mojo_layer/build
+
+# Build Mojo modules if Mojo SDK is available
+RUN if [ -n "$MOJO_SDK_PATH" ] && [ -f "$MOJO_SDK_PATH/mojo" ]; then \
+    echo "Building Mojo performance layer..."; \
+    chmod +x mojo_layer/build.sh && ./mojo_layer/build.sh || echo "Mojo build failed, using Python fallback"; \
+    else \
+    echo "Skipping Mojo build - SDK not available"; \
+    fi
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV EDUCATIONAL_MODE=true
 ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
+ENV USE_MOJO_LAYER=true
+ENV MOJO_DEBUG=false
 
 # Create non-root user for security
 RUN adduser --disabled-password --gecos '' appuser && \

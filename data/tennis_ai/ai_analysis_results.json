@@ -1,0 +1,939 @@
+{
+  "generated_at": "2025-11-18T14:32:47.470183",
+  "model": "gpt-4",
+  "total_analyzed": 25,
+  "high_value_bets": 0,
+  "estimated_cost_eur": 0.75,
+  "all_analyses": [
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both Player A and Player B, it's difficult to accurately assess their performance and predict the outcome of the match. Furthermore, without recent results, it's impossible to evaluate their current form and momentum. The unknown variables and data quality present high risk factors.",
+      "key_factors": [
+        "Unknown ranking",
+        "Lack of recent results",
+        "Unknown variables"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81f5-a9bd-f84b1ee972f2",
+        "page_url": "https://www.notion.so/2afa20e3a65b81f5a9bdf84b1ee972f2",
+        "player_a": "Havermans D.",
+        "player_b": "Mi L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:08.819605"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent results, form assessment is not possible. The surface suitability is also unknown due to lack of data on player styles and their fit with hard court. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown player styles and surface fit",
+        "No recent results for form assessment"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data for accurate prediction"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8144-bca7-c0ead388b3f5",
+        "page_url": "https://www.notion.so/2afa20e3a65b8144bca7c0ead388b3f5",
+        "player_a": "Golovina M.",
+        "player_b": "Kuharenko P.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:21.254618"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it's difficult to accurately predict the outcome. Both players are likely to be closely matched, hence the 50/50 win probability. The pre-filter score is high, but without more data, a bet recommendation cannot be made.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown player form",
+        "Unknown surface suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient player data",
+        "High risk level"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-813f-8bde-e5dfa1f0c116",
+        "page_url": "https://www.notion.so/2afa20e3a65b813f8bdee5dfa1f0c116",
+        "player_a": "Fulgenzi B.",
+        "player_b": "Fulgenzi L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:27.693637"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of available data regarding the players' rankings and recent performance, it is difficult to accurately predict the outcome of the match. Additionally, the W15 tier is known for its unpredictability, further complicating the analysis. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Unknown player rankings",
+        "Unknown recent performance",
+        "W15 unpredictability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data",
+        "High unpredictability"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-819f-9585-d786afda2cf6",
+        "page_url": "https://www.notion.so/2afa20e3a65b819f9585d786afda2cf6",
+        "player_a": "De Koning R.",
+        "player_b": "Giordano M.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:41.499864"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking and recent performance data for both players, it's difficult to accurately assess the potential outcome of this match. Additionally, the W15 level is known for its unpredictability, further increasing the risk associated with this bet.",
+      "key_factors": [
+        "Lack of ranking data",
+        "Lack of recent performance data",
+        "W15 unpredictability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data",
+        "High unpredictability"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8148-9177-d66c736a4466",
+        "page_url": "https://www.notion.so/2afa20e3a65b81489177d66c736a4466",
+        "player_a": "Abouelsaad H.",
+        "player_b": "Fouad N.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:47.353793"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Both players have no known ranking, making it difficult to predict the outcome. The lack of data also makes it impossible to assess their form and suitability to the hard court surface. Therefore, it's best to skip this match.",
+      "key_factors": [
+        "Unknown ranking",
+        "Unknown form",
+        "Unknown surface suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81da-bb62-d25ad78559c3",
+        "page_url": "https://www.notion.so/2afa20e3a65b81dabb62d25ad78559c3",
+        "player_a": "Mandavkar H.",
+        "player_b": "Paul K.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:51.967320"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately assess the potential outcome of the match. Additionally, without recent results, momentum indicators cannot be calculated. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown recent results",
+        "Unknown player styles"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data for analysis"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81b0-9792-ced03b7dcf1d",
+        "page_url": "https://www.notion.so/2afa20e3a65b81b09792ced03b7dcf1d",
+        "player_a": "Khomutsianskaya D.",
+        "player_b": "Kubareva A.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:30:57.182853"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking and recent performance data for both players, it is difficult to accurately predict the outcome of the match. Additionally, the W15 tier often sees unpredictable results, further complicating the analysis. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of player data",
+        "Unpredictability of W15 tier",
+        "Unknown player form"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8118-81ce-da2885a2c3c7",
+        "page_url": "https://www.notion.so/2afa20e3a65b811881ceda2885a2c3c7",
+        "player_a": "Giannini N.",
+        "player_b": "Ibrahim J.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:02.833055"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. The surface suitability is also unknown due to the lack of information on player styles and how they fit with the hard court. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking",
+        "Unknown form",
+        "Unknown surface suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-818e-8da9-c6f705a5edd8",
+        "page_url": "https://www.notion.so/2afa20e3a65b818e8da9c6f705a5edd8",
+        "player_a": "Tian N.",
+        "player_b": "Wang J.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:10.395129"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. The surface suitability is also unknown due to the lack of information about player styles and their fit with the hard court. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown player styles and surface fit",
+        "No recent results or momentum indicators"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8127-b173-d31f00a98735",
+        "page_url": "https://www.notion.so/2afa20e3a65b8127b173d31f00a98735",
+        "player_a": "Kang N. H.",
+        "player_b": "Moon J.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:22.273529"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of the match. The surface suitability and form assessment also cannot be determined without further data. Therefore, it is recommended to skip this match for betting purposes.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown player styles and surface fit",
+        "Insufficient data for form assessment"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data for accurate analysis"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-819b-a0f6-cda51ed68138",
+        "page_url": "https://www.notion.so/2afa20e3a65b819ba0f6cda51ed68138",
+        "player_a": "Dao u.",
+        "player_b": "Wang Y.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:27.851805"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent performance data, assessing the form of each player is challenging. The surface suitability cannot be determined without knowledge of each player's style and past performance on hard courts.",
+      "key_factors": [
+        "Unknown Rankings",
+        "Lack of Recent Performance Data",
+        "Unknown Surface Suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient Data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8197-9d2f-c9a3c7abd5c1",
+        "page_url": "https://www.notion.so/2afa20e3a65b81979d2fc9a3c7abd5c1",
+        "player_a": "Chea J.",
+        "player_b": "Nguyen T. M. L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:34.265733"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Both players have no known ranking, making it difficult to assess their performance. Additionally, there is no data available on their recent results or their suitability to the hard court surface. This makes it impossible to accurately predict the outcome of the match.",
+      "key_factors": [
+        "Unknown ranking",
+        "Unknown recent results",
+        "Unknown surface suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81cf-ac5c-f9af6f2673ed",
+        "page_url": "https://www.notion.so/2afa20e3a65b81cfac5cf9af6f2673ed",
+        "player_a": "Ramesh J.",
+        "player_b": "Sama C. R.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:39.588789"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it's difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. The surface suitability is also unknown as we don't have information about the players' styles and their fit with the hard court. Therefore, it's recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown player styles",
+        "No recent results"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81d8-bf7a-e8c45ccba5da",
+        "page_url": "https://www.notion.so/2afa20e3a65b81d8bf7ae8c45ccba5da",
+        "player_a": "Goto R.",
+        "player_b": "Matsuda R.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Phan Thiet 2 (Vietnam), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:50.818795"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking data for both players, it's difficult to accurately predict the outcome of this match. The surface suitability and form assessment are also unknown, which further complicates the analysis. The pre-filter score is high, but without additional data, it's not enough to make a confident prediction.",
+      "key_factors": [
+        "Lack of ranking data",
+        "Unknown surface suitability",
+        "Unknown form assessment"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8121-ab4c-d4e36d03a209",
+        "page_url": "https://www.notion.so/2afa20e3a65b8121ab4cd4e36d03a209",
+        "player_a": "Pawlak L.",
+        "player_b": "Svahn I.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Monastir 40 (Tunisia), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:31:55.658524"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players and the unknown ranking gap, it is difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. Therefore, the risk of betting on this match is high.",
+      "key_factors": [
+        "Unknown ranking",
+        "Lack of recent results",
+        "High risk"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Lack of player ranking information",
+        "Lack of recent results"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8143-b434-dce634abbc2e",
+        "page_url": "https://www.notion.so/2afa20e3a65b8143b434dce634abbc2e",
+        "player_a": "Lopez E.",
+        "player_b": "Soussi L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Monastir 40 (Tunisia), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:00.285372"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it's difficult to assess their performance and predict the outcome of the match. The unknown ranking gap also makes it impossible to evaluate the W15 tier implications. Furthermore, without recent results, it's challenging to measure momentum indicators and identify potential market inefficiencies.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown recent results",
+        "Unknown player styles and surface fit"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-815b-9f36-e1ca96eda4c2",
+        "page_url": "https://www.notion.so/2afa20e3a65b815b9f36e1ca96eda4c2",
+        "player_a": "Adeshina E.",
+        "player_b": "Stevens A.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Monastir 40 (Tunisia), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:06.698310"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent form data, it's impossible to assess momentum. The surface suitability is also unknown without player style data. Therefore, it's recommended to skip this match.",
+      "key_factors": [
+        "Unknown ranking",
+        "Unknown form",
+        "Unknown player style"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81d1-aa89-e36465b36e2b",
+        "page_url": "https://www.notion.so/2afa20e3a65b81d1aa89e36465b36e2b",
+        "player_a": "Fullana L.",
+        "player_b": "Pedretti T.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Mogi das Cruzes (Brazil), clay - ITF WOMEN - DOUBLES:",
+        "surface": "Clay",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Clay",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:11.983211"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of the match. Additionally, without recent results or momentum indicators, form assessment is not possible. The surface suitability is also unknown without knowledge of the players' styles and how they fit with the hard court. Therefore, the match is recommended to be skipped.",
+      "key_factors": [
+        "Lack of player ranking",
+        "Unknown player styles",
+        "No recent results"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81fd-a06e-e8c67461326b",
+        "page_url": "https://www.notion.so/2afa20e3a65b81fda06ee8c67461326b",
+        "player_a": "Novais M.",
+        "player_b": "Tomai C.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Lousada (Portugal), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:17.267878"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking and recent performance data for both players, it is impossible to make an informed bet. The W15 level is known for its unpredictability, and without solid data, the risk of betting is significantly increased.",
+      "key_factors": [
+        "Lack of ranking data",
+        "Lack of recent performance data",
+        "Unpredictability of W15 level"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8162-abc3-d883053f6006",
+        "page_url": "https://www.notion.so/2afa20e3a65b8162abc3d883053f6006",
+        "player_a": "Agra A. G.",
+        "player_b": "Castro B.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Lousada (Portugal), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:22.539431"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it's impossible to make a reliable prediction. The W15 tier is known for its unpredictability, and without concrete data, the risk is too high. The surface suitability and form assessment are also unknown, further increasing the risk.",
+      "key_factors": [
+        "Unknown rankings",
+        "Unknown form",
+        "W15 unpredictability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81a9-b9cc-cfe8aed3e9f8",
+        "page_url": "https://www.notion.so/2afa20e3a65b81a9b9cccfe8aed3e9f8",
+        "player_a": "Franca M.",
+        "player_b": "Simes A.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Lousada (Portugal), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:26.883340"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Both players have no known ranking, making it difficult to assess their skill levels and predict the outcome of the match. Additionally, there is no information available on their recent form or how well their playing styles suit the hard court surface. Therefore, it's best to skip this match due to the high level of uncertainty.",
+      "key_factors": [
+        "Unknown player rankings",
+        "Lack of form data",
+        "Unknown player styles"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81f9-8601-d72c62022a2d",
+        "page_url": "https://www.notion.so/2afa20e3a65b81f98601d72c62022a2d",
+        "player_a": "Bosman C.",
+        "player_b": "Veldman K.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Lousada (Portugal), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:33.198899"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking data for both players, it is difficult to accurately predict the outcome of the match. Furthermore, without recent results or momentum indicators, form assessment is also challenging. The surface suitability is also unknown due to lack of data on player styles and their fit with hard court. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking data",
+        "Unknown form",
+        "Unknown surface suitability"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8151-85fc-dce1427e98ab",
+        "page_url": "https://www.notion.so/2afa20e3a65b815185fcdce1427e98ab",
+        "player_a": "Kumhom L.",
+        "player_b": "Yongmod T.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Hua Hin 2 (Thailand), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:37.979355"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. The surface suitability is also unknown due to the lack of information on player styles and surface fit.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Lack of recent results",
+        "Unknown player styles and surface fit"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-812c-aab9-cc2921da5a7c",
+        "page_url": "https://www.notion.so/2afa20e3a65b812caab9cc2921da5a7c",
+        "player_a": "Kawagishi N.",
+        "player_b": "Nakashima M.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Hua Hin 2 (Thailand), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:42.736774"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Additionally, without recent results or momentum indicators, form assessment is not possible. The pre-filter score is high, but without more data, it is not enough to make a confident recommendation.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown form",
+        "High pre-filter score"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-813e-8190-fe3b5fae7593",
+        "page_url": "https://www.notion.so/2afa20e3a65b813e8190fe3b5fae7593",
+        "player_a": "Mansfield K.",
+        "player_b": "Parres Azcoitia O.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Alcala de Henares (Spain), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:32:47.469639"
+    }
+  ],
+  "high_value_bets_detail": []
+}

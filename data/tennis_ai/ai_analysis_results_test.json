@@ -1,0 +1,121 @@
+{
+  "generated_at": "2025-11-18T14:19:03.257809",
+  "model": "gpt-4",
+  "total_analyzed": 3,
+  "high_value_bets": 0,
+  "estimated_cost_eur": 0.09,
+  "all_analyses": [
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of the match. Additionally, there is no available data on recent performance or form for either player. This makes it impossible to identify any potential market inefficiencies or calculate an expected value. Therefore, it is recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "No recent performance data",
+        "Unable to calculate expected value"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-81f5-a9bd-f84b1ee972f2",
+        "page_url": "https://www.notion.so/2afa20e3a65b81f5a9bdf84b1ee972f2",
+        "player_a": "Havermans D.",
+        "player_b": "Mi L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:18:52.588625"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it's difficult to predict the outcome of the match. Additionally, there's no information available on their recent form or their performance on hard courts. Therefore, it's recommended to skip this match.",
+      "key_factors": [
+        "Lack of ranking information",
+        "Unknown form",
+        "Unknown performance on hard courts"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-8144-bca7-c0ead388b3f5",
+        "page_url": "https://www.notion.so/2afa20e3a65b8144bca7c0ead388b3f5",
+        "player_a": "Golovina M.",
+        "player_b": "Kuharenko P.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:18:57.494484"
+    },
+    {
+      "recommended_bet": "Skip",
+      "confidence": "Low",
+      "win_probability": 0.5,
+      "expected_value_pct": 0,
+      "reasoning": "Due to the lack of ranking information for both players, it is difficult to accurately predict the outcome of this match. Furthermore, there is no recent form data available to assess the momentum of either player. The pre-filter score is high, but without additional data, it's risky to make a bet.",
+      "key_factors": [
+        "Lack of ranking information",
+        "No form data",
+        "High pre-filter score"
+      ],
+      "suggested_stake_pct": 0,
+      "risk_level": "High",
+      "skip_reasons": [
+        "Insufficient data"
+      ],
+      "match_data": {
+        "page_id": "2afa20e3-a65b-813f-8bde-e5dfa1f0c116",
+        "page_url": "https://www.notion.so/2afa20e3a65b813f8bdee5dfa1f0c116",
+        "player_a": "Fulgenzi B.",
+        "player_b": "Fulgenzi L.",
+        "ranking_a": null,
+        "ranking_b": null,
+        "tournament": "W15 Sharm ElSheikh 20 (Egypt), hard - ITF WOMEN - DOUBLES:",
+        "surface": "Hard",
+        "status": "Upcoming",
+        "date": "2025-11-18T10:45:00.000+00:00",
+        "score": 85,
+        "factors": [
+          "➖ Ranking data not available (will use AI analysis)",
+          "✅ Surface: Hard",
+          "✅ W15 tournament",
+          "✅ Complete essential data"
+        ]
+      },
+      "analyzed_at": "2025-11-18T14:19:03.257583"
+    }
+  ],
+  "high_value_bets_detail": []
+}

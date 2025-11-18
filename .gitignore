@@ -42,6 +42,16 @@ telegram_secrets.env
 # Notion integration secrets
 config/notion_databases.json
 config/notion_token.txt
+config/notion_config.json
 *.notion_token
 NOTION_TOKEN
 .vercel
+
+# Config files with secrets (use environment variables instead)
+config/live_config.py
+config/screening_config.py
+config/soccer_screening_config.py
+
+# Log files
+*.log
+live_monitor.log

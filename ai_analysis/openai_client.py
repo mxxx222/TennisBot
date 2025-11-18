@@ -79,6 +79,133 @@ class OpenAIClient:
             logger.error(f"⚠️ Error during OpenAIClient cleanup: {e}")
         return False
         
+    async def analyze_tennis_match(self, match_data: Dict,
+                                   use_fast_model: bool = False) -> Optional[OpenAIAnalysisResult]:
+        """
+        Analyze ITF tennis match with tennis-specific prompt
+        
+        Args:
+            match_data: Dictionary with tennis match data:
+                - player_a_name, player_b_name
+                - player_a_odds, player_b_odds
+                - tournament, tournament_tier
+                - surface
+                - player_a_elo, player_b_elo (optional)
+                - player_a_rank, player_b_rank (optional)
+                - player_a_surface_win_pct (optional)
+                - player_a_form (optional)
+            use_fast_model: Whether to use fast model (gpt-4o-mini)
+        
+        Returns:
+            OpenAIAnalysisResult with tennis-specific analysis
+        """
+        try:
+            model = self.fast_model if use_fast_model else self.premium_model
+            
+            # Prepare tennis-specific prompt
+            prompt = self._prepare_tennis_prompt(match_data)
+            
+            # Make API request
+            start_time = time.time()
+            
+            response = await asyncio.to_thread(
+                self.client.chat.completions.create,
+                model=model,
+                messages=[
+                    {"role": "system", "content": self._get_tennis_system_prompt()},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=500,
+                temperature=0.1,
+                response_format={"type": "json_object"}
+            )
+            
+            analysis_time = time.time() - start_time
+            
+            # Parse response
+            result = self._parse_openai_response(response, analysis_time, model)
+            
+            # Track costs
+            self._update_cost_tracking(response.usage, model)
+            
+            self.total_requests += 1
+            
+            logger.info(f"Tennis analysis completed for {match_data.get('player_a_name')} vs {match_data.get('player_b_name')} "
+                       f"(Edge: {result.edge_estimate:.1f}%, Cost: ${result.cost:.4f}, Model: {model})")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Tennis analysis failed: {e}")
+            self.failed_requests += 1
+            return None
+    
+    def _prepare_tennis_prompt(self, match_data: Dict) -> str:
+        """Prepare tennis-specific analysis prompt"""
+        
+        return f"""Analyze this ITF Women's tennis match for betting value:
+
+MATCH DETAILS:
+- Player A: {match_data.get('player_a_name', 'Unknown')}
+- Player B: {match_data.get('player_b_name', 'Unknown')}
+- Tournament: {match_data.get('tournament', 'Unknown')} ({match_data.get('tournament_tier', 'Unknown')})
+- Surface: {match_data.get('surface', 'Unknown')}
+- Player A Odds: {match_data.get('player_a_odds', 'N/A')}
+- Player B Odds: {match_data.get('player_b_odds', 'N/A')}
+
+PLAYER DATA:
+- Player A ELO: {match_data.get('player_a_elo', 'N/A')}
+- Player B ELO: {match_data.get('player_b_elo', 'N/A')}
+- Player A Rank: {match_data.get('player_a_rank', 'N/A')}
+- Player B Rank: {match_data.get('player_b_rank', 'N/A')}
+- Player A Surface Win%: {match_data.get('player_a_surface_win_pct', 'N/A')}%
+- Player A Recent Form: {match_data.get('player_a_form', 'N/A')}
+
+ANALYSIS REQUIRED:
+This is an ITF Women's match requiring value betting assessment.
+
+Please provide a comprehensive JSON analysis with:
+{{
+    "edge_estimate": float,  // Expected edge percentage (0-20)
+    "confidence_score": float,  // Confidence level (0-1)
+    "risk_factors": [string],  // Key risk factors
+    "value_assessment": string,  // "strong_value", "moderate_value", "marginal_value", "no_value"
+    "reasoning": string,  // Detailed reasoning
+    "recommended_action": string,  // "bet", "skip", "monitor"
+    "key_insights": [string],  // 2-3 most important insights
+    "surface_advantage": string,  // Which player has surface advantage
+    "ranking_impact": string  // How ranking differential affects match
+}}
+
+Focus on:
+1. ELO-based probability vs bookmaker odds
+2. Surface specialization and playing style fit
+3. Ranking differential impact in ITF tournaments
+4. Recent form and momentum
+5. ITF W15/W35 volatility and data quality considerations"""
+    
+    def _get_tennis_system_prompt(self) -> str:
+        """Get system prompt for tennis analysis"""
+        
+        return """You are an elite tennis betting analyst specializing in ITF Women's tournaments (W15, W35, W50).
+
+Your expertise includes:
+- ITF tournament dynamics and player behavior
+- Surface specialization (Hard, Clay, Grass)
+- ELO rating interpretation for tennis
+- Ranking differential analysis
+- Value betting in lower-tier tournaments
+- Risk assessment for ITF matches
+
+Key principles:
+- Be selective: Only recommend bets with >5% expected value
+- Consider ITF volatility and data quality limitations
+- Factor in surface specialization heavily
+- Account for ranking gaps and recent form
+- Conservative risk assessment for ITF matches
+
+Always provide structured JSON responses with detailed reasoning."""
+    
     async def analyze_premium_opportunity(self, match_data: Dict, 
                                         historical_context: str = "",
                                         use_fast_model: bool = False) -> Optional[OpenAIAnalysisResult]:
@@ -207,9 +334,14 @@ Always provide structured JSON responses with detailed reasoning."""
                 # Fallback parsing if JSON fails
                 analysis_data = self._extract_from_text(content)
             
-            # Calculate cost (OpenAI pricing)
-            input_cost = (usage.prompt_tokens / 1_000_000) * 5.00  # $5 per 1M input tokens
-            output_cost = (usage.completion_tokens / 1_000_000) * 15.00  # $15 per 1M output tokens
+            # Calculate cost (OpenAI pricing - gpt-4o: $2.50/$10 per 1M tokens)
+            # For gpt-4o-mini: $0.15/$0.60 per 1M tokens
+            if model == 'gpt-4o-mini':
+                input_cost = (usage.prompt_tokens / 1_000_000) * 0.15
+                output_cost = (usage.completion_tokens / 1_000_000) * 0.60
+            else:  # gpt-4o
+                input_cost = (usage.prompt_tokens / 1_000_000) * 2.50
+                output_cost = (usage.completion_tokens / 1_000_000) * 10.00
             total_cost = input_cost + output_cost
             
             return OpenAIAnalysisResult(
@@ -296,9 +428,14 @@ Always provide structured JSON responses with detailed reasoning."""
         input_tokens = usage.prompt_tokens
         output_tokens = usage.completion_tokens
         
-        # Calculate OpenAI cost
-        input_cost = (input_tokens / 1_000_000) * 5.00
-        output_cost = (output_tokens / 1_000_000) * 15.00
+        # Calculate OpenAI cost (gpt-4o: $2.50/$10 per 1M tokens)
+        # For gpt-4o-mini: $0.15/$0.60 per 1M tokens
+        if 'mini' in model:
+            input_cost = (input_tokens / 1_000_000) * 0.15
+            output_cost = (output_tokens / 1_000_000) * 0.60
+        else:  # gpt-4o
+            input_cost = (input_tokens / 1_000_000) * 2.50
+            output_cost = (output_tokens / 1_000_000) * 10.00
         total_cost = input_cost + output_cost
         
         self.total_cost += total_cost

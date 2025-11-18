@@ -16,6 +16,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 import sys
+from functools import lru_cache
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -52,12 +53,13 @@ class ITFNotionPipeline:
             database_id=self.config.get('notion', {}).get('tennis_prematch_db_id')
         )
         
-        # Duplicate tracking
+        # Duplicate tracking (with caching)
         self.processed_match_ids: set = set()
+        self.duplicate_cache: Dict[str, bool] = {}  # Cache for duplicate checks
         
-        # Batch update settings
+        # Batch update settings (optimized for concurrent processing)
         self.batch_size = 3  # Max 3 req/s per Notion API
-        self.batch_delay = 1.0  # 1 second between batches
+        self.batch_delay = 1.0  # 1 second between batches (distributed across batch)
         
         logger.info("🔄 ITF Notion Pipeline initialized")
     
@@ -168,13 +170,23 @@ class ITFNotionPipeline:
                 "rich_text": [{"text": {"content": match.live_score}}]
             }
         
-        # Tournament tier (if needed for filtering)
-        if match.tournament_tier:
-            properties["Tournament Tier"] = {
-                "select": {
-                    "name": match.tournament_tier
-                }
+        # Add Player A Odds if available
+        if hasattr(match, 'player1_odds') and match.player1_odds:
+            properties["Player A Odds"] = {
+                "number": match.player1_odds
             }
+        
+        # Add Player B Odds if available
+        if hasattr(match, 'player2_odds') and match.player2_odds:
+            properties["Player B Odds"] = {
+                "number": match.player2_odds
+            }
+        
+        # Note: Relations (Data Source Scraper, Player A Card, Player B Card) 
+        # should be linked separately using link_existing_matches.py script
+        # This is because we need to:
+        # 1. Find the scraper page ID in ROI Scraping Targets DB
+        # 2. Find Player A/B Card page IDs in ITF Player Cards DB by name matching
         
         return {
             'title': match_title,
@@ -184,7 +196,7 @@ class ITFNotionPipeline:
     
     async def check_duplicate(self, match_id: str) -> bool:
         """
-        Check if match already exists in Notion database
+        Check if match already exists in Notion database (with caching)
         
         Args:
             match_id: Match identifier
@@ -192,13 +204,19 @@ class ITFNotionPipeline:
         Returns:
             True if duplicate exists
         """
-        # Check local cache first
+        # Check local cache first (fastest)
         if match_id in self.processed_match_ids:
             return True
         
+        # Check duplicate cache (for batch operations)
+        if match_id in self.duplicate_cache:
+            return self.duplicate_cache[match_id]
+        
         # TODO: Query Notion database to check for existing match
         # For now, use local cache only
-        return False
+        is_duplicate = False
+        self.duplicate_cache[match_id] = is_duplicate
+        return is_duplicate
     
     async def create_match_page(self, notion_data: Dict[str, Any]) -> Optional[str]:
         """
@@ -237,7 +255,7 @@ class ITFNotionPipeline:
     
     async def process_matches_batch(self, matches: List[ITFMatch]) -> Dict[str, Any]:
         """
-        Process a batch of matches with rate limiting
+        Process a batch of matches with optimized concurrent processing
         
         Args:
             matches: List of ITFMatch objects
@@ -252,27 +270,48 @@ class ITFNotionPipeline:
             'page_ids': []
         }
         
+        # Filter duplicates first (batch duplicate check)
+        valid_matches = []
         for match in matches:
-            # Check for duplicates
             if await self.check_duplicate(match.match_id):
                 logger.debug(f"⏭️ Skipping duplicate match: {match.match_id}")
                 results['duplicates'] += 1
                 continue
-            
-            # Transform to Notion format
-            notion_data = self.transform_match_to_notion(match)
-            
-            # Create page
-            page_id = await self.create_match_page(notion_data)
-            
-            if page_id:
-                results['created'] += 1
-                results['page_ids'].append(page_id)
-            else:
-                results['errors'] += 1
-            
-            # Rate limiting: wait between requests
-            await asyncio.sleep(self.batch_delay)
+            valid_matches.append(match)
+        
+        if not valid_matches:
+            return results
+        
+        # Process matches in concurrent batches (respecting Notion API limits)
+        # Notion API allows 3 req/s, so we process up to 3 concurrently
+        semaphore = asyncio.Semaphore(self.batch_size)
+        
+        async def process_single_match(match: ITFMatch):
+            """Process a single match with semaphore limiting"""
+            async with semaphore:
+                try:
+                    # Transform to Notion format
+                    notion_data = self.transform_match_to_notion(match)
+                    
+                    # Create page
+                    page_id = await self.create_match_page(notion_data)
+                    
+                    if page_id:
+                        results['created'] += 1
+                        results['page_ids'].append(page_id)
+                    else:
+                        results['errors'] += 1
+                    
+                    # Rate limiting: wait between batches (not individual requests)
+                    await asyncio.sleep(self.batch_delay / self.batch_size)
+                    
+                except Exception as e:
+                    logger.error(f"❌ Error processing match {match.match_id}: {e}")
+                    results['errors'] += 1
+        
+        # Process all matches concurrently (with semaphore limiting)
+        tasks = [process_single_match(match) for match in valid_matches]
+        await asyncio.gather(*tasks, return_exceptions=True)
         
         return results
     
@@ -294,7 +333,9 @@ class ITFNotionPipeline:
             # Use enhanced scraper (synchronous) or async scraper
             if ENHANCED_SCRAPER_AVAILABLE:
                 # Enhanced scraper is synchronous
-                matches_list = self.scraper.scrape(tiers=['W15', 'W35', 'W50'])
+                # Enable odds fetching if configured
+                fetch_odds = self.config.get('scraper', {}).get('fetch_odds', False)
+                matches_list = self.scraper.scrape(tiers=['W15', 'W35', 'W50'], fetch_odds=fetch_odds)
                 
                 # Convert to ITFMatch format
                 matches_data = []
@@ -312,7 +353,9 @@ class ITFNotionPipeline:
                         set1_score=None,  # Would need to parse from live_score
                         scheduled_time=None,
                         match_url=None,
-                        scraped_at=datetime.fromisoformat(match_dict.get('scraped_at', datetime.now().isoformat()))
+                        scraped_at=datetime.fromisoformat(match_dict.get('scraped_at', datetime.now().isoformat())),
+                        player1_odds=match_dict.get('player_a_odds'),
+                        player2_odds=match_dict.get('player_b_odds')
                     )
                     matches_data.append(match)
                 

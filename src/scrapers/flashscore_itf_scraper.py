@@ -26,6 +26,8 @@ class ITFMatch:
     scheduled_time: Optional[datetime]
     match_url: Optional[str]
     scraped_at: datetime
+    player1_odds: Optional[float] = None  # Odds for player1
+    player2_odds: Optional[float] = None  # Odds for player2
 
 
 """
@@ -162,21 +164,22 @@ class FlashScoreITFScraperEnhanced:
         try:
             self.driver.get(url)
             
-            # Wait for page to load
-            time.sleep(5)  # Give JavaScript time to load
+            # Wait for page to load using WebDriverWait instead of blocking sleep
+            wait = WebDriverWait(self.driver, 15)
+            wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
             
             # Try to find and click ITF Women filter if available
             try:
-                # Look for ITF Women link/button
-                itf_link = self.driver.find_element(By.PARTIAL_LINK_TEXT, "ITF")
+                # Look for ITF Women link/button with wait
+                itf_link = wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, "ITF")))
                 if itf_link:
                     itf_link.click()
-                    time.sleep(3)
+                    # Wait for filter to apply (non-blocking wait)
+                    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
             except:
                 logger.debug("Could not find ITF filter, continuing...")
             
-            # Wait for matches to load (max 15s)
-            wait = WebDriverWait(self.driver, 15)
+            # Wait for matches to load (max 15s) - already initialized above
             
             # Multiple selector strategies
             selectors = [
@@ -199,12 +202,16 @@ class FlashScoreITFScraperEnhanced:
             
             if not found:
                 logger.warning("⚠️ No matches found with standard selectors, trying fallback...")
-                time.sleep(5)  # Wait longer for content
+                # Wait for content to load using explicit wait instead of blocking sleep
+                wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
             
-            # Scroll to load lazy content
+            # Scroll to load lazy content - optimized with async-like waits
             for i in range(5):
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
+                # Use WebDriverWait for shorter, non-blocking waits
+                WebDriverWait(self.driver, 1).until(
+                    lambda d: d.execute_script("return document.readyState") == "complete"
+                )
             
             # Get rendered HTML
             html = self.driver.page_source
@@ -659,12 +666,109 @@ class FlashScoreITFScraperEnhanced:
         
         return True
     
-    def scrape(self, tiers: List[str] = None) -> List[Dict]:
+    async def fetch_odds_for_matches(self, matches: List[Dict]) -> List[Dict]:
+        """
+        Fetch odds for scraped matches using Odds API
+        
+        Args:
+            matches: List of match dictionaries from scraper
+        
+        Returns:
+            List of matches with odds added
+        """
+        try:
+            # Try to import OddsFetcher
+            sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+            from utils.odds_fetcher import OddsFetcher
+            
+            async with OddsFetcher() as fetcher:
+                # Fetch tennis matches from Odds API
+                odds_matches = await fetcher.fetch_tennis_matches(hours_ahead=48)
+                
+                if not odds_matches:
+                    logger.warning("⚠️ No odds matches found from Odds API")
+                    return matches
+                
+                logger.info(f"📊 Fetched {len(odds_matches)} matches from Odds API")
+                
+                # Match scraped matches with odds matches by player names
+                for match in matches:
+                    player_a = match.get('player_a', '').strip()
+                    player_b = match.get('player_b', '').strip()
+                    
+                    if not player_a or not player_b:
+                        continue
+                    
+                    # Try to find matching odds match
+                    best_match = None
+                    best_score = 0.0
+                    
+                    for odds_match in odds_matches:
+                        home_team = odds_match.home_team.strip()
+                        away_team = odds_match.away_team.strip()
+                        
+                        # Calculate name similarity score
+                        score = 0.0
+                        
+                        # Exact match
+                        if (player_a.lower() == home_team.lower() and 
+                            player_b.lower() == away_team.lower()):
+                            score = 1.0
+                        elif (player_a.lower() == away_team.lower() and 
+                              player_b.lower() == home_team.lower()):
+                            score = 1.0
+                        # Partial match (last name)
+                        elif (player_a.split()[-1].lower() == home_team.split()[-1].lower() and
+                              player_b.split()[-1].lower() == away_team.split()[-1].lower()):
+                            score = 0.8
+                        elif (player_a.split()[-1].lower() == away_team.split()[-1].lower() and
+                              player_b.split()[-1].lower() == home_team.split()[-1].lower()):
+                            score = 0.8
+                        
+                        if score > best_score:
+                            best_score = score
+                            best_match = odds_match
+                    
+                    # If we found a good match, add odds
+                    if best_match and best_score >= 0.8:
+                        player_a_odds, player_b_odds = best_match.get_best_odds()
+                        
+                        # Determine which player corresponds to which odds
+                        home_team = best_match.home_team.strip()
+                        away_team = best_match.away_team.strip()
+                        
+                        if player_a.lower() == home_team.lower():
+                            match['player_a_odds'] = player_a_odds
+                            match['player_b_odds'] = player_b_odds
+                        elif player_a.lower() == away_team.lower():
+                            match['player_a_odds'] = player_b_odds
+                            match['player_b_odds'] = player_a_odds
+                        else:
+                            # Default: assume player_a is home
+                            match['player_a_odds'] = player_a_odds
+                            match['player_b_odds'] = player_b_odds
+                        
+                        logger.debug(f"✅ Matched odds for {player_a} vs {player_b}: {match.get('player_a_odds')} / {match.get('player_b_odds')}")
+                
+                matched_count = sum(1 for m in matches if m.get('player_a_odds'))
+                logger.info(f"✅ Matched odds for {matched_count}/{len(matches)} matches")
+                
+        except ImportError:
+            logger.warning("⚠️ OddsFetcher not available, skipping odds fetching")
+        except Exception as e:
+            logger.error(f"❌ Error fetching odds: {e}")
+            import traceback
+            traceback.print_exc()
+        
+        return matches
+    
+    def scrape(self, tiers: List[str] = None, fetch_odds: bool = False) -> List[Dict]:
         """
         Main scrape method
         
         Args:
             tiers: List of tiers to scrape (W15, W35, W50)
+            fetch_odds: Whether to fetch odds from Odds API (async operation)
         
         Returns:
             List of match dictionaries
@@ -691,8 +795,18 @@ class FlashScoreITFScraperEnhanced:
             logger.info(f"✅ {tier}: {len(matches)} matches found")
             all_matches.extend(matches)
             
-            # Rate limiting
-            time.sleep(self.config.get('request_delay', 2))
+            # Rate limiting - only wait if needed (configurable)
+            request_delay = self.config.get('request_delay', 2)
+            if request_delay > 0:
+                time.sleep(request_delay)
+        
+        # Fetch odds if requested (async)
+        if fetch_odds and all_matches:
+            try:
+                # Run async odds fetching
+                all_matches = asyncio.run(self.fetch_odds_for_matches(all_matches))
+            except Exception as e:
+                logger.error(f"❌ Error fetching odds: {e}")
         
         return all_matches
     

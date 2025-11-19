@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 import json
 import os
+from contextlib import contextmanager
+import threading
 
 from config.live_config import LiveMonitoringConfig
 from monitors.odds_tracker import OddsSnapshot, OddsMovement
@@ -33,15 +35,55 @@ class PerformanceRecord:
     edge_estimate: float
 
 class OddsDatabase:
-    """Manages historical odds data storage and retrieval"""
+    """Manages historical odds data storage and retrieval with connection pooling"""
     
     def __init__(self, db_path: str = None):
         self.config = LiveMonitoringConfig()
         self.db_path = db_path or self.config.DATABASE_PATH
         self.connection: Optional[sqlite3.Connection] = None
+        self._connection_lock = threading.Lock()  # Thread-safe connection access
+        
+        # Connection pool settings
+        self.pool_size = 5
+        self.pool: List[sqlite3.Connection] = []
+        self._pool_lock = threading.Lock()
         
         # Initialize database
         self._initialize_database()
+    
+    @contextmanager
+    def get_connection(self):
+        """Thread-safe connection context manager with connection pooling"""
+        conn = None
+        try:
+            # Try to get connection from pool
+            with self._pool_lock:
+                if self.pool:
+                    conn = self.pool.pop()
+                else:
+                    # Create new connection if pool is empty
+                    conn = sqlite3.connect(self.db_path, check_same_thread=False)
+                    conn.row_factory = sqlite3.Row
+            
+            yield conn
+            conn.commit()  # Commit on successful completion
+            
+            # Return connection to pool
+            with self._pool_lock:
+                if len(self.pool) < self.pool_size:
+                    self.pool.append(conn)
+                    conn = None  # Don't close if returned to pool
+        except Exception:
+            if conn:
+                conn.rollback()
+            raise
+        finally:
+            # Close connection if not returned to pool
+            if conn:
+                try:
+                    conn.close()
+                except:
+                    pass
     
     async def __aenter__(self):
         """Async context manager entry"""
@@ -181,261 +223,291 @@ class OddsDatabase:
         self.connection.commit()
     
     def store_odds_snapshot(self, snapshot: OddsSnapshot):
-        """Store an odds snapshot"""
+        """Store an odds snapshot (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cursor.execute('''
-                INSERT INTO odds_snapshots 
-                (match_id, home_team, away_team, home_odds, away_odds, timestamp, 
-                 league, commence_time, bookmaker)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                snapshot.match_id,
-                snapshot.home_team,
-                snapshot.away_team,
-                snapshot.home_odds,
-                snapshot.away_odds,
-                snapshot.timestamp.isoformat(),
-                snapshot.league,
-                snapshot.commence_time.isoformat(),
-                snapshot.bookmaker
-            ))
-            
-            self.connection.commit()
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO odds_snapshots 
+                    (match_id, home_team, away_team, home_odds, away_odds, timestamp, 
+                     league, commence_time, bookmaker)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    snapshot.match_id,
+                    snapshot.home_team,
+                    snapshot.away_team,
+                    snapshot.home_odds,
+                    snapshot.away_odds,
+                    snapshot.timestamp.isoformat(),
+                    snapshot.league,
+                    snapshot.commence_time.isoformat(),
+                    snapshot.bookmaker
+                ))
             
         except Exception as e:
             logger.error(f"Failed to store odds snapshot: {e}")
     
-    def store_odds_movement(self, movement: OddsMovement):
-        """Store an odds movement"""
+    def store_odds_snapshots_batch(self, snapshots: List[OddsSnapshot]):
+        """Store multiple odds snapshots in a single transaction (batch insert)"""
+        
+        if not snapshots:
+            return
         
         try:
-            cursor = self.connection.cursor()
-            cursor.execute('''
-                INSERT INTO odds_movements 
-                (match_id, team, old_odds, new_odds, change_amount, change_percentage,
-                 timestamp, movement_type, significance)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                movement.match_id,
-                movement.team,
-                movement.old_odds,
-                movement.new_odds,
-                movement.change,
-                movement.change_percentage,
-                movement.timestamp.isoformat(),
-                movement.movement_type,
-                movement.significance
-            ))
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.executemany('''
+                    INSERT INTO odds_snapshots 
+                    (match_id, home_team, away_team, home_odds, away_odds, timestamp, 
+                     league, commence_time, bookmaker)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', [(
+                    s.match_id,
+                    s.home_team,
+                    s.away_team,
+                    s.home_odds,
+                    s.away_odds,
+                    s.timestamp.isoformat(),
+                    s.league,
+                    s.commence_time.isoformat(),
+                    s.bookmaker
+                ) for s in snapshots])
             
-            self.connection.commit()
+            logger.info(f"✅ Batch inserted {len(snapshots)} odds snapshots")
+            
+        except Exception as e:
+            logger.error(f"Failed to store odds snapshots batch: {e}")
+    
+    def store_odds_movement(self, movement: OddsMovement):
+        """Store an odds movement (optimized with connection pooling)"""
+        
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO odds_movements 
+                    (match_id, team, old_odds, new_odds, change_amount, change_percentage,
+                     timestamp, movement_type, significance)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    movement.match_id,
+                    movement.team,
+                    movement.old_odds,
+                    movement.new_odds,
+                    movement.change,
+                    movement.change_percentage,
+                    movement.timestamp.isoformat(),
+                    movement.movement_type,
+                    movement.significance
+                ))
             
         except Exception as e:
             logger.error(f"Failed to store odds movement: {e}")
     
     def store_value_opportunity(self, opportunity: ValueOpportunity):
-        """Store a value opportunity"""
+        """Store a value opportunity (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cursor.execute('''
-                INSERT OR REPLACE INTO value_opportunities 
-                (opportunity_id, match_id, team, opponent, odds, previous_odds,
-                 league, commence_time, detected_time, recommended_stake, confidence,
-                 edge_estimate, kelly_fraction, urgency_level, priority_score,
-                 time_sensitivity, movement_direction, odds_velocity)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                opportunity.match_id,  # Using match_id as opportunity_id
-                opportunity.match_id.split('_')[0],  # Extract base match_id
-                opportunity.team,
-                opportunity.opponent,
-                opportunity.odds,
-                opportunity.previous_odds,
-                opportunity.league,
-                opportunity.commence_time.isoformat(),
-                opportunity.detected_time.isoformat(),
-                opportunity.recommended_stake,
-                opportunity.confidence,
-                opportunity.edge_estimate,
-                opportunity.kelly_fraction,
-                opportunity.urgency_level,
-                opportunity.priority_score,
-                opportunity.time_sensitivity,
-                opportunity.movement_direction,
-                opportunity.odds_velocity
-            ))
-            
-            self.connection.commit()
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT OR REPLACE INTO value_opportunities 
+                    (opportunity_id, match_id, team, opponent, odds, previous_odds,
+                     league, commence_time, detected_time, recommended_stake, confidence,
+                     edge_estimate, kelly_fraction, urgency_level, priority_score,
+                     time_sensitivity, movement_direction, odds_velocity)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    opportunity.match_id,  # Using match_id as opportunity_id
+                    opportunity.match_id.split('_')[0],  # Extract base match_id
+                    opportunity.team,
+                    opportunity.opponent,
+                    opportunity.odds,
+                    opportunity.previous_odds,
+                    opportunity.league,
+                    opportunity.commence_time.isoformat(),
+                    opportunity.detected_time.isoformat(),
+                    opportunity.recommended_stake,
+                    opportunity.confidence,
+                    opportunity.edge_estimate,
+                    opportunity.kelly_fraction,
+                    opportunity.urgency_level,
+                    opportunity.priority_score,
+                    opportunity.time_sensitivity,
+                    opportunity.movement_direction,
+                    opportunity.odds_velocity
+                ))
             
         except Exception as e:
             logger.error(f"Failed to store value opportunity: {e}")
     
     def store_performance_record(self, record: PerformanceRecord):
-        """Store a performance record"""
+        """Store a performance record (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cursor.execute('''
-                INSERT INTO performance_records 
-                (opportunity_id, match_id, team, odds, stake, result, profit,
-                 recorded_time, league, confidence, edge_estimate)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                record.opportunity_id,
-                record.match_id,
-                record.team,
-                record.odds,
-                record.stake,
-                record.result,
-                record.profit,
-                record.recorded_time.isoformat(),
-                record.league,
-                record.confidence,
-                record.edge_estimate
-            ))
-            
-            self.connection.commit()
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO performance_records 
+                    (opportunity_id, match_id, team, odds, stake, result, profit,
+                     recorded_time, league, confidence, edge_estimate)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    record.opportunity_id,
+                    record.match_id,
+                    record.team,
+                    record.odds,
+                    record.stake,
+                    record.result,
+                    record.profit,
+                    record.recorded_time.isoformat(),
+                    record.league,
+                    record.confidence,
+                    record.edge_estimate
+                ))
             
         except Exception as e:
             logger.error(f"Failed to store performance record: {e}")
     
     def get_recent_opportunities(self, hours: int = 24) -> List[ValueOpportunity]:
-        """Get value opportunities from the last N hours"""
+        """Get value opportunities from the last N hours (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cutoff_time = (datetime.now() - timedelta(hours=hours)).isoformat()
-            
-            cursor.execute('''
-                SELECT * FROM value_opportunities 
-                WHERE detected_time > ? 
-                ORDER BY detected_time DESC
-            ''', (cutoff_time,))
-            
-            opportunities = []
-            for row in cursor.fetchall():
-                opportunity = ValueOpportunity(
-                    match_id=row['opportunity_id'],
-                    team=row['team'],
-                    opponent=row['opponent'],
-                    odds=row['odds'],
-                    previous_odds=row['previous_odds'],
-                    league=row['league'],
-                    commence_time=datetime.fromisoformat(row['commence_time']),
-                    detected_time=datetime.fromisoformat(row['detected_time']),
-                    recommended_stake=row['recommended_stake'],
-                    confidence=row['confidence'],
-                    edge_estimate=row['edge_estimate'],
-                    kelly_fraction=row['kelly_fraction'],
-                    urgency_level=row['urgency_level'],
-                    priority_score=row['priority_score'],
-                    time_sensitivity=row['time_sensitivity'],
-                    movement_direction=row['movement_direction'],
-                    odds_velocity=row['odds_velocity']
-                )
-                opportunities.append(opportunity)
-            
-            return opportunities
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cutoff_time = (datetime.now() - timedelta(hours=hours)).isoformat()
+                
+                cursor.execute('''
+                    SELECT * FROM value_opportunities 
+                    WHERE detected_time > ? 
+                    ORDER BY detected_time DESC
+                ''', (cutoff_time,))
+                
+                opportunities = []
+                for row in cursor.fetchall():
+                    opportunity = ValueOpportunity(
+                        match_id=row['opportunity_id'],
+                        team=row['team'],
+                        opponent=row['opponent'],
+                        odds=row['odds'],
+                        previous_odds=row['previous_odds'],
+                        league=row['league'],
+                        commence_time=datetime.fromisoformat(row['commence_time']),
+                        detected_time=datetime.fromisoformat(row['detected_time']),
+                        recommended_stake=row['recommended_stake'],
+                        confidence=row['confidence'],
+                        edge_estimate=row['edge_estimate'],
+                        kelly_fraction=row['kelly_fraction'],
+                        urgency_level=row['urgency_level'],
+                        priority_score=row['priority_score'],
+                        time_sensitivity=row['time_sensitivity'],
+                        movement_direction=row['movement_direction'],
+                        odds_velocity=row['odds_velocity']
+                    )
+                    opportunities.append(opportunity)
+                
+                return opportunities
             
         except Exception as e:
             logger.error(f"Failed to get recent opportunities: {e}")
             return []
     
     def get_performance_summary(self, days: int = 30) -> Dict:
-        """Get performance summary for the last N days"""
+        """Get performance summary for the last N days (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cutoff_time = (datetime.now() - timedelta(days=days)).isoformat()
-            
-            # Get basic stats
-            cursor.execute('''
-                SELECT 
-                    COUNT(*) as total_bets,
-                    COUNT(CASE WHEN result = 'WIN' THEN 1 END) as wins,
-                    COUNT(CASE WHEN result = 'LOSS' THEN 1 END) as losses,
-                    SUM(stake) as total_staked,
-                    SUM(CASE WHEN profit IS NOT NULL THEN profit ELSE 0 END) as total_profit,
-                    AVG(odds) as avg_odds,
-                    AVG(edge_estimate) as avg_edge
-                FROM performance_records 
-                WHERE recorded_time > ?
-            ''', (cutoff_time,))
-            
-            row = cursor.fetchone()
-            
-            total_bets = row['total_bets'] or 0
-            wins = row['wins'] or 0
-            losses = row['losses'] or 0
-            total_staked = row['total_staked'] or 0
-            total_profit = row['total_profit'] or 0
-            
-            # Calculate derived metrics
-            win_rate = (wins / max(wins + losses, 1)) * 100
-            roi = (total_profit / max(total_staked, 1)) * 100
-            
-            # Get league breakdown
-            cursor.execute('''
-                SELECT league, COUNT(*) as count, AVG(edge_estimate) as avg_edge
-                FROM performance_records 
-                WHERE recorded_time > ?
-                GROUP BY league
-                ORDER BY count DESC
-            ''', (cutoff_time,))
-            
-            league_breakdown = {}
-            for row in cursor.fetchall():
-                league_breakdown[row['league']] = {
-                    'count': row['count'],
-                    'avg_edge': row['avg_edge']
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cutoff_time = (datetime.now() - timedelta(days=days)).isoformat()
+                
+                # Get basic stats
+                cursor.execute('''
+                    SELECT 
+                        COUNT(*) as total_bets,
+                        COUNT(CASE WHEN result = 'WIN' THEN 1 END) as wins,
+                        COUNT(CASE WHEN result = 'LOSS' THEN 1 END) as losses,
+                        SUM(stake) as total_staked,
+                        SUM(CASE WHEN profit IS NOT NULL THEN profit ELSE 0 END) as total_profit,
+                        AVG(odds) as avg_odds,
+                        AVG(edge_estimate) as avg_edge
+                    FROM performance_records 
+                    WHERE recorded_time > ?
+                ''', (cutoff_time,))
+                
+                row = cursor.fetchone()
+                
+                total_bets = row['total_bets'] or 0
+                wins = row['wins'] or 0
+                losses = row['losses'] or 0
+                total_staked = row['total_staked'] or 0
+                total_profit = row['total_profit'] or 0
+                
+                # Calculate derived metrics
+                win_rate = (wins / max(wins + losses, 1)) * 100
+                roi = (total_profit / max(total_staked, 1)) * 100
+                
+                # Get league breakdown
+                cursor.execute('''
+                    SELECT league, COUNT(*) as count, AVG(edge_estimate) as avg_edge
+                    FROM performance_records 
+                    WHERE recorded_time > ?
+                    GROUP BY league
+                    ORDER BY count DESC
+                ''', (cutoff_time,))
+                
+                league_breakdown = {}
+                for row in cursor.fetchall():
+                    league_breakdown[row['league']] = {
+                        'count': row['count'],
+                        'avg_edge': row['avg_edge']
+                    }
+                
+                return {
+                    'total_bets': total_bets,
+                    'wins': wins,
+                    'losses': losses,
+                    'win_rate': round(win_rate, 2),
+                    'total_staked': round(total_staked, 2),
+                    'total_profit': round(total_profit, 2),
+                    'roi': round(roi, 2),
+                    'avg_odds': round(row['avg_odds'] or 0, 2),
+                    'avg_edge': round(row['avg_edge'] or 0, 2),
+                    'league_breakdown': league_breakdown
                 }
-            
-            return {
-                'total_bets': total_bets,
-                'wins': wins,
-                'losses': losses,
-                'win_rate': round(win_rate, 2),
-                'total_staked': round(total_staked, 2),
-                'total_profit': round(total_profit, 2),
-                'roi': round(roi, 2),
-                'avg_odds': round(row['avg_odds'] or 0, 2),
-                'avg_edge': round(row['avg_edge'] or 0, 2),
-                'league_breakdown': league_breakdown
-            }
             
         except Exception as e:
             logger.error(f"Failed to get performance summary: {e}")
             return {}
     
     def get_odds_history(self, match_id: str) -> List[OddsSnapshot]:
-        """Get odds history for a specific match"""
+        """Get odds history for a specific match (optimized with connection pooling)"""
         
         try:
-            cursor = self.connection.cursor()
-            cursor.execute('''
-                SELECT * FROM odds_snapshots 
-                WHERE match_id = ? 
-                ORDER BY timestamp ASC
-            ''', (match_id,))
-            
-            snapshots = []
-            for row in cursor.fetchall():
-                snapshot = OddsSnapshot(
-                    match_id=row['match_id'],
-                    home_team=row['home_team'],
-                    away_team=row['away_team'],
-                    home_odds=row['home_odds'],
-                    away_odds=row['away_odds'],
-                    timestamp=datetime.fromisoformat(row['timestamp']),
-                    league=row['league'],
-                    commence_time=datetime.fromisoformat(row['commence_time']),
-                    bookmaker=row['bookmaker']
-                )
-                snapshots.append(snapshot)
-            
-            return snapshots
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT * FROM odds_snapshots 
+                    WHERE match_id = ? 
+                    ORDER BY timestamp ASC
+                ''', (match_id,))
+                
+                snapshots = []
+                for row in cursor.fetchall():
+                    snapshot = OddsSnapshot(
+                        match_id=row['match_id'],
+                        home_team=row['home_team'],
+                        away_team=row['away_team'],
+                        home_odds=row['home_odds'],
+                        away_odds=row['away_odds'],
+                        timestamp=datetime.fromisoformat(row['timestamp']),
+                        league=row['league'],
+                        commence_time=datetime.fromisoformat(row['commence_time']),
+                        bookmaker=row['bookmaker']
+                    )
+                    snapshots.append(snapshot)
+                
+                return snapshots
             
         except Exception as e:
             logger.error(f"Failed to get odds history for {match_id}: {e}")
@@ -520,10 +592,22 @@ class OddsDatabase:
             return {}
     
     def close(self):
-        """Close database connection"""
+        """Close database connection and connection pool"""
+        # Close main connection
         if self.connection:
             self.connection.close()
-            logger.info("Database connection closed")
+            self.connection = None
+        
+        # Close all connections in pool
+        with self._pool_lock:
+            for conn in self.pool:
+                try:
+                    conn.close()
+                except:
+                    pass
+            self.pool.clear()
+        
+        logger.info("Database connection and pool closed")
     
     def __enter__(self):
         return self

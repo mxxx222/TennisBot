@@ -1,0 +1,60 @@
+# Fly.io ITF Tennis Pipeline Configuration
+# =====================================
+# This app runs a long-running scheduler that executes three cron jobs:
+# 1. ITF Scraper: 06:00 & 18:00 UTC (2x daily)
+# 2. Player Card Linker: 06:30 UTC (1x daily)
+# 3. GPT Analyzer: 07:00 & 19:00 UTC (2x daily)
+
+app = "itf-tennis-pipeline"
+primary_region = "iad"  # US East (Virginia) - change to your preferred region
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PYTHONUNBUFFERED = "1"
+  TZ = "UTC"
+
+# Environment Variables (set via `fly secrets set`)
+# ==================================================
+#
+# REQUIRED:
+# - NOTION_TOKEN or NOTION_API_KEY (required for all jobs)
+#   Note: Scripts accept either variable name
+#
+# - NOTION_TENNIS_PREMATCH_DB_ID or NOTION_PREMATCH_DB_ID (required)
+#   Note: Scripts accept either variable name
+#
+# - OPENAI_API_KEY (required for GPT Analyzer job)
+#
+# OPTIONAL:
+# - ODDS_API_KEY (optional, for odds fetching in scraper)
+#   Note: If not set, odds fetching will be skipped (does not block deployment)
+#
+# - NOTION_ITF_PLAYER_CARDS_DB_ID (optional, for player card linking)
+#
+# - NOTION_ROI_SCRAPING_TARGETS_DB_ID (optional, for scraper relations)
+#
+# Example: fly secrets set NOTION_TOKEN="secret_xxx" OPENAI_API_KEY="sk-xxx"
+
+[[services]]
+  internal_port = 8000
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+[processes]
+  app = "python scripts/tennis_ai/scheduler.py"
+
+[vm]
+  memory_mb = 512
+  cpu_kind = "shared"
+  cpus = 1
+
+[[mounts]]
+  source = "itf_data"
+  destination = "/app/data"
+

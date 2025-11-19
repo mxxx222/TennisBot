@@ -76,5 +76,5 @@ HEALTHCHECK --interval=5m --timeout=30s --start-period=60s --retries=3 \
 # Expose port (if web interface is added)
 EXPOSE 8000
 
-# Default command
-CMD ["python", "ultimate_showcase.py"]
+# Default command - run scheduler for ITF tennis pipeline
+CMD ["python", "scripts/tennis_ai/scheduler.py"]

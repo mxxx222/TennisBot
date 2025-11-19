@@ -1,0 +1,81 @@
+🎾 GOOGLE SEARCH LINKS FOR 21 TENNIS MATCHES - 17.9.2025
+================================================================
+
+Copy-paste these links to find results in Google snippets:
+
+1. T. Seyboth Wild vs V. Kopriva (EventKey: 12070966)
+   https://www.google.com/search?q=Wild+Kopriva+17.9.2025+tennis
+
+2. A. Molcan vs K. Coppejans (EventKey: 12071014)
+   https://www.google.com/search?q=Molcan+Coppejans+17.9.2025+tennis
+
+3. F. Bondioli vs A. Martin (EventKey: 12071066)
+   https://www.google.com/search?q=Bondioli+Martin+17.9.2025+tennis
+
+4. N. D. Ionel vs D. Rincon (EventKey: 12071186)
+   https://www.google.com/search?q=Ionel+Rincon+17.9.2025+tennis
+
+5. M. Mrva vs M. Erhard (EventKey: 12071190)
+   https://www.google.com/search?q=Mrva+Erhard+17.9.2025+tennis
+
+6. S. Rokusek vs A. Smith (EventKey: 12071266)
+   https://www.google.com/search?q=Rokusek+Smith+17.9.2025+tennis
+
+7. H. Sato vs N. McKenzie (EventKey: 12071267)
+   https://www.google.com/search?q=Sato+McKenzie+17.9.2025+tennis
+
+8. D. Sumizawa vs J. Brumm (EventKey: 12071344)
+   https://www.google.com/search?q=Sumizawa+Brumm+17.9.2025+tennis
+
+9. R. Taguchi vs S. Shin (EventKey: 12071345)
+   https://www.google.com/search?q=Taguchi+Shin+17.9.2025+tennis
+
+10. J. Lu vs K. Pavlova (EventKey: 12071349)
+    https://www.google.com/search?q=Lu+Pavlova+17.9.2025+tennis
+
+11. M. Dodig vs Z. Kolar (EventKey: 12071360)
+    https://www.google.com/search?q=Dodig+Kolar+17.9.2025+tennis
+
+12. P. Martinez vs M. Topo (EventKey: 12071361)
+    https://www.google.com/search?q=Martinez+Topo+17.9.2025+tennis
+
+13. D. Novak vs R. Carballes Baena (EventKey: 12071364)
+    https://www.google.com/search?q=Novak+Baena+17.9.2025+tennis
+
+14. C. Stebe vs J. J. Schwaerzler (EventKey: 12071366)
+    https://www.google.com/search?q=Stebe+Schwaerzler+17.9.2025+tennis
+
+15. R. Peniston vs L. Maxted (EventKey: 12071482)
+    https://www.google.com/search?q=Peniston+Maxted+17.9.2025+tennis
+
+16. G. Pedone vs A. Prisacariu (EventKey: 12071495)
+    https://www.google.com/search?q=Pedone+Prisacariu+17.9.2025+tennis
+
+17. K. Deichmann vs G. Ce (EventKey: 12071499)
+    https://www.google.com/search?q=Deichmann+Ce+17.9.2025+tennis
+
+18. H. Wendelken vs Y. Ghazouani Durand (EventKey: 12071542)
+    https://www.google.com/search?q=Wendelken+Durand+17.9.2025+tennis
+
+19. N. Kicker vs H. Casanova (EventKey: 12071557)
+    https://www.google.com/search?q=Kicker+Casanova+17.9.2025+tennis
+
+20. C. Sinclair vs Je. Delaney (EventKey: 12071723)
+    https://www.google.com/search?q=Sinclair+Delaney+17.9.2025+tennis
+
+21. O. Anderson vs P. Brown (EventKey: 12071729)
+    https://www.google.com/search?q=Anderson+Brown+17.9.2025+tennis
+
+================================================================
+📝 INSTRUCTIONS:
+1. Open each link in browser
+2. Look at the FIRST Google result snippet (no need to click!)
+3. Find the score (e.g., "7-5 6-1" or "3-6 6-1 6-2")
+4. Determine winner: Home = first player, Away = second player
+5. Update data/results.csv with format: EventKey,Winner,Score
+
+Example:
+12071366,Away,7-5 6-1
+
+================================================================
+

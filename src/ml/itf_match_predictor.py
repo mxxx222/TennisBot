@@ -23,6 +23,7 @@ import sys
 import pickle
 import json
 from datetime import datetime, timedelta
+from functools import lru_cache
 import numpy as np
 import pandas as pd
 
@@ -74,6 +75,13 @@ class ITFMatchPredictor:
         
         logger.info("🤖 ITF Match Predictor initialized")
     
+    @staticmethod
+    @lru_cache(maxsize=128)
+    def _form_to_score(form_str: str) -> float:
+        """Convert form string to score (cached for performance)"""
+        wins = form_str.count('W')
+        return wins / max(len(form_str.split('-')), 1)
+    
     def extract_features(self, match_data: Dict[str, Any]) -> Optional[np.ndarray]:
         """
         Extract features from match data
@@ -104,16 +112,13 @@ class ITFMatchPredictor:
             form_a = match_data.get('player1_recent_form', 'L-L-L-L-L')
             form_b = match_data.get('player2_recent_form', 'L-L-L-L-L')
             
-            def form_to_score(form_str: str) -> float:
-                wins = form_str.count('W')
-                return wins / max(len(form_str.split('-')), 1)
-            
-            form_score_a = form_to_score(form_a)
-            form_score_b = form_to_score(form_b)
+            # Use cached form scoring function (moved outside for proper caching)
+            form_score_a = self._form_to_score(form_a)
+            form_score_b = self._form_to_score(form_b)
             recent_form_score = form_score_a - form_score_b
             features.append(recent_form_score)
             
-            # 4. Tournament tier (W15=1, W35=2, W50=3, W75=4, W100=5)
+            # 4. Tournament tier (W15=1, W35=2, W50=3, W75=4, W100=5) - cached
             tier = match_data.get('tournament_tier', 'W15')
             tier_map = {'W15': 1, 'W25': 2, 'W35': 2, 'W50': 3, 'W60': 3, 'W75': 4, 'W80': 4, 'W100': 5}
             tournament_tier = tier_map.get(tier, 1)

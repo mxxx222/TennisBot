@@ -1,0 +1,85 @@
+# Fly.io ignore file
+# Excludes files from deployment to reduce image size
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Tests
+tests/
+test_*.py
+*_test.py
+.pytest_cache/
+
+# Logs and data (will be persisted via volumes)
+logs/*.log
+data/*.db
+data/*.json
+data/*.csv
+data/models/
+data/research/
+data/tennis_ai/
+
+# Local config files (secrets should be set via fly secrets)
+telegram_secrets.env
+*.env
+*.env.local
+.secrets
+
+# Archive
+archive/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml
+Dockerfile.*
+!.dockerignore
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Mojo (if not using)
+mojo_layer/
+
+# Scripts that might have local dependencies
+scripts/create_notion_status_page.sh
+scripts/deploy_*.sh
+scripts/update_github_token.sh
+

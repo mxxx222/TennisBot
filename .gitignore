@@ -55,3 +55,8 @@ config/soccer_screening_config.py
 # Log files
 *.log
 live_monitor.log
+
+# Validation output files (generated runtime data)
+data/results.csv
+data/validation_summary.csv
+data/validation_summary.json

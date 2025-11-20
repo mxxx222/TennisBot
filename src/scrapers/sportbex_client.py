@@ -48,7 +48,7 @@ class SportbexMatch:
 class SportbexClient:
     """Client for Sportbex API"""
     
-    BASE_URL = "https://api.sportbex.com/v1"
+    BASE_URL = "https://trial.sportbex.com/api/v1"
     
     def __init__(self, api_key: Optional[str] = None):
         """
@@ -116,9 +116,27 @@ class SportbexClient:
                     self.request_count += 1
                     
                     if response.status == 200:
-                        data = await response.json()
-                        logger.debug(f"Successfully fetched from {endpoint}")
-                        return data
+                        # Check if response is JSON
+                        content_type = response.headers.get('Content-Type', '')
+                        if 'application/json' in content_type:
+                            data = await response.json()
+                            logger.debug(f"Successfully fetched from {endpoint}")
+                            return data
+                        else:
+                            # Response is not JSON (might be HTML)
+                            text = await response.text()
+                            if text.strip().startswith('<!DOCTYPE') or text.strip().startswith('<html'):
+                                logger.warning(f"API returned HTML instead of JSON. Endpoint might be wrong: {endpoint}")
+                                logger.debug(f"Response preview: {text[:200]}")
+                            else:
+                                # Try to parse as JSON anyway
+                                try:
+                                    import json
+                                    data = json.loads(text)
+                                    return data
+                                except:
+                                    logger.warning(f"Could not parse response as JSON from {endpoint}")
+                            return None
                     elif response.status == 401:
                         logger.error("Unauthorized - check API key")
                         return None

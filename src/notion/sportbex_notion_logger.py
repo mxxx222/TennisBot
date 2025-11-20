@@ -52,10 +52,11 @@ class SportbexNotionLogger(NotionBetLogger):
         super().__init__(database_id)
         
         # Try to get master database ID if not provided
+        # Use existing NOTION_BETS_DATABASE_ID from telegram_secrets.env (master database)
         if not self.database_id:
             self.database_id = (
                 os.getenv('NOTION_MASTER_DB_ID') or
-                os.getenv('NOTION_BETS_DATABASE_ID') or
+                os.getenv('NOTION_BETS_DATABASE_ID') or  # Master database (from telegram_secrets.env)
                 self._load_master_db_id_from_config()
             )
         

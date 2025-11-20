@@ -57,6 +57,7 @@ class SportbexClient:
         Args:
             api_key: Sportbex API key (defaults to env var SPORTBEX_API_KEY)
         """
+        # Try to get API key from environment or use default trial key
         self.api_key = api_key or os.getenv('SPORTBEX_API_KEY') or 'Fbmm5Xt57NzVjdKdGwPIQY7EXKOmYAt2MfFWXVCb'
         self.session: Optional[aiohttp.ClientSession] = None
         self.last_request_time = 0.0

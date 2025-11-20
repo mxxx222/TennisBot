@@ -1,0 +1,71 @@
+# Sportbex API Configuration
+# ===========================
+
+# API Settings
+api:
+  # Sportbex API key (or set via SPORTBEX_API_KEY env var)
+  api_key: "Fbmm5Xt57NzVjdKdGwPIQY7EXKOmYAt2MfFWXVCb"
+  
+  # Base URL
+  base_url: "https://api.sportbex.com/v1"
+  
+  # Rate limiting
+  min_request_delay_seconds: 0.2  # 200ms between requests
+  max_requests_per_day: 500
+
+# Filter Settings
+filters:
+  # Odds range
+  min_odds: 1.40
+  max_odds: 1.80
+  
+  # Ranking delta (Sprint 1 placeholder, improves in Sprint 2 with ELO)
+  min_ranking_delta: 20
+  max_ranking_delta: 80
+  
+  # Allowed tournaments
+  allowed_tournaments:
+    - "W15"
+    - "W25"
+    - "W35"
+    - "ATP Challenger"
+    - "CHALLENGER"
+  
+  # Time window
+  days_ahead: 2  # Fetch matches for next 2 days
+
+# Candidate Settings
+candidates:
+  # Number of candidates to return
+  min_candidates: 5
+  max_candidates: 20
+
+# Notion Integration
+notion:
+  # Master database ID (or set via NOTION_MASTER_DB_ID env var)
+  master_database_id: null  # Set in telegram_secrets.env
+  
+  # Status field options
+  status_options:
+    - "Review"
+    - "Approved"
+    - "Pending"
+    - "Won"
+    - "Lost"
+
+# Scheduler Settings
+scheduler:
+  # Run time (EET timezone)
+  run_time: "08:00"
+  
+  # Timezone
+  timezone: "Europe/Helsinki"  # EET
+  
+  # Use Python scheduler (schedule library) or cron
+  use_python_scheduler: true  # Set to false to use cron instead
+
+# Logging
+logging:
+  level: "INFO"
+  file: "logs/sportbex_daily_candidates.log"
+

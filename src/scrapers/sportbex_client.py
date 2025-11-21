@@ -210,18 +210,19 @@ class SportbexClient:
                     continue
             
             # Fetch events (matches) for this competition
-            events_data = await self._make_request(f'/betfair/competitions/{comp_id}/events')
+            # Endpoint: /betfair/event/{sportId}/{competitionId}
+            events_data = await self._make_request(f'/betfair/event/2/{comp_id}')
             
             if events_data:
-                comp_matches = self._parse_events(events_data, comp_name, comp_id)
+                comp_matches = await self._parse_events(events_data, comp_name, comp_id)
                 matches.extend(comp_matches)
         
         logger.info(f"✅ Found {len(matches)} total matches")
         return matches
     
-    def _parse_events(self, events_data: Any, competition_name: str, competition_id: str) -> List[SportbexMatch]:
+    async def _parse_events(self, events_data: Any, competition_name: str, competition_id: str) -> List[SportbexMatch]:
         """
-        Parse events (matches) from Sportbex API response
+        Parse events (matches) from Sportbex API response and fetch odds
         
         Args:
             events_data: API response with events
@@ -236,35 +237,67 @@ class SportbexClient:
         if not isinstance(events_data, list):
             return matches
         
-        for event in events_data:
+        for event_item in events_data:
             try:
+                event = event_item.get('event', {}) if 'event' in event_item else event_item
+                
                 # Extract event information
                 event_id = str(event.get('id') or event.get('eventId') or hash(str(event)))
+                event_name = event.get('name', '')
                 
-                # Extract players/teams
-                home_team = event.get('homeTeam', {}).get('name') or event.get('home') or ''
-                away_team = event.get('awayTeam', {}).get('name') or event.get('away') or ''
-                
-                if not home_team or not away_team:
+                if not event_name:
                     continue
                 
+                # Parse player names from event name (format: "Player A v Player B")
+                players = event_name.split(' v ')
+                if len(players) != 2:
+                    # Try other separators
+                    for sep in [' vs ', ' - ', ' / ']:
+                        if sep in event_name:
+                            players = event_name.split(sep)
+                            break
+                
+                if len(players) != 2:
+                    logger.debug(f"Could not parse players from event name: {event_name}")
+                    continue
+                
+                player1 = players[0].strip()
+                player2 = players[1].strip()
+                
                 # Extract start time
-                start_time = event.get('startTime') or event.get('start') or event.get('date')
+                start_time = event.get('openDate') or event.get('startTime') or event.get('start') or event.get('date')
                 commence_time = self._parse_datetime(start_time)
                 
-                # Extract markets for odds
-                markets = event.get('markets', [])
+                # Fetch markets (odds) for this event
+                # First get market IDs
+                markets_data = await self._make_request(f'/betfair/markets/2/{event_id}')
                 player1_odds = None
                 player2_odds = None
                 
-                for market in markets:
-                    if market.get('marketType') == 'MATCH_ODDS' or market.get('name') == 'Match Odds':
-                        outcomes = market.get('outcomes', [])
-                        for outcome in outcomes:
-                            if outcome.get('name') == home_team:
-                                player1_odds = outcome.get('price') or outcome.get('odds')
-                            elif outcome.get('name') == away_team:
-                                player2_odds = outcome.get('price') or outcome.get('odds')
+                if markets_data and isinstance(markets_data, list):
+                    # Find Match Odds market ID
+                    match_odds_market_id = None
+                    for market in markets_data:
+                        market_type = market.get('marketType') or market.get('type') or ''
+                        market_id = market.get('marketId') or market.get('id')
+                        if market_id and ('MATCH_ODDS' in market_type.upper() or 'WINNER' in market_type.upper()):
+                            match_odds_market_id = str(market_id)
+                            break
+                    
+                    # Fetch odds using listMarketBook endpoint
+                    if match_odds_market_id:
+                        odds_data = await self._fetch_market_odds(match_odds_market_id)
+                        if odds_data:
+                            # Parse odds from market book
+                            for runner in odds_data.get('runners', []):
+                                runner_name = runner.get('name', '')
+                                price = runner.get('price') or runner.get('lastPriceTraded')
+                                
+                                if price:
+                                    if player1 in runner_name or runner_name in player1:
+                                        player1_odds = float(price)
+                                    elif player2 in runner_name or runner_name in player2:
+                                        player2_odds = float(price)
                 
                 # Extract tournament tier
                 tournament_tier = self._extract_tournament_tier(competition_name)
@@ -272,10 +305,10 @@ class SportbexClient:
                 match = SportbexMatch(
                     match_id=event_id,
                     tournament=competition_name,
-                    player1=home_team,
-                    player2=away_team,
-                    player1_odds=float(player1_odds) if player1_odds else None,
-                    player2_odds=float(player2_odds) if player2_odds else None,
+                    player1=player1,
+                    player2=player2,
+                    player1_odds=player1_odds,
+                    player2_odds=player2_odds,
                     commence_time=commence_time,
                     tournament_tier=tournament_tier,
                     raw_data=event
@@ -285,6 +318,8 @@ class SportbexClient:
                 
             except Exception as e:
                 logger.error(f"Error parsing event: {e}")
+                import traceback
+                logger.debug(traceback.format_exc())
                 continue
         
         return matches
@@ -429,15 +464,56 @@ class SportbexClient:
         
         return None
     
+    async def _fetch_market_odds(self, market_id: str) -> Optional[Dict]:
+        """
+        Fetch odds for a market using listMarketBook endpoint
+        
+        Args:
+            market_id: Market ID
+            
+        Returns:
+            Market book data with odds
+        """
+        try:
+            # POST request to listMarketBook
+            url = f"{self.BASE_URL}/betfair/listMarketBook/2"
+            await self._rate_limit()
+            
+            payload = {"marketIds": [market_id]}
+            
+            async with self.session.post(
+                url,
+                json=payload,
+                headers={'sportbex-api-key': self.api_key, 'Content-Type': 'application/json'}
+            ) as response:
+                self.request_count += 1
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if isinstance(data, list) and len(data) > 0:
+                        return data[0]  # Return first market book
+                    return data
+                else:
+                    logger.debug(f"Failed to fetch market odds: {response.status}")
+                    return None
+        except Exception as e:
+            logger.debug(f"Error fetching market odds: {e}")
+            return None
+    
     def _parse_datetime(self, dt_str: Optional[str]) -> Optional[datetime]:
         """Parse datetime string into datetime object"""
         if not dt_str:
             return None
         
         try:
-            # Try ISO format
-            if 'T' in dt_str or 'Z' in dt_str:
-                dt_str = dt_str.replace('Z', '+00:00')
+            # Try ISO format with timezone
+            if 'T' in dt_str:
+                if dt_str.endswith('Z'):
+                    # UTC timezone
+                    dt_str = dt_str.replace('Z', '+00:00')
+                elif '+' not in dt_str and dt_str.count('-') >= 3:
+                    # Add UTC timezone if missing
+                    dt_str = dt_str + '+00:00'
                 return datetime.fromisoformat(dt_str)
             
             # Try common formats

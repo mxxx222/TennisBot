@@ -132,11 +132,22 @@ class SportbexFilter:
             # If no time, assume it's valid (will be filtered later if needed)
             return True
         
-        now = datetime.now()
+        from datetime import timezone
+        now = datetime.now(timezone.utc) if match.commence_time.tzinfo else datetime.now()
         cutoff = now + timedelta(hours=hours)
         
+        # Make both datetimes timezone-aware or naive
+        match_time = match.commence_time
+        if match_time.tzinfo and not now.tzinfo:
+            now = now.replace(tzinfo=timezone.utc)
+            cutoff = cutoff.replace(tzinfo=timezone.utc)
+        elif not match_time.tzinfo and now.tzinfo:
+            match_time = match_time.replace(tzinfo=None)
+            now = now.replace(tzinfo=None)
+            cutoff = cutoff.replace(tzinfo=None)
+        
         # Match should be in the future but within window
-        return now < match.commence_time <= cutoff
+        return now < match_time <= cutoff
     
     def _check_player_odds(self, 
                           match: SportbexMatch, 

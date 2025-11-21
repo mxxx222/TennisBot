@@ -61,7 +61,9 @@ class MatchFilter:
         try:
             if not NOTION_TOKEN:
                 raise ValueError("NOTION_TOKEN not set")
-            self.notion = Client(auth=NOTION_TOKEN)
+            # Use 'client' instead of 'notion' for consistency with other files
+            self.client = Client(auth=NOTION_TOKEN)
+            self.notion = self.client  # Alias for backwards compatibility
         except Exception as e:
             logger.error(f"❌ Failed to initialize Notion client: {e}")
             raise
@@ -99,7 +101,7 @@ class MatchFilter:
                 if not self.raw_feed_db:
                     break
                 
-                response = self.notion.databases.query(
+                response = self.client.databases.query(
                     database_id=self.raw_feed_db,
                     filter={
                         "and": [
@@ -144,7 +146,7 @@ class MatchFilter:
             if not self.player_cards_db:
                 return None
             
-            response = self.notion.databases.query(
+            response = self.client.databases.query(
                 database_id=self.player_cards_db,
                 filter={
                     "or": [
@@ -480,7 +482,7 @@ class MatchFilter:
         try:
             # Check if already exists (simplified check)
             try:
-                existing = self.notion.databases.query(
+                existing = self.client.databases.query(
                     database_id=self.prematch_db,
                     filter={
                         "and": [
@@ -501,7 +503,7 @@ class MatchFilter:
                 return True  # Consider it success if already exists
             
             # Create page in Tennis Prematch DB
-            self.notion.pages.create(
+            self.client.pages.create(
                 parent={"database_id": self.prematch_db},
                 properties=prematch_props
             )
@@ -554,7 +556,7 @@ class MatchFilter:
                     "rich_text": [{"text": {"content": notes}}]
                 }
             
-            self.notion.pages.update(
+            self.client.pages.update(
                 page_id=match_id,
                 properties=update_props
             )

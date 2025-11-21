@@ -30,13 +30,18 @@ All dependencies are already in `requirements.txt`:
 Add to `telegram_secrets.env`:
 ```bash
 NOTION_CANDIDATES_DB_ID=your_candidates_db_id_here
+NOTION_MATCH_RESULTS_DB_ID=your_match_results_db_id_here
 ```
 
-**How to get Candidates DB ID:**
-1. Open your "Tennis Candidates" database in Notion
+**How to get Database IDs:**
+1. Open your database in Notion
 2. Copy the database ID from the URL
 3. URL format: `https://notion.so/YOUR_WORKSPACE/DATABASE_ID?v=...`
 4. The database ID is the long string before the `?`
+
+**Required Databases:**
+- **Tennis Candidates DB** - For Stage 1/2 workflow
+- **Match Results DB** - For ML training data collection (50 properties)
 
 ### 3. Verify API Keys
 
@@ -80,8 +85,10 @@ Add to crontab (`crontab -e`):
 ## Workflow
 
 1. **08:00** - Stage 1 scans ITF matches → Candidates DB (Status="Scanned")
-2. **09:00** - Stage 2 AI analysis → Updates candidates (Status="Analyzed")
-3. **09:30** - Review promoted bets in Bets DB → Place bets manually
+2. **08:15** - Daily Learning Loop → Collects matches → Match Results DB (Status="Scanned")
+3. **09:00** - Stage 2 AI analysis → Updates candidates (Status="Analyzed")
+4. **09:30** - Review promoted bets in Bets DB → Place bets manually
+5. **20:00** - Update Match Results → Fetches actual results → Updates Match Results DB (Status="Resulted")
 
 ## Expected Results
 
@@ -122,11 +129,59 @@ Edit `config/sportbex_filters.json` to adjust:
 - Check API key has credits
 - Model: `gpt-4o` (can change to `gpt-4-turbo`)
 
+## Match Results DB for ML Training
+
+The Match Results Database collects comprehensive match data for ML model training.
+
+### Features
+
+- **50 Properties** for comprehensive data collection:
+  - Basic data (Match ID, Players, Tournament, Surface, Dates)
+  - Odds data (Opening/Closing, Movement, CLV)
+  - Player stats (Rank, ELO, Age, Form, H2H)
+  - AI predictions (GPT-4, XGBoost, LightGBM, Ensemble)
+  - Betting info (Bet Placed, Side, Odds, Stake, PnL, CLV)
+  - Meta (Actual Winner, Score, Status, Data Quality, Source)
+
+### 6 Views
+
+1. **Daily Scan Queue** - Today's scanned matches
+2. **Pending Results** - Waiting for results
+3. **ML Training Dataset** - All completed matches (1000+ matches)
+4. **Model Performance** - AI prediction accuracy
+5. **Placed Bets Analysis** - Bet ROI analysis
+6. **By Tournament Tier** - Board view by tier
+
+### Status Workflow
+
+- **Scanned** → Match collected from Stage 1
+- **Predicted** → AI analysis completed
+- **Resulted** → Actual result recorded
+
+### Daily Learning Loop
+
+```bash
+python3 scripts/tennis_ai/daily_learning_loop.py
+```
+
+Collects 100+ matches per day for ML training dataset.
+
+### Update Match Results
+
+```bash
+python3 scripts/tennis_ai/update_match_results.py
+```
+
+Fetches actual results and updates Match Results DB.
+
 ## Files
 
 - `scripts/tennis_ai/stage1_scanner.py` - Stage 1 scanner
 - `scripts/tennis_ai/stage2_ai_analyzer.py` - Stage 2 AI analyzer
 - `scripts/tennis_ai/sportbex_client_simple.py` - Simple Sportbex API client
+- `scripts/tennis_ai/daily_learning_loop.py` - Daily ML data collection
+- `scripts/tennis_ai/update_match_results.py` - Result updater
+- `src/notion/match_results_logger.py` - Match Results DB logger
 - `config/sportbex_filters.json` - Filter configuration
 - `scripts/tennis_ai/run_2stage_system.sh` - Runner script
 

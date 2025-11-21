@@ -156,7 +156,7 @@ def fetch_google_snippet(search_url: str, delay: float = REQUEST_DELAY) -> Optio
     except Exception as e:
         print(f"   ⚠️  Parsing failed: {e}")
         return None
-
+    
 
 def auto_search_match(player1: str, player2: str, match_date: str = None) -> Optional[Dict]:
     """
@@ -183,7 +183,7 @@ def auto_search_match(player1: str, player2: str, match_date: str = None) -> Opt
     snippet_text = fetch_google_snippet(search_url)
     
     if not snippet_text:
-        return None
+    return None
     
     # Parse snippet using the parser
     result = parse_snippet(snippet_text, player1, player2)
@@ -243,19 +243,19 @@ def main():
         if mode in ["auto", "hybrid"]:
             if REQUESTS_AVAILABLE:
                 print(f"   🔍 Searching Google...")
-                result = auto_search_match(player1, player2)
+            result = auto_search_match(player1, player2)
                 if result and result.get('winner'):
                     confidence = result.get('confidence', 0)
                     print(f"   ✅ Auto-found: {result['winner']} - {result['score']} (confidence: {confidence}%)")
+            else:
+                if mode == "auto":
+                    # In auto mode, show Google link but mark as not found
+                    search_url = manual_google_search_instructions(player1, player2)
+                    print(f"   🔍 Google: {search_url}")
+                    print(f"   ⚠️  Auto-search failed - check Google snippet manually")
+                    not_found.append(match)
                 else:
-                    if mode == "auto":
-                        # In auto mode, show Google link but mark as not found
-                        search_url = manual_google_search_instructions(player1, player2)
-                        print(f"   🔍 Google: {search_url}")
-                        print(f"   ⚠️  Auto-search failed - check Google snippet manually")
-                        not_found.append(match)
-                    else:
-                        # In hybrid mode, fall through to manual input
+                    # In hybrid mode, fall through to manual input
                         search_url = manual_google_search_instructions(player1, player2)
                         print(f"   🔍 Google: {search_url}")
                         print(f"   ⚠️  Auto-search failed, falling back to manual input")
@@ -306,14 +306,14 @@ def main():
                             }
                 else:
                     # Manual entry
-                    winner = input(f"   Winner (Home/Away): ").strip()
-                    score = input(f"   Score: ").strip()
-                    
-                    if winner and score:
-                        result = {
-                            'winner': winner.capitalize(),
-                            'score': score
-                        }
+                winner = input(f"   Winner (Home/Away): ").strip()
+                score = input(f"   Score: ").strip()
+                
+                if winner and score:
+                    result = {
+                        'winner': winner.capitalize(),
+                        'score': score
+                    }
             except (EOFError, KeyboardInterrupt):
                 print(f"   ⏭️  Skipped (interrupted)")
                 not_found.append(match)

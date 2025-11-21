@@ -7,11 +7,16 @@ This guide explains how to deploy the ITF tennis pipeline to Fly.io. The deploym
 ## Architecture
 
 - **Single Fly.io app**: `itf-tennis-pipeline`
-- **Long-running process**: Scheduler script runs continuously
-- **Three scheduled jobs**:
-  1. ITF Scraper: 06:00 & 18:00 UTC (2x daily)
-  2. Player Card Linker: 06:30 UTC (1x daily, after scraper)
-  3. GPT Analyzer: 07:00 & 19:00 UTC (2x daily, after linking)
+- **Long-running process**: Enhanced scheduler script runs continuously
+- **Two scheduled jobs (Enhanced Pipeline with ITF Entries Intelligence)**:
+  1. ITF Entries Intelligence Scraper: 07:00 UTC (08:00 CET) - Daily
+  2. Enhanced Tennis AI Pipeline: 07:15 UTC (08:15 CET) - Daily (after intelligence update)
+  
+**Note**: Enhanced pipeline includes:
+- ITF entries intelligence scraping
+- Pre-filtering matches
+- GPT-4 analysis with entries intelligence enhancement
+- Notion integration with intelligence fields
 
 ## Prerequisites
 

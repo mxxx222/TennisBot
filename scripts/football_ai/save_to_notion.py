@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Save Tennis AI analysis results to Notion database.
+Save Football OU2.5 AI analysis results to Notion database.
 Integrates with the feedback loop for calibration.
 """
 
@@ -29,8 +29,9 @@ except ImportError:
 
 # CONFIG
 NOTION_TOKEN = os.getenv('NOTION_API_KEY') or os.getenv('NOTION_TOKEN')
-NOTION_DB_ID = os.getenv('NOTION_AI_PREDICTIONS_DB_ID') or "f114ed7edffc4e799a05280ca89bc63e"
-INPUT_FILE = project_root / 'data' / 'tennis_ai' / 'ai_analysis_results.json'
+# TODO: Set your Football OU2.5 Predictions database ID
+NOTION_DB_ID = os.getenv('NOTION_FOOTBALL_AI_PREDICTIONS_DB_ID') or ""
+INPUT_FILE = project_root / 'data' / 'football_ai' / 'ai_analysis_results.json'
 
 # FILTERING THRESHOLD
 # Based on validation: 100% win rate (12/12) for 70%+ impliedP bets
@@ -43,7 +44,7 @@ def save_prediction_to_notion(notion_client, match_data, analysis_result):
     
     Args:
         notion_client: Notion Client instance
-        match_data: Dict with match info (players, tournament, date, url)
+        match_data: Dict with match info (teams, league, date, url)
         analysis_result: Dict with AI analysis (recommendation, confidence, edge, reasoning)
     
     Returns:
@@ -51,7 +52,7 @@ def save_prediction_to_notion(notion_client, match_data, analysis_result):
     """
     try:
         # Create match name
-        match_name = f"{match_data.get('player_a', 'Unknown')} vs {match_data.get('player_b', 'Unknown')}"
+        match_name = f"{match_data.get('home_team', 'Unknown')} vs {match_data.get('away_team', 'Unknown')}"
         
         # Parse date if available
         date_value = None
@@ -62,9 +63,9 @@ def save_prediction_to_notion(notion_client, match_data, analysis_result):
             except:
                 pass
         
-        # Map recommendation
+        # Map recommendation (OVER/UNDER/Skip)
         recommendation = analysis_result.get('recommended_bet', 'Skip')
-        if recommendation not in ['Player A', 'Player B', 'Skip']:
+        if recommendation not in ['OVER', 'UNDER', 'Skip']:
             recommendation = 'Skip'
         
         # Get confidence as number (0-1)
@@ -84,8 +85,8 @@ def save_prediction_to_notion(notion_client, match_data, analysis_result):
             "Match": {
                 "title": [{"text": {"content": match_name}}]
             },
-            "Tournament": {
-                "rich_text": [{"text": {"content": match_data.get('tournament', 'Unknown')[:2000]}}]
+            "League": {
+                "rich_text": [{"text": {"content": match_data.get('league', 'Unknown')[:2000]}}]
             },
             "Pre-filter Score": {
                 "number": prefilter_score
@@ -126,42 +127,6 @@ def save_prediction_to_notion(notion_client, match_data, analysis_result):
                 "url": match_data['page_url']
             }
         
-        # Add entries intelligence fields if available
-        entries_intel = analysis_result.get('entries_intelligence', {})
-        if entries_intel:
-            # Entries Intelligence Boost (number)
-            total_adjustment = entries_intel.get('total_adjustment', '+0.0%')
-            try:
-                # Parse "+5.0%" to 5.0
-                boost_value = float(total_adjustment.replace('+', '').replace('%', ''))
-                properties["Entries Intelligence Boost"] = {
-                    "number": boost_value
-                }
-            except (ValueError, AttributeError):
-                pass
-            
-            # Motivation Score (number) - average of player motivations
-            # This would need to be calculated from player1_motivation and player2_motivation
-            # For now, use intelligence_confidence as proxy
-            intel_conf = entries_intel.get('intelligence_confidence', 0)
-            if intel_conf:
-                properties["Intelligence Confidence"] = {
-                    "number": intel_conf
-                }
-            
-            # Withdrawal Risk (select)
-            withdrawal_risk = entries_intel.get('withdrawal_risk', 'LOW')
-            if withdrawal_risk in ['LOW', 'MEDIUM', 'HIGH']:
-                properties["Withdrawal Risk"] = {
-                    "select": {"name": withdrawal_risk}
-                }
-            
-            # Home Advantage (checkbox)
-            home_advantage = entries_intel.get('home_advantage', False)
-            properties["Home Advantage"] = {
-                "checkbox": bool(home_advantage)
-            }
-        
         # Create page
         page = notion_client.pages.create(
             parent={"database_id": NOTION_DB_ID},
@@ -198,6 +163,11 @@ def save_batch_to_notion(results_file=None):
         print("   Set NOTION_API_KEY or NOTION_TOKEN in telegram_secrets.env")
         return 0, 0
     
+    if not NOTION_DB_ID:
+        print("⚠️  NOTION_FOOTBALL_AI_PREDICTIONS_DB_ID not set")
+        print("   Set it in telegram_secrets.env or update NOTION_DB_ID in this file")
+        return 0, 0
+    
     print("💾 Saving predictions to Notion...")
     print("=" * 70)
     
@@ -230,10 +200,10 @@ def save_batch_to_notion(results_file=None):
     for i, analysis in enumerate(analyses, 1):
         match_data = analysis.get('match_data', {})
         recommendation = analysis.get('recommended_bet', 'Skip')
-        match_name = f"{match_data.get('player_a', 'Unknown')} vs {match_data.get('player_b', 'Unknown')}"
+        match_name = f"{match_data.get('home_team', 'Unknown')} vs {match_data.get('away_team', 'Unknown')}"
         
         # Check impliedP threshold (only for bet recommendations)
-        if recommendation in ['Player A', 'Player B']:
+        if recommendation in ['OVER', 'UNDER']:
             # Get impliedP from match_data if available
             impliedp = match_data.get('impliedP') or match_data.get('impliedp') or match_data.get('implied_probability')
             
@@ -257,7 +227,7 @@ def save_batch_to_notion(results_file=None):
         
         if page_id:
             saved_count += 1
-            if recommendation in ['Player A', 'Player B']:
+            if recommendation in ['OVER', 'UNDER']:
                 bet_count += 1
                 print(f"✅ Saved (BET)")
             else:

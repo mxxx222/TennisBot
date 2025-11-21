@@ -1,0 +1,88 @@
+{
+  "id": "web_scraper_example",
+  "name": "Basic Web Scraper Workflow",
+  "description": "A simple workflow that scrapes forum posts and stores them in a database",
+  "nodes": [
+    {
+      "id": "web_scraper_1",
+      "type": "webScraper",
+      "name": "Forum Scraper",
+      "parameters": {
+        "urls": [
+          "https://example-forum.com/board/1",
+          "https://example-forum.com/board/2"
+        ],
+        "selectors": {
+          "posts": ".post-content",
+          "titles": ".post-title",
+          "authors": ".post-author"
+        },
+        "max_pages": 5,
+        "rate_limit": 1.0,
+        "use_browser": false,
+        "anti_detection": true
+      }
+    },
+    {
+      "id": "data_filter_1",
+      "type": "dataFilter",
+      "name": "Content Filter",
+      "parameters": {
+        "min_length": 20,
+        "remove_duplicates": true,
+        "include_keywords": ["tennis", "match", "betting"],
+        "exclude_keywords": ["spam", "advertisement"]
+      }
+    },
+    {
+      "id": "data_transformer_1",
+      "type": "dataTransformer",
+      "name": "Data Formatter",
+      "parameters": {
+        "transformations": ["lowercase", "strip_whitespace", "calculate_length"],
+        "field_mappings": {
+          "post_content": "content",
+          "post_title": "title",
+          "author_name": "author"
+        },
+        "normalize_text": true
+      }
+    },
+    {
+      "id": "db_storage_1",
+      "type": "databaseStorage",
+      "name": "Database Storage",
+      "parameters": {
+        "db_type": "sqlite",
+        "connection_string": "forum_data.db",
+        "table_name": "forum_posts",
+        "batch_size": 50,
+        "on_conflict": "update"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "web_scraper_1",
+      "fromOutput": "data",
+      "to": "data_filter_1",
+      "toInput": "data"
+    },
+    {
+      "from": "data_filter_1",
+      "fromOutput": "processed_data",
+      "to": "data_transformer_1",
+      "toInput": "data"
+    },
+    {
+      "from": "data_transformer_1",
+      "fromOutput": "processed_data",
+      "to": "db_storage_1",
+      "toInput": "data"
+    }
+  ],
+  "settings": {
+    "max_execution_time": 300,
+    "retry_failed_nodes": true
+  }
+}

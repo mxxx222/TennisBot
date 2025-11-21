@@ -1,0 +1,148 @@
+{
+  "id": "social_media_monitor",
+  "name": "Social Media Intelligence Monitor",
+  "description": "Monitor Telegram channels and Discord servers for betting intelligence",
+  "nodes": [
+    {
+      "id": "telegram_scraper_1",
+      "type": "telegramScraper",
+      "name": "Telegram Monitor",
+      "parameters": {
+        "channels": [
+          "@betting_insider_channel",
+          "@tennis_tips_group"
+        ],
+        "max_messages": 200,
+        "hours_back": 24,
+        "min_content_length": 15,
+        "keywords": ["bet", "pick", "odds", "tennis", "match"],
+        "exclude_keywords": ["spam", "scam", "fake"]
+      }
+    },
+    {
+      "id": "discord_scraper_1",
+      "type": "discordScraper",
+      "name": "Discord Monitor",
+      "parameters": {
+        "servers": ["BettingServer1", "TennisTipsServer"],
+        "channels": ["tips", "predictions", "analysis"],
+        "max_messages": 150,
+        "hours_back": 24,
+        "min_content_length": 15,
+        "keywords": ["bet", "pick", "odds", "tennis"],
+        "exclude_keywords": ["spam", "ban", "report"]
+      }
+    },
+    {
+      "id": "data_merger_1",
+      "type": "dataTransformer",
+      "name": "Data Merger",
+      "parameters": {
+        "transformations": ["merge_sources", "lowercase", "strip_whitespace"],
+        "normalize_text": true,
+        "generate_summaries": true
+      }
+    },
+    {
+      "id": "content_filter_1",
+      "type": "dataFilter",
+      "name": "Quality Filter",
+      "parameters": {
+        "min_length": 30,
+        "remove_duplicates": true,
+        "include_keywords": ["bet", "pick", "odds", "prediction"],
+        "exclude_keywords": ["spam", "fake", "scam", "test"],
+        "min_quality_score": 0.3
+      }
+    },
+    {
+      "id": "intelligence_extractor_1",
+      "type": "dataTransformer",
+      "name": "Intelligence Extractor",
+      "parameters": {
+        "transformations": ["extract_urls", "extract_mentions", "extract_entities"],
+        "field_mappings": {
+          "message_text": "content",
+          "channel_name": "source",
+          "user_name": "author"
+        },
+        "custom_transforms": [
+          {
+            "name": "extract_betting_info",
+            "type": "regex_replace",
+            "field": "content",
+            "params": {
+              "pattern": "(?i)(bet|pick|take)\\s+(.+?)(?:\\.|$)",
+              "replacement": "Betting pick: \\2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "db_storage_1",
+      "type": "databaseStorage",
+      "name": "Intelligence Database",
+      "parameters": {
+        "db_type": "sqlite",
+        "connection_string": "social_intelligence.db",
+        "table_name": "betting_intelligence",
+        "batch_size": 25,
+        "on_conflict": "update",
+        "table_schema": {
+          "id": "TEXT PRIMARY KEY",
+          "source": "TEXT",
+          "content": "TEXT",
+          "author": "TEXT",
+          "timestamp": "TEXT",
+          "intelligence_type": "TEXT",
+          "confidence_score": "REAL",
+          "metadata": "TEXT",
+          "created_at": "TEXT DEFAULT CURRENT_TIMESTAMP"
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "telegram_scraper_1",
+      "fromOutput": "data",
+      "to": "data_merger_1",
+      "toInput": "input_1"
+    },
+    {
+      "from": "discord_scraper_1",
+      "fromOutput": "data",
+      "to": "data_merger_1",
+      "toInput": "input_2"
+    },
+    {
+      "from": "data_merger_1",
+      "fromOutput": "processed_data",
+      "to": "content_filter_1",
+      "toInput": "data"
+    },
+    {
+      "from": "content_filter_1",
+      "fromOutput": "processed_data",
+      "to": "intelligence_extractor_1",
+      "toInput": "data"
+    },
+    {
+      "from": "intelligence_extractor_1",
+      "fromOutput": "processed_data",
+      "to": "db_storage_1",
+      "toInput": "data"
+    }
+  ],
+  "settings": {
+    "max_execution_time": 600,
+    "retry_failed_nodes": true,
+    "schedule": "0 */4 * * *"
+  },
+  "metadata": {
+    "category": "intelligence",
+    "priority": "high",
+    "tags": ["telegram", "discord", "betting", "intelligence"]
+  }
+}

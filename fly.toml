@@ -1,9 +1,8 @@
-# Fly.io ITF Tennis Pipeline Configuration
-# =====================================
-# This app runs a long-running scheduler that executes three cron jobs:
-# 1. ITF Scraper: 06:00 & 18:00 UTC (2x daily)
-# 2. Player Card Linker: 06:30 UTC (1x daily)
-# 3. GPT Analyzer: 07:00 & 19:00 UTC (2x daily)
+# Fly.io ITF Tennis Enhanced Pipeline Configuration
+# ================================================
+# This app runs a long-running scheduler that executes enhanced pipeline with ITF Entries Intelligence:
+# 1. ITF Entries Intelligence Scraper: 07:00 UTC (08:00 CET) - Daily
+# 2. Enhanced Tennis AI Pipeline: 07:15 UTC (08:15 CET) - Daily (after intelligence update)
 
 app = "itf-tennis-pipeline"
 primary_region = "iad"  # US East (Virginia) - change to your preferred region
@@ -37,24 +36,16 @@ primary_region = "iad"  # US East (Virginia) - change to your preferred region
 #
 # Example: fly secrets set NOTION_TOKEN="secret_xxx" OPENAI_API_KEY="sk-xxx"
 
-[[services]]
-  internal_port = 8000
-  protocol = "tcp"
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
-
 [processes]
-  app = "python scripts/tennis_ai/scheduler.py"
+  app = "python scripts/tennis_ai/scheduler_enhanced.py"
 
 [vm]
   memory_mb = 512
   cpu_kind = "shared"
   cpus = 1
 
-[[mounts]]
-  source = "itf_data"
-  destination = "/app/data"
+# Optional: Uncomment to use persistent volume for data storage
+# [[mounts]]
+#   source = "itf_data"
+#   destination = "/app/data"
 

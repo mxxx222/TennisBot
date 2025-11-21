@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-W15 Tennis AI Analyzer
-Analysoi vain pre-filterin läpäisseet ottelut OpenAI:llä
-Kustannus: ~€0.03 per ottelu (GPT-4)
+Football OU2.5 AI Analyzer
+Analyzes pre-filtered football matches for Over/Under 2.5 goals betting
+Cost: ~€0.03 per match (GPT-4)
 
-VAATII: OPENAI_API_KEY environment variable
+REQUIRES: OPENAI_API_KEY environment variable
 """
 
 import os
@@ -34,9 +34,9 @@ except ImportError:
 
 # CONFIG
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-INPUT_FILE = project_root / 'data' / 'tennis_ai' / 'ai_candidates.json'
-OUTPUT_FILE = project_root / 'data' / 'tennis_ai' / 'ai_analysis_results.json'
-MODEL = 'gpt-4'  # Vaihda 'gpt-3.5-turbo' jos haluat halvemman
+INPUT_FILE = project_root / 'data' / 'football_ai' / 'ai_candidates.json'
+OUTPUT_FILE = project_root / 'data' / 'football_ai' / 'ai_analysis_results.json'
+MODEL = 'gpt-4'  # Change to 'gpt-3.5-turbo' if you want cheaper
 
 if not OPENAI_API_KEY:
     print("❌ ERROR: OPENAI_API_KEY not set")
@@ -48,42 +48,52 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 # AI PROMPT
 ANALYSIS_PROMPT = """
-You are an elite tennis betting analyst specializing in ITF W15 Women's tournaments.
+You are an elite football betting analyst specializing in Over/Under 2.5 goals betting.
 
 **Match Data:**
 
-- Player A: {player_a} (Ranking: {ranking_a})
-- Player B: {player_b} (Ranking: {ranking_b})
-- Tournament: {tournament}
-- Surface: {surface}
+- Home Team: {home_team}
+- Away Team: {away_team}
+- League: {league}
+- Home Goals Avg: {home_goals_avg}
+- Away Goals Avg: {away_goals_avg}
+- Home Conceded Avg: {home_conceded_avg}
+- Away Conceded Avg: {away_conceded_avg}
+- Home Form: {home_form}
+- Away Form: {away_form}
 - Pre-filter Score: {prefilter_score}/100
 
 **Analysis Framework:**
 
-1. **Ranking Analysis**
-   - Ranking gap: {ranking_gap}
-   - W15 tier implications
+1. **Goal-Scoring Patterns**
+   - Combined average goals: {total_avg_goals}
+   - Offensive strength analysis
+   - Recent goal trends
 
-2. **Surface Suitability**
-   - {surface} court characteristics
-   - Player styles and surface fit
+2. **Defensive Weakness**
+   - Combined conceded average: {total_conceded_avg}
+   - Defensive vulnerabilities
+   - Clean sheet probability
 
 3. **Form Assessment**
-   - Recent results
-   - Momentum indicators
+   - Recent match results
+   - Goal-scoring momentum
+   - Defensive form
 
 4. **Value Identification**
-   - Expected win probability
+   - Expected total goals probability
    - Market inefficiencies
+   - Over/Under edge calculation
 
 5. **Risk Factors**
    - Data quality
-   - Unknown variables
+   - Missing key players
+   - Weather conditions (if available)
 
 **Output MUST be valid JSON:**
 
 {{
-  "recommended_bet": "Player A" | "Player B" | "Skip",
+  "recommended_bet": "OVER" | "UNDER" | "Skip",
   "confidence": "High" | "Medium" | "Low",
   "win_probability": 0.00-1.00,
   "expected_value_pct": 0-100,
@@ -99,44 +109,54 @@ You are an elite tennis betting analyst specializing in ITF W15 Women's tourname
 - Be ruthlessly selective (recommend <30% of matches)
 - Require minimum +7% expected value
 - **CRITICAL: Only recommend bets with impliedP >= 70%**
-  - Validation shows 100% win rate (12/12) for 70%+ impliedP bets
+  - Validation from tennis shows 100% win rate (12/12) for 70%+ impliedP bets
   - Lower impliedP (<70%) has significantly higher failure rate
   - If win_probability < 0.70, recommend "Skip" regardless of other factors
-- At W15 level, upsets are common - be conservative
+- Focus on goal-scoring patterns and defensive weaknesses
+- Consider league characteristics (some leagues are higher scoring)
 - ONLY output valid JSON, no other text
 """
 
-class TennisAIAnalyzer:
+class FootballAIAnalyzer:
     def __init__(self, api_key, model='gpt-4'):
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.analyses = []
     
     def analyze_match(self, match):
-        """Analysoi yksittäinen ottelu AI:llä"""
+        """Analyze single match with AI"""
         
-        ranking_gap = None
-        if match.get('ranking_a') and match.get('ranking_b'):
-            ranking_gap = abs(match['ranking_a'] - match['ranking_b'])
+        # Calculate combined stats
+        home_goals = match.get('home_goals_avg', 0) or 0
+        away_goals = match.get('away_goals_avg', 0) or 0
+        total_avg_goals = home_goals + away_goals
+        
+        home_conceded = match.get('home_conceded_avg', 0) or 0
+        away_conceded = match.get('away_conceded_avg', 0) or 0
+        total_conceded_avg = home_conceded + away_conceded
         
         prompt = ANALYSIS_PROMPT.format(
-            player_a=match['player_a'],
-            player_b=match['player_b'],
-            ranking_a=match.get('ranking_a', 'Unknown'),
-            ranking_b=match.get('ranking_b', 'Unknown'),
-            tournament=match['tournament'],
-            surface=match['surface'],
+            home_team=match['home_team'],
+            away_team=match['away_team'],
+            league=match.get('league', 'Unknown'),
+            home_goals_avg=home_goals if home_goals > 0 else 'N/A',
+            away_goals_avg=away_goals if away_goals > 0 else 'N/A',
+            home_conceded_avg=home_conceded if home_conceded > 0 else 'N/A',
+            away_conceded_avg=away_conceded if away_conceded > 0 else 'N/A',
+            home_form=match.get('home_form', 'N/A'),
+            away_form=match.get('away_form', 'N/A'),
             prefilter_score=match['score'],
-            ranking_gap=ranking_gap or 'Unknown'
+            total_avg_goals=total_avg_goals if total_avg_goals > 0 else 'N/A',
+            total_conceded_avg=total_conceded_avg if total_conceded_avg > 0 else 'N/A'
         )
         
         try:
-            print(f"\n🤖 Analyzing: {match['player_a']} vs {match['player_b']}...")
+            print(f"\n🤖 Analyzing: {match['home_team']} vs {match['away_team']}...")
             
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a professional tennis betting analyst. Always respond with valid JSON only."},
+                    {"role": "system", "content": "You are a professional football betting analyst specializing in Over/Under 2.5 goals. Always respond with valid JSON only."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.3,
@@ -173,7 +193,7 @@ class TennisAIAnalyzer:
             }
     
     def analyze_batch(self, matches):
-        """Analysoi useita otteluita"""
+        """Analyze multiple matches"""
         results = []
         
         for i, match in enumerate(matches, 1):
@@ -185,7 +205,7 @@ class TennisAIAnalyzer:
         return results
     
     def get_high_value_bets(self, min_confidence='Medium', min_ev=7):
-        """Suodata korkean arvon vedot"""
+        """Filter high-value bets"""
         confidence_rank = {'High': 3, 'Medium': 2, 'Low': 1}
         min_rank = confidence_rank[min_confidence]
         
@@ -207,17 +227,9 @@ class TennisAIAnalyzer:
         return high_value
 
 def load_candidates(filename=None):
-    """Lataa pre-filterin tulokset (prefers optimized batch if available)"""
+    """Load pre-filter results"""
     if filename is None:
-        # Check for optimized batch first
-        optimized_file = project_root / 'data' / 'tennis_ai' / 'ai_candidates_optimized.json'
-        default_file = project_root / 'data' / 'tennis_ai' / 'ai_candidates.json'
-        
-        if optimized_file.exists():
-            filename = optimized_file
-            print("📊 Using optimized batch (top 25 matches)")
-        else:
-            filename = default_file
+        filename = project_root / 'data' / 'football_ai' / 'ai_candidates.json'
     else:
         filename = Path(filename)
     
@@ -227,21 +239,16 @@ def load_candidates(filename=None):
         
         matches = data['matches']
         
-        # Show batch info if optimized
-        if 'original_total' in data:
-            print(f"   Original: {data['original_total']} → Optimized: {len(matches)}")
-            print(f"   Cost savings: ${(data['original_total'] - len(matches)) * 0.03:.2f}")
-        
         return matches
     except FileNotFoundError:
         print(f"❌ ERROR: {filename} not found")
-        print("   Run prefilter_w15_matches.py first")
+        print("   Run prefilter_ou25_matches.py first")
         exit(1)
 
 def save_results(analyzer, filename=None):
-    """Tallenna AI-analyysin tulokset"""
+    """Save AI analysis results"""
     if filename is None:
-        filename = project_root / 'data' / 'tennis_ai' / 'ai_analysis_results.json'
+        filename = project_root / 'data' / 'football_ai' / 'ai_analysis_results.json'
     else:
         filename = Path(filename)
     
@@ -267,7 +274,7 @@ def save_results(analyzer, filename=None):
     return high_value
 
 def print_summary(high_value_bets):
-    """Tulosta yhteenveto"""
+    """Print summary"""
     print(f"\n{'='*80}")
     print(f"🎯 AI ANALYSIS SUMMARY")
     print(f"{'='*80}\n")
@@ -276,10 +283,10 @@ def print_summary(high_value_bets):
     
     for i, bet in enumerate(high_value_bets, 1):
         match = bet['match_data']
-        print(f"{i}. {match['player_a']} vs {match['player_b']}")
+        print(f"{i}. {match['home_team']} vs {match['away_team']}")
         print(f"   🎯 Bet: {bet['recommended_bet']} | Confidence: {bet['confidence']}")
         print(f"   💰 Stake: {bet['suggested_stake_pct']}% | EV: +{bet.get('expected_value_pct', 0)}%")
-        print(f"   📊 {match['tournament']} | {match['surface']}")
+        print(f"   📊 {match['league']}")
         print(f"   💡 {bet['reasoning'][:150]}...")
         print()
 
@@ -292,7 +299,7 @@ if __name__ == '__main__':
     estimated_cost = len(candidates) * 0.03
     print(f"💰 Estimated API cost: €{estimated_cost:.2f}")
     
-    # Check if running non-interactively (from script or pipe)
+    # Check if running non-interactively
     import sys
     if sys.stdin.isatty():
         proceed = input(f"\nProceed with AI analysis of {len(candidates)} matches? (y/n): ")
@@ -304,12 +311,12 @@ if __name__ == '__main__':
     
     print("\n🤖 Starting AI analysis...\n")
     
-    analyzer = TennisAIAnalyzer(OPENAI_API_KEY, model=MODEL)
+    analyzer = FootballAIAnalyzer(OPENAI_API_KEY, model=MODEL)
     results = analyzer.analyze_batch(candidates)
     
     high_value_bets = save_results(analyzer)
     print_summary(high_value_bets)
     
     print(f"\n✅ Analysis complete!")
-    print(f"\n📋 Next: python3 scripts/tennis_ai/generate_bet_list.py")
+    print(f"\n📋 Next: python3 scripts/football_ai/generate_bet_list.py")
 

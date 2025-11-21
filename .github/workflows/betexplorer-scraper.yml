@@ -34,8 +34,10 @@ jobs:
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          RAW_MATCH_FEED_DB_ID: ${{ secrets.RAW_MATCH_FEED_DB_ID }}
           NOTION_TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
           NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+          PARALLEL_WRITE: ${{ secrets.PARALLEL_WRITE || 'false' }}
         run: |
           python run_betexplorer_scraper.py
 

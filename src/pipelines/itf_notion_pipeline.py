@@ -25,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from src.scrapers.flashscore_itf_scraper import FlashScoreITFScraperEnhanced, ITFMatch
 ENHANCED_SCRAPER_AVAILABLE = True
 from src.notion.itf_database_updater import ITFDatabaseUpdater
+from src.notion.raw_match_feed_updater import RawMatchFeedUpdater
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +50,18 @@ class ITFNotionPipeline:
             from src.scrapers.flashscore_itf_scraper import FlashScoreITFScraper
             self.scraper = FlashScoreITFScraper(scraper_config)
         
+        # Raw Match Feed updater (primary target)
+        self.raw_feed_updater = RawMatchFeedUpdater(
+            database_id=self.config.get('notion', {}).get('raw_match_feed_db_id')
+        )
+        
+        # Tennis Prematch updater (for parallel write mode during migration)
         self.notion_updater = ITFDatabaseUpdater(
             database_id=self.config.get('notion', {}).get('tennis_prematch_db_id')
         )
+        
+        # Migration mode: parallel_write writes to both DBs (Phase 1)
+        self.parallel_write = self.config.get('notion', {}).get('parallel_write', False)
         
         # Duplicate tracking (with caching)
         self.processed_match_ids: set = set()
@@ -61,7 +71,7 @@ class ITFNotionPipeline:
         self.batch_size = 3  # Max 3 req/s per Notion API
         self.batch_delay = 1.0  # 1 second between batches (distributed across batch)
         
-        logger.info("🔄 ITF Notion Pipeline initialized")
+        logger.info(f"🔄 ITF Notion Pipeline initialized (parallel_write: {self.parallel_write})")
     
     def transform_match_to_notion(self, match: ITFMatch) -> Dict[str, Any]:
         """
@@ -290,16 +300,23 @@ class ITFNotionPipeline:
             """Process a single match with semaphore limiting"""
             async with semaphore:
                 try:
-                    # Transform to Notion format
-                    notion_data = self.transform_match_to_notion(match)
+                    # Write to Raw Match Feed (primary target)
+                    raw_feed_page_id = None
+                    if self.raw_feed_updater.client and self.raw_feed_updater.database_id:
+                        raw_feed_page_id = self.raw_feed_updater.create_match(match, match_type="itf")
+                        if raw_feed_page_id:
+                            results['created'] += 1
+                            results['page_ids'].append(raw_feed_page_id)
                     
-                    # Create page
-                    page_id = await self.create_match_page(notion_data)
+                    # Parallel write mode: also write to Tennis Prematch DB (migration Phase 1)
+                    if self.parallel_write:
+                        notion_data = self.transform_match_to_notion(match)
+                        prematch_page_id = await self.create_match_page(notion_data)
+                        if prematch_page_id and not raw_feed_page_id:
+                            # Only count if Raw Feed write failed
+                            results['created'] += 1
                     
-                    if page_id:
-                        results['created'] += 1
-                        results['page_ids'].append(page_id)
-                    else:
+                    if not raw_feed_page_id and not self.parallel_write:
                         results['errors'] += 1
                     
                     # Rate limiting: wait between batches (not individual requests)
@@ -334,8 +351,10 @@ class ITFNotionPipeline:
             if ENHANCED_SCRAPER_AVAILABLE:
                 # Enhanced scraper is synchronous
                 # Enable odds fetching if configured
+                # For migration: remove tier filtering, write ALL tiers (W15/W25/W35/W50/W75/W100)
                 fetch_odds = self.config.get('scraper', {}).get('fetch_odds', False)
-                matches_list = self.scraper.scrape(tiers=['W15', 'W35', 'W50'], fetch_odds=fetch_odds)
+                # Scrape all tiers - no filtering
+                matches_list = self.scraper.scrape(tiers=['W15', 'W25', 'W35', 'W50', 'W75', 'W100'], fetch_odds=fetch_odds)
                 
                 # Convert to ITFMatch format
                 matches_data = []

@@ -1,0 +1,46 @@
+name: AI Match Filter
+
+on:
+  schedule:
+    # Run daily at 09:00 EET (07:00 UTC) - after all scrapers complete
+    - cron: '0 7 * * *'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  filter-matches:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install notion-client requests python-dotenv
+      
+      - name: Run AI Match Filter
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_API_KEY: ${{ secrets.NOTION_TOKEN }}
+          RAW_MATCH_FEED_DB_ID: ${{ secrets.RAW_MATCH_FEED_DB_ID }}
+          TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+          NOTION_ITF_PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+        run: |
+          python scripts/tennis_ai/match_filter.py
+      
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: filter-logs
+          path: '*.log'
+          retention-days: 7
+
+

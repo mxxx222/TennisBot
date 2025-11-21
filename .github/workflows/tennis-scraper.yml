@@ -1,0 +1,44 @@
+name: Tennis Scraper Cron
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Cache data directory
+        uses: actions/cache@v3
+        with:
+          path: data/
+          key: tennis-data-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            tennis-data-${{ runner.os }}-
+
+      - name: Make script executable
+        run: chmod +x scripts/tennis_ai/run_tennis_ai_enhanced.sh
+
+      - name: Run scraper
+        run: ./scripts/tennis_ai/run_tennis_ai_enhanced.sh
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RAW_MATCH_FEED_DB_ID: ${{ secrets.RAW_MATCH_FEED_DB_ID }}
+          NOTION_TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          PARALLEL_WRITE: ${{ secrets.PARALLEL_WRITE || 'false' }}

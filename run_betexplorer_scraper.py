@@ -45,15 +45,20 @@ async def main():
         config['notion'] = {}
     
     # Set default values
-    config['scraper'].setdefault('target_tiers', ['W15', 'W25'])
+    config['scraper'].setdefault('target_tiers', ['W15', 'W25', 'W35', 'W50'])  # All tiers for Raw Feed
     config['scraper'].setdefault('request_delay', 2.0)
     config['scraper'].setdefault('max_retries', 3)
     config['scraper'].setdefault('timeout', 30)
     config['scraper'].setdefault('use_selenium', True)
     
+    # Load database IDs from environment
+    import os
+    config['notion'].setdefault('raw_match_feed_db_id', os.getenv('RAW_MATCH_FEED_DB_ID'))
     config['notion'].setdefault('tennis_prematch_db_id', None)  # Will load from env
     config['notion'].setdefault('batch_size', 3)
     config['notion'].setdefault('batch_delay', 1.0)
+    # Migration mode: parallel_write=True for Phase 1 (writes to both DBs)
+    config['notion'].setdefault('parallel_write', os.getenv('PARALLEL_WRITE', 'false').lower() == 'true')
     
     pipeline = BetExplorerNotionPipeline(config)
     result = await pipeline.run_pipeline()

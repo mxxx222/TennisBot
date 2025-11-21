@@ -1,0 +1,40 @@
+name: Weather Enrichment
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 10:00 EET (08:00 UTC)
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  enrich-weather:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: pip install notion-client requests
+      
+      - name: Run Weather Enricher
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_API_KEY: ${{ secrets.NOTION_TOKEN }}
+          TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+        run: python scripts/tennis_ai/weather_enricher.py
+      
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-logs
+          path: '*.log'
+          retention-days: 7
+

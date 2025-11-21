@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from src.scrapers.betexplorer_scraper import BetExplorerScraper
 from src.notion.itf_database_updater import ITFDatabaseUpdater
+from src.notion.raw_match_feed_updater import RawMatchFeedUpdater
 
 logger = logging.getLogger(__name__)
 
@@ -42,9 +43,18 @@ class BetExplorerNotionPipeline:
         scraper_config = self.config.get('scraper', {})
         self.scraper = BetExplorerScraper(scraper_config, use_selenium=True)
         
+        # Raw Match Feed updater (primary target)
+        self.raw_feed_updater = RawMatchFeedUpdater(
+            database_id=self.config.get('notion', {}).get('raw_match_feed_db_id')
+        )
+        
+        # Tennis Prematch updater (for parallel write mode during migration)
         self.notion_updater = ITFDatabaseUpdater(
             database_id=self.config.get('notion', {}).get('tennis_prematch_db_id')
         )
+        
+        # Migration mode: parallel_write writes to both DBs (Phase 1)
+        self.parallel_write = self.config.get('notion', {}).get('parallel_write', False)
         
         # Duplicate tracking (with caching)
         self.processed_match_ids: set = set()
@@ -54,7 +64,7 @@ class BetExplorerNotionPipeline:
         self.batch_size = self.config.get('notion', {}).get('batch_size', 3)  # Max 3 req/s per Notion API
         self.batch_delay = self.config.get('notion', {}).get('batch_delay', 1.0)  # 1 second between batches
         
-        logger.info("🔄 BetExplorer Notion Pipeline initialized")
+        logger.info(f"🔄 BetExplorer Notion Pipeline initialized (parallel_write: {self.parallel_write})")
     
     def transform_match_to_notion(self, match: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -296,16 +306,23 @@ class BetExplorerNotionPipeline:
             """Process a single match with semaphore limiting"""
             async with semaphore:
                 try:
-                    # Transform to Notion format
-                    notion_data = self.transform_match_to_notion(match)
+                    # Write to Raw Match Feed (primary target)
+                    raw_feed_page_id = None
+                    if self.raw_feed_updater.client and self.raw_feed_updater.database_id:
+                        raw_feed_page_id = self.raw_feed_updater.create_match(match, match_type="betexplorer")
+                        if raw_feed_page_id:
+                            results['created'] += 1
+                            results['page_ids'].append(raw_feed_page_id)
                     
-                    # Create page
-                    page_id = await self.create_match_page(notion_data)
+                    # Parallel write mode: also write to Tennis Prematch DB (migration Phase 1)
+                    if self.parallel_write:
+                        notion_data = self.transform_match_to_notion(match)
+                        prematch_page_id = await self.create_match_page(notion_data)
+                        if prematch_page_id and not raw_feed_page_id:
+                            # Only count if Raw Feed write failed
+                            results['created'] += 1
                     
-                    if page_id:
-                        results['created'] += 1
-                        results['page_ids'].append(page_id)
-                    else:
+                    if not raw_feed_page_id and not self.parallel_write:
                         results['errors'] += 1
                     
                     # Rate limiting: wait between batches (not individual requests)
@@ -336,10 +353,11 @@ class BetExplorerNotionPipeline:
             # Step 1: Scrape matches
             logger.info("📥 Step 1: Scraping ITF matches from BetExplorer...")
             
-            # Get target tiers from config
-            target_tiers = self.config.get('scraper', {}).get('target_tiers', ['W15', 'W25'])
+            # Get target tiers from config (now writes ALL tiers, no filtering)
+            # For migration: remove tier filtering to write all matches to Raw Feed
+            target_tiers = self.config.get('scraper', {}).get('target_tiers', ['W15', 'W25', 'W35', 'W50'])
             
-            # Scrape matches (synchronous operation)
+            # Scrape matches (synchronous operation) - now includes all tiers
             matches_list = self.scraper.scrape(tiers=target_tiers)
             
             logger.info(f"✅ Scraped {len(matches_list)} matches")

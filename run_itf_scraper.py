@@ -21,13 +21,18 @@ logging.basicConfig(
 
 async def main():
     """Run ITF pipeline"""
+    import os
     config = {
         'scraper': {
-            'target_tournaments': ['W15', 'W35', 'W50'],
+            'target_tournaments': ['W15', 'W25', 'W35', 'W50', 'W75', 'W100'],  # All tiers for Raw Feed
             'rate_limit': 2.5,
+            'fetch_odds': False,
         },
         'notion': {
+            'raw_match_feed_db_id': os.getenv('RAW_MATCH_FEED_DB_ID'),
             'tennis_prematch_db_id': None,  # Will load from env
+            # Migration mode: parallel_write=True for Phase 1 (writes to both DBs)
+            'parallel_write': os.getenv('PARALLEL_WRITE', 'false').lower() == 'true',
         }
     }
     

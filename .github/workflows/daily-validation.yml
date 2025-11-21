@@ -1,0 +1,52 @@
+name: Daily System Validation
+
+on:
+  schedule:
+    # Run daily at 10:30 EET (08:30 UTC) - after all workflows complete
+    - cron: '30 8 * * *'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install notion-client requests python-dotenv
+      
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run System Validation
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_API_KEY: ${{ secrets.NOTION_TOKEN }}
+          RAW_MATCH_FEED_DB_ID: ${{ secrets.RAW_MATCH_FEED_DB_ID }}
+          TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+          NOTION_ITF_PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+        run: |
+          python scripts/validate_system.py
+      
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: '*.log'
+          retention-days: 7
+          if-no-files-found: ignore
+

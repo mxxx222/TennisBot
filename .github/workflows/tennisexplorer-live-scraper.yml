@@ -1,0 +1,47 @@
+name: TennisExplorer Live Scraper
+
+on:
+  schedule:
+    # Run every 5 minutes (live data needs faster updates)
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Create logs directory
+        run: |
+          mkdir -p logs
+
+      - name: Run TennisExplorer Live Scraper
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_TENNISEXPLORER_DB_ID: ${{ secrets.NOTION_TENNISEXPLORER_DB_ID }}
+          NOTION_TENNIS_MASTER_DB_ID: ${{ secrets.NOTION_TENNIS_MASTER_DB_ID }}
+        run: |
+          python -m src.scrapers.tennisexplorer_live.scraper
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: tennisexplorer-scraper-logs
+          path: logs/tennisexplorer_scraper.log

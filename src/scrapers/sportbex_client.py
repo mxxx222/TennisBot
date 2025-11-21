@@ -275,29 +275,40 @@ class SportbexClient:
                 player2_odds = None
                 
                 if markets_data and isinstance(markets_data, list):
-                    # Find Match Odds market ID
-                    match_odds_market_id = None
+                    # Find Match Odds market
                     for market in markets_data:
-                        market_type = market.get('marketType') or market.get('type') or ''
+                        market_name = market.get('marketName', '')
                         market_id = market.get('marketId') or market.get('id')
-                        if market_id and ('MATCH_ODDS' in market_type.upper() or 'WINNER' in market_type.upper()):
-                            match_odds_market_id = str(market_id)
-                            break
-                    
-                    # Fetch odds using listMarketBook endpoint
-                    if match_odds_market_id:
-                        odds_data = await self._fetch_market_odds(match_odds_market_id)
-                        if odds_data:
-                            # Parse odds from market book
-                            for runner in odds_data.get('runners', []):
-                                runner_name = runner.get('name', '')
-                                price = runner.get('price') or runner.get('lastPriceTraded')
+                        
+                        # Look for Match Odds market
+                        if market_id and ('Match Odds' in market_name or 'MATCH_ODDS' in market_name.upper()):
+                            # Fetch odds using listMarketBook endpoint
+                            odds_data = await self._fetch_market_odds(str(market_id))
+                            
+                            if odds_data and isinstance(odds_data, dict):
+                                # Parse odds from market book
+                                runners = odds_data.get('runners', [])
                                 
-                                if price:
-                                    if player1 in runner_name or runner_name in player1:
-                                        player1_odds = float(price)
-                                    elif player2 in runner_name or runner_name in player2:
-                                        player2_odds = float(price)
+                                # Match runners to players by selectionId order (usually first = player1, second = player2)
+                                # Or try to match by name if available
+                                for idx, runner in enumerate(runners):
+                                    # Get price from availableToBack or lastPriceTraded
+                                    price = None
+                                    ex = runner.get('ex', {})
+                                    if ex and 'availableToBack' in ex and len(ex['availableToBack']) > 0:
+                                        price = ex['availableToBack'][0].get('price')
+                                    elif 'lastPriceTraded' in runner:
+                                        price = runner['lastPriceTraded']
+                                    
+                                    if price:
+                                        # Simple matching: first runner = player1, second = player2
+                                        if idx == 0:
+                                            player1_odds = float(price)
+                                        elif idx == 1:
+                                            player2_odds = float(price)
+                            
+                            # Break after finding Match Odds market
+                            break
                 
                 # Extract tournament tier
                 tournament_tier = self._extract_tournament_tier(competition_name)
@@ -490,8 +501,13 @@ class SportbexClient:
                 
                 if response.status == 200:
                     data = await response.json()
-                    if isinstance(data, list) and len(data) > 0:
-                        return data[0]  # Return first market book
+                    # API returns: {"status": true, "data": [...]}
+                    if isinstance(data, dict) and data.get('status') and data.get('data'):
+                        market_books = data['data']
+                        if isinstance(market_books, list) and len(market_books) > 0:
+                            return market_books[0]  # Return first market book
+                    elif isinstance(data, list) and len(data) > 0:
+                        return data[0]
                     return data
                 else:
                     logger.debug(f"Failed to fetch market odds: {response.status}")

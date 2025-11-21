@@ -36,6 +36,8 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_TENNISEXPLORER_DB_ID: ${{ secrets.NOTION_TENNISEXPLORER_DB_ID }}
           NOTION_TENNIS_MASTER_DB_ID: ${{ secrets.NOTION_TENNIS_MASTER_DB_ID }}
+          NOTION_PLAYER_CARDS_DB_ID: 5f81f033ff9a4894b219cf1706dec20e
+          NOTION_TENNIS_PREMATCH_DB_ID: d49f87e13dfe406ca50f748535ac1295
         run: |
           python -m src.scrapers.tennisexplorer_live.scraper
 

@@ -16,7 +16,7 @@ WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 TENNIS_PREMATCH_DB_ID = os.getenv("TENNIS_PREMATCH_DB_ID") or os.getenv("NOTION_TENNIS_PREMATCH_DB_ID") or os.getenv("NOTION_PREMATCH_DB_ID")
 
-notion = Client(auth=NOTION_TOKEN)
+notion_client = Client(auth=NOTION_TOKEN) if NOTION_TOKEN else None
 
 
 class WeatherEnricher:
@@ -26,13 +26,16 @@ class WeatherEnricher:
     
     def __init__(self):
         self.api_key = WEATHER_API_KEY
-        self.notion = notion
+        self.notion = notion_client
         self.location_cache = {}  # Cache geocoding results
         
     def get_upcoming_matches(self) -> list:
         """
         Get matches in next 48 hours without weather data.
         """
+        if not self.notion or not TENNIS_PREMATCH_DB_ID:
+            return []
+        
         now = datetime.now()
         end = now + timedelta(days=2)
         
@@ -41,21 +44,25 @@ class WeatherEnricher:
         start_cursor = None
         
         while has_more:
-            response = self.notion.databases.query(
-                database_id=TENNIS_PREMATCH_DB_ID,
-                filter={
-                    "and": [
-                        {"property": "Match Status", "select": {"equals": "Scheduled"}},
-                        {"property": "Match Date", "date": {"on_or_after": now.isoformat()}},
-                        {"property": "Match Date", "date": {"on_or_before": end.isoformat()}}
-                    ]
-                },
-                start_cursor=start_cursor
-            )
-            
-            matches.extend(response["results"])
-            has_more = response["has_more"]
-            start_cursor = response.get("next_cursor")
+            try:
+                response = self.notion.databases.query(
+                    database_id=TENNIS_PREMATCH_DB_ID,
+                    filter={
+                        "and": [
+                            {"property": "Match Status", "select": {"equals": "Scheduled"}},
+                            {"property": "Match Date", "date": {"on_or_after": now.isoformat()}},
+                            {"property": "Match Date", "date": {"on_or_before": end.isoformat()}}
+                        ]
+                    },
+                    start_cursor=start_cursor
+                )
+                
+                matches.extend(response.get("results", []))
+                has_more = response.get("has_more", False)
+                start_cursor = response.get("next_cursor")
+            except Exception as e:
+                print(f"❌ Error fetching matches: {e}")
+                break
             
         print(f"📥 Found {len(matches)} upcoming matches")
         return matches

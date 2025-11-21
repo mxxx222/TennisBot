@@ -58,7 +58,12 @@ class MatchFilter:
             logger.error("❌ NOTION_TOKEN not set")
             raise ValueError("NOTION_TOKEN environment variable required")
         
-        self.notion = Client(auth=NOTION_TOKEN)
+        try:
+            self.notion = Client(auth=NOTION_TOKEN)
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize Notion client: {e}")
+            raise
+        
         self.raw_feed_db = RAW_MATCH_FEED_DB_ID
         self.prematch_db = TENNIS_PREMATCH_DB_ID
         self.player_cards_db = PLAYER_CARDS_DB_ID
@@ -89,6 +94,9 @@ class MatchFilter:
         
         while has_more:
             try:
+                if not self.raw_feed_db:
+                    break
+                
                 response = self.notion.databases.query(
                     database_id=self.raw_feed_db,
                     filter={
@@ -100,12 +108,14 @@ class MatchFilter:
                     start_cursor=start_cursor
                 )
                 
-                matches.extend(response["results"])
-                has_more = response["has_more"]
+                matches.extend(response.get("results", []))
+                has_more = response.get("has_more", False)
                 start_cursor = response.get("next_cursor")
                 
             except Exception as e:
                 logger.error(f"❌ Error fetching unprocessed matches: {e}")
+                import traceback
+                logger.debug(traceback.format_exc())
                 break
         
         logger.info(f"📥 Found {len(matches)} unprocessed matches")
@@ -129,6 +139,9 @@ class MatchFilter:
             return self.player_cache[player_name]
         
         try:
+            if not self.player_cards_db:
+                return None
+            
             response = self.notion.databases.query(
                 database_id=self.player_cards_db,
                 filter={
@@ -139,7 +152,7 @@ class MatchFilter:
                 }
             )
             
-            if response["results"]:
+            if response.get("results"):
                 props = response["results"][0]["properties"]
                 player_data = {
                     "elo": props.get("Overall ELO", {}).get("number") or props.get("ELO", {}).get("number") or 1500,

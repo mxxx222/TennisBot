@@ -1,0 +1,24 @@
+# 🎾 BETEXPLORER SCRAPER CONFIGURATION
+# ====================================
+# Configuration file for the BetExplorer ITF Women scraper
+
+# Scraper Settings
+scraper:
+  use_selenium: true
+  request_delay: 2.0  # Seconds between requests
+  max_retries: 3
+  timeout: 30  # Page load timeout in seconds
+  target_tiers: ['W15', 'W25']  # Tournament tiers to scrape
+  user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+
+# Notion Integration Settings
+notion:
+  tennis_prematch_db_id: null  # Will be loaded from environment variable
+  batch_size: 3  # Max 3 req/s per Notion API
+  batch_delay: 1.0  # Seconds between batches
+
+# Logging Settings
+logging:
+  level: "INFO"
+  file: "logs/betexplorer_scraper.log"
+

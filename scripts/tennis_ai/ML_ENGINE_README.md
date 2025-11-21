@@ -7,8 +7,10 @@ The Self-Learning AI Engine is a 5-layer ML system that continuously improves te
 ## Architecture
 
 ### Layer 1: Universal Data Collection ✅
-- **`src/ml/data_collector.py`** - Collects ALL ITF matches daily (100+ matches)
-- **`src/ml/result_validator.py`** - Daily result fetching (runs at 20:00)
+- **`scripts/tennis_ai/daily_learning_loop.py`** - Collects ALL ITF matches daily → Notion Match Results DB (100+ matches)
+- **`scripts/tennis_ai/update_match_results.py`** - Daily result fetching → Notion Match Results DB (runs at 20:00)
+- **`src/ml/notion_sync.py`** - Syncs Notion Match Results DB → SQLite (for ML training)
+- **`src/ml/data_collector.py`** - SQLite database operations (MatchResultsDB class)
 
 ### Layer 2: Feature Store ✅
 - **`src/ml/feature_store.py`** - Extracts 30+ features per match (rank delta, ELO, form, surface, H2H, etc.)
@@ -22,7 +24,7 @@ The Self-Learning AI Engine is a 5-layer ML system that continuously improves te
 - **`src/ml/meta_learner.py`** - Combines GPT-4, XGBoost, and LightGBM with dynamic weights
 
 ### Layer 5: Continuous Learning ✅
-- **`src/ml/learning_loop.py`** - Daily learning orchestrator (runs at 21:00)
+- **`src/ml/learning_loop.py`** - Daily learning orchestrator (runs at 21:00, syncs Notion → SQLite first)
 - **`src/ml/incremental_learner.py`** - Online learning updates
 - **`scripts/tennis_ai/ml_weekly_retrain.py`** - Weekly retraining system
 
@@ -32,14 +34,23 @@ The Self-Learning AI Engine is a 5-layer ML system that continuously improves te
 - **`src/ml/alert_system.py`** - Performance monitoring alerts
 - **`scripts/tennis_ai/ml_dashboard.py`** - CLI dashboard
 
-## Database
+## Database Architecture
 
-- **`data/match_results.db`** - SQLite database for training data
+**Single Source of Truth: Notion Match Results DB**
+- 50 properties for comprehensive match data
+- Human-readable UI for manual review
+- Master database for all match information
+
+**SQLite Cache (for ML training)**
+- **`data/match_results.db`** - Synced from Notion daily
   - `matches` table - All match data
   - `results` table - Match results
   - `features` table - Extracted features
   - `training_data` view - Combined view for training
+- Fast pandas/sklearn access for ML training
+- Automatically synced from Notion before ML training
 
+**A/B Testing Database**
 - **`data/ab_testing.db`** - SQLite database for A/B testing
   - `strategies` table - Registered strategies
   - `strategy_results` table - Individual results
@@ -47,17 +58,31 @@ The Self-Learning AI Engine is a 5-layer ML system that continuously improves te
 
 ## Usage
 
-### 1. Collect Daily Matches
+### 1. Collect Daily Matches (to Notion)
 ```bash
-python src/ml/data_collector.py --days-ahead 2
+# Collects matches to Notion Match Results DB
+python3 scripts/tennis_ai/daily_learning_loop.py
 ```
 
-### 2. Validate Results (Daily at 20:00)
+### 2. Update Match Results (in Notion)
 ```bash
-python src/ml/result_validator.py --days-back 7
+# Updates results in Notion Match Results DB
+python3 scripts/tennis_ai/update_match_results.py
 ```
 
-### 3. Train Models
+### 3. Sync Notion → SQLite (for ML training)
+```bash
+# Full sync (all matches)
+python3 src/ml/notion_sync.py --full
+
+# Incremental sync (last 7 days)
+python3 src/ml/notion_sync.py
+
+# Show stats
+python3 src/ml/notion_sync.py --stats
+```
+
+### 4. Train Models
 ```bash
 # Train XGBoost
 python src/ml/xgboost_trainer.py --train
@@ -66,37 +91,56 @@ python src/ml/xgboost_trainer.py --train
 python src/ml/lightgbm_trainer.py --train
 ```
 
-### 4. Daily Learning Loop (21:00)
+### 5. Daily Learning Loop (21:00)
 ```bash
-python src/ml/learning_loop.py --days-back 7
+# Automatically syncs Notion → SQLite, then runs ML training
+python3 src/ml/learning_loop.py
 ```
 
-### 5. Weekly Retraining
+### 6. Weekly Retraining
 ```bash
 python scripts/tennis_ai/ml_weekly_retrain.py
 ```
 
-### 6. View Dashboard
+### 7. View Dashboard
 ```bash
-python scripts/tennis_ai/ml_dashboard.py
+python3 scripts/tennis_ai/ml_dashboard.py
 ```
 
-### 7. Check Alerts
+### 8. Check Alerts
 ```bash
-python src/ml/alert_system.py --check
+python3 src/ml/alert_system.py --check
 ```
 
-### 8. Generate Weekly Report
+### 9. Generate Weekly Report
 ```bash
-python src/ml/alert_system.py --weekly-report
+python3 src/ml/alert_system.py --weekly-report
 ```
 
-## Integration with Sprint 1
+## Integration Architecture
 
-The ML engine integrates with the existing Sportbex pipeline:
-- Uses `SportbexClient` for match data collection
-- Extends `sportbex_daily_candidates.py` with ML predictions
-- Adds ML confidence scores to Notion candidates
+**Data Flow:**
+```
+Notion Match Results DB (master, 50 properties)
+  ↓ (daily sync via notion_sync.py)
+SQLite match_results.db (cache, ML-optimized)
+  ↓ (ML training)
+XGBoost + LightGBM + Meta-Learner
+  ↓ (write predictions back)
+Notion Match Results DB
+```
+
+**Daily Workflow:**
+1. **08:00** → `daily_learning_loop.py` (collect matches → Notion)
+2. **20:00** → `update_match_results.py` (update results → Notion)
+3. **21:00** → `learning_loop.py` (sync Notion → SQLite → ML training)
+
+**Benefits:**
+- ✅ Single source of truth (Notion)
+- ✅ No data duplication
+- ✅ Human-readable UI (Notion)
+- ✅ Fast ML training (SQLite)
+- ✅ Easy schema changes (only in Notion)
 
 ## Dependencies
 
@@ -116,21 +160,46 @@ New packages added to `requirements.txt`:
 
 ## Next Steps
 
-1. **Collect Historical Data**: Run data collector to gather 500+ matches
-2. **Train Initial Models**: Train XGBoost and LightGBM on collected data
-3. **Set Up Cron Jobs**:
-   - 08:00 - Daily candidate collection (existing)
-   - 20:00 - Result validation
-   - 21:00 - Daily learning loop
-   - Weekly - Model retraining
-4. **Monitor Performance**: Use dashboard and alerts to track improvements
+1. **Set Up Notion Match Results DB**: Get database ID and add to `telegram_secrets.env`
+   ```bash
+   NOTION_MATCH_RESULTS_DB_ID=your_db_id_here
+   ```
+
+2. **Collect Historical Data**: Run `daily_learning_loop.py` to gather 500+ matches in Notion
+
+3. **Sync to SQLite**: Run `notion_sync.py --full` to sync all matches
+
+4. **Train Initial Models**: Train XGBoost and LightGBM on synced data
+   ```bash
+   python3 src/ml/xgboost_trainer.py --train
+   python3 src/ml/lightgbm_trainer.py --train
+   ```
+
+5. **Set Up Cron Jobs**:
+   ```bash
+   # 08:00 - Collect matches to Notion
+   0 8 * * * cd /path/to/TennisBot && python3 scripts/tennis_ai/daily_learning_loop.py
+   
+   # 20:00 - Update results in Notion
+   0 20 * * * cd /path/to/TennisBot && python3 scripts/tennis_ai/update_match_results.py
+   
+   # 21:00 - Sync and ML training
+   0 21 * * * cd /path/to/TennisBot && python3 src/ml/learning_loop.py
+   
+   # Weekly - Retrain models
+   0 22 * * 0 cd /path/to/TennisBot && python3 scripts/tennis_ai/ml_weekly_retrain.py
+   ```
+
+6. **Monitor Performance**: Use dashboard and alerts to track improvements
 
 ## Files Created
 
 ### Sprint 1: Data Foundation
-- `src/ml/data_collector.py`
-- `src/ml/result_validator.py`
-- `src/ml/feature_store.py`
+- `src/ml/data_collector.py` - SQLite database operations (MatchResultsDB class)
+- `src/ml/notion_sync.py` - Notion → SQLite sync module
+- `src/ml/feature_store.py` - Feature extraction
+- `scripts/tennis_ai/daily_learning_loop.py` - Collect matches to Notion
+- `scripts/tennis_ai/update_match_results.py` - Update results in Notion
 
 ### Sprint 2: ML Models
 - `src/ml/xgboost_trainer.py`

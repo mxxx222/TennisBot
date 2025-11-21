@@ -20,7 +20,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.ml.result_validator import ResultValidator
+from src.ml.notion_sync import NotionToSQLiteSync
 from src.ml.incremental_learner import IncrementalLearner
 from src.ml.data_collector import MatchResultsDB
 
@@ -35,10 +35,10 @@ class LearningLoop:
         Initialize learning loop
         
         Args:
-            api_key: Sportbex API key
+            api_key: Sportbex API key (not used anymore, kept for compatibility)
             db_path: Path to Match Results database
         """
-        self.validator = ResultValidator(api_key=api_key, db_path=db_path)
+        self.syncer = NotionToSQLiteSync(db_path=db_path)
         self.incremental_learner = IncrementalLearner(db_path=db_path)
         self.db = MatchResultsDB(db_path=db_path)
         
@@ -62,23 +62,19 @@ class LearningLoop:
         start_time = datetime.now()
         
         try:
-            # Step 1: Fetch results for completed matches
-            logger.info("\n📥 Step 1: Fetching match results...")
-            validation_result = await self.validator.fetch_results(days_back=days_back)
+            # Step 1: Sync Notion → SQLite (single source of truth)
+            logger.info("\n🔄 Step 1: Syncing Notion Match Results DB → SQLite...")
+            sync_result = self.syncer.sync(full_sync=False)  # Incremental sync
             
-            if not validation_result.get('success'):
-                logger.error(f"❌ Result validation failed: {validation_result.get('error')}")
-                return {
-                    'success': False,
-                    'error': validation_result.get('error'),
-                    'timestamp': datetime.now().isoformat()
-                }
+            if not sync_result.get('success'):
+                logger.warning(f"⚠️ Sync had issues: {sync_result.get('error')}")
+                # Continue anyway - might have existing data
             
-            results_found = validation_result.get('results_found', 0)
-            logger.info(f"✅ Found {results_found} new results")
+            synced_count = sync_result.get('synced', 0)
+            logger.info(f"✅ Synced {synced_count} matches from Notion")
             
-            # Step 2: Update features for matches with new results
-            logger.info("\n🔧 Step 2: Updating features for matches with results...")
+            # Step 2: Get matches with results for training
+            logger.info("\n🔧 Step 2: Getting matches with results for training...")
             matches_with_results = self.db.get_training_data(limit=None)
             logger.info(f"✅ Found {len(matches_with_results)} matches with results")
             
@@ -102,7 +98,7 @@ class LearningLoop:
             logger.info("=" * 80)
             logger.info("✅ DAILY LEARNING LOOP COMPLETED")
             logger.info("=" * 80)
-            logger.info(f"📊 Results found: {results_found}")
+            logger.info(f"🔄 Matches synced from Notion: {synced_count}")
             logger.info(f"📈 Matches with results: {len(matches_with_results)}")
             logger.info(f"🧠 Incremental learning: {'✅ Success' if learning_result.get('success') else '⚠️ Issues'}")
             logger.info(f"⚖️ Accuracy update: {'✅ Success' if accuracy_result.get('success') else '⚠️ Issues'}")
@@ -113,7 +109,7 @@ class LearningLoop:
                 'success': True,
                 'timestamp': end_time.isoformat(),
                 'duration_seconds': duration,
-                'results_found': results_found,
+                'matches_synced': synced_count,
                 'matches_with_results': len(matches_with_results),
                 'incremental_learning': learning_result,
                 'accuracy_update': accuracy_result

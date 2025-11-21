@@ -89,6 +89,34 @@ Add to crontab (`crontab -e`):
 3. **09:00** - Stage 2 AI analysis → Updates candidates (Status="Analyzed")
 4. **09:30** - Review promoted bets in Bets DB → Place bets manually
 5. **20:00** - Update Match Results → Fetches actual results → Updates Match Results DB (Status="Resulted")
+6. **21:00** - ML Learning Loop → Syncs Notion → SQLite → ML training → Updates predictions back to Notion
+
+## ML Integration
+
+The Match Results DB is synced to SQLite for fast ML training:
+
+**Sync Notion → SQLite:**
+```bash
+# Full sync (first time)
+python3 src/ml/notion_sync.py --full
+
+# Incremental sync (daily, only recent changes)
+python3 src/ml/notion_sync.py
+```
+
+**ML Training (uses synced SQLite data):**
+```bash
+# Daily learning loop (auto-syncs before training)
+python3 src/ml/learning_loop.py
+
+# Weekly retraining
+python3 scripts/tennis_ai/ml_weekly_retrain.py
+```
+
+**Architecture:**
+- **Notion Match Results DB** = Single source of truth (50 properties, human-readable)
+- **SQLite match_results.db** = ML cache (synced from Notion, fast for training)
+- **ML Models** = Train on SQLite, write predictions back to Notion
 
 ## Expected Results
 

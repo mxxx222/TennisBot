@@ -14,7 +14,7 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 # Import the ITF entries intelligence scraper
 sys.path.append(str(Path(__file__).parent))

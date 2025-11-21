@@ -48,7 +48,7 @@ class SportbexMatch:
 class SportbexClient:
     """Client for Sportbex API"""
     
-    BASE_URL = "https://trial.sportbex.com/api/v1"
+    BASE_URL = "https://trial-api.sportbex.com/api"
     
     def __init__(self, api_key: Optional[str] = None):
         """
@@ -70,7 +70,7 @@ class SportbexClient:
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
             headers={
-                'Authorization': f'Bearer {self.api_key}',
+                'sportbex-api-key': self.api_key,
                 'Content-Type': 'application/json',
                 'User-Agent': 'TennisBot/1.0'
             }
@@ -185,34 +185,107 @@ class SportbexClient:
         """
         logger.info(f"Fetching tennis matches for next {days_ahead} days")
         
-        # Try different endpoint patterns (Sportbex API may vary)
-        endpoints_to_try = [
-            '/matches',
-            '/tennis/matches',
-            '/sports/tennis/matches'
-        ]
+        # Step 1: Get tennis competitions (competition ID 2 = Tennis)
+        competitions_data = await self._make_request('/betfair/competitions/2')
         
+        if not competitions_data or not isinstance(competitions_data, list):
+            logger.warning("No competitions found")
+            return []
+        
+        logger.info(f"Found {len(competitions_data)} tennis competitions")
+        
+        # Step 2: Fetch matches from each competition
+        matches = []
+        for comp in competitions_data[:20]:  # Limit to first 20 competitions
+            comp_id = comp.get('competition', {}).get('id')
+            comp_name = comp.get('competition', {}).get('name', '')
+            
+            if not comp_id:
+                continue
+            
+            # Filter by tournament types if specified
+            if tournament_types:
+                comp_upper = comp_name.upper()
+                if not any(tier.upper() in comp_upper for tier in tournament_types):
+                    continue
+            
+            # Fetch events (matches) for this competition
+            events_data = await self._make_request(f'/betfair/competitions/{comp_id}/events')
+            
+            if events_data:
+                comp_matches = self._parse_events(events_data, comp_name, comp_id)
+                matches.extend(comp_matches)
+        
+        logger.info(f"✅ Found {len(matches)} total matches")
+        return matches
+    
+    def _parse_events(self, events_data: Any, competition_name: str, competition_id: str) -> List[SportbexMatch]:
+        """
+        Parse events (matches) from Sportbex API response
+        
+        Args:
+            events_data: API response with events
+            competition_name: Competition/tournament name
+            competition_id: Competition ID
+            
+        Returns:
+            List of SportbexMatch objects
+        """
         matches = []
         
-        for endpoint in endpoints_to_try:
-            params = {
-                'sport': sport,
-                'days': days_ahead
-            }
-            
-            data = await self._make_request(endpoint, params)
-            
-            if data:
-                # Parse response (structure may vary)
-                matches = self._parse_matches(data, tournament_types)
-                if matches:
-                    logger.info(f"Found {len(matches)} matches from {endpoint}")
-                    break
+        if not isinstance(events_data, list):
+            return matches
         
-        if not matches:
-            logger.warning("No matches found - API structure may be different")
-            # Return empty list or try alternative parsing
-            matches = []
+        for event in events_data:
+            try:
+                # Extract event information
+                event_id = str(event.get('id') or event.get('eventId') or hash(str(event)))
+                
+                # Extract players/teams
+                home_team = event.get('homeTeam', {}).get('name') or event.get('home') or ''
+                away_team = event.get('awayTeam', {}).get('name') or event.get('away') or ''
+                
+                if not home_team or not away_team:
+                    continue
+                
+                # Extract start time
+                start_time = event.get('startTime') or event.get('start') or event.get('date')
+                commence_time = self._parse_datetime(start_time)
+                
+                # Extract markets for odds
+                markets = event.get('markets', [])
+                player1_odds = None
+                player2_odds = None
+                
+                for market in markets:
+                    if market.get('marketType') == 'MATCH_ODDS' or market.get('name') == 'Match Odds':
+                        outcomes = market.get('outcomes', [])
+                        for outcome in outcomes:
+                            if outcome.get('name') == home_team:
+                                player1_odds = outcome.get('price') or outcome.get('odds')
+                            elif outcome.get('name') == away_team:
+                                player2_odds = outcome.get('price') or outcome.get('odds')
+                
+                # Extract tournament tier
+                tournament_tier = self._extract_tournament_tier(competition_name)
+                
+                match = SportbexMatch(
+                    match_id=event_id,
+                    tournament=competition_name,
+                    player1=home_team,
+                    player2=away_team,
+                    player1_odds=float(player1_odds) if player1_odds else None,
+                    player2_odds=float(player2_odds) if player2_odds else None,
+                    commence_time=commence_time,
+                    tournament_tier=tournament_tier,
+                    raw_data=event
+                )
+                
+                matches.append(match)
+                
+            except Exception as e:
+                logger.error(f"Error parsing event: {e}")
+                continue
         
         return matches
     

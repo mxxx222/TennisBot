@@ -1,0 +1,55 @@
+name: Daily Momentum Calculator
+
+on:
+  schedule:
+    # Run daily at 07:00 EET (05:00 UTC in winter, 06:00 UTC in summer)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  calculate-momentum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Match History Calculator
+        run: python src/notion/match_history_calculator.py --all
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_ITF_PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.PLAYER_CARDS_DB_ID }}
+          NOTION_TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.TENNIS_PREMATCH_DB_ID }}
+          TENNIS_PREMATCH_DB_ID: ${{ secrets.TENNIS_PREMATCH_DB_ID }}
+
+      - name: Run Momentum Calculator
+        run: python scripts/tennis_ai/momentum_calculator.py --all
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_ITF_PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.PLAYER_CARDS_DB_ID }}
+          NOTION_TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.TENNIS_PREMATCH_DB_ID }}
+          TENNIS_PREMATCH_DB_ID: ${{ secrets.TENNIS_PREMATCH_DB_ID }}
+
+      - name: Log completion
+        if: always()
+        run: |
+          echo "✅ Momentum calculator workflow completed"
+          echo "Check logs above for details"
+

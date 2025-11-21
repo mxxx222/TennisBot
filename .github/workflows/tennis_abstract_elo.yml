@@ -1,0 +1,41 @@
+name: Daily Tennis Abstract ELO Scraper
+
+on:
+  schedule:
+    # Run daily at 06:00 EET (04:00 UTC in winter, 05:00 UTC in summer)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape-elo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ELO Scraper
+        run: python scripts/tennis_abstract_elo_scraper.py --limit 100
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_ITF_PLAYER_CARDS_DB_ID: ${{ secrets.NOTION_ITF_PLAYER_CARDS_DB_ID }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.PLAYER_CARDS_DB_ID }}
+
+      - name: Log completion
+        if: always()
+        run: |
+          echo "✅ ELO scraper workflow completed"
+          echo "Check logs above for details"
+

@@ -118,96 +118,65 @@ class SportbexNotionLogger(NotionBetLogger):
             # Determine tournament level
             tournament_level = self._get_tournament_level(match.tournament, match.tournament_tier)
             
-            # Create match title
+            # Create match title (Vihje field - title type)
             match_title = f"{match.player1} vs {match.player2}"
             
-            # Prepare properties according to BETTING_LOG_TEMPLATE.md
-            # Status field: Review (default for candidates)
+            # Prepare properties according to actual Notion database schema
+            # Database fields: Vihje (title), Date, Pelaaja A, Pelaaja B, Odds, Bookmaker, Surface, etc.
             properties = {
-                "Date & Time": {
+                "Vihje": {
+                    "title": [{"text": {"content": match_title}}]
+                },
+                "Date": {
                     "date": {
                         "start": (match.commence_time or datetime.now()).isoformat()
                     }
                 },
-                "Tournament": {
-                    "rich_text": [{"text": {"content": match.tournament}}]
-                },
-                "Player 1": {
+                "Pelaaja A": {
                     "rich_text": [{"text": {"content": match.player1}}]
                 },
-                "Player 2": {
+                "Pelaaja B": {
                     "rich_text": [{"text": {"content": match.player2}}]
-                },
-                "Selected Player": {
-                    "select": {
-                        "name": candidate.selected_player
-                    }
                 },
                 "Odds": {
                     "number": candidate.selected_odds
                 },
-                "Bet Type": {
-                    "select": {
-                        "name": "SINGLE"
-                    }
-                },
-                "Result": {
-                    "select": {
-                        "name": "Pending"
-                    }
-                },
-                "Tournament Level": {
-                    "select": {
-                        "name": tournament_level
-                    }
-                },
                 "Bookmaker": {
-                    "select": {
-                        "name": "Sportbex"
-                    }
+                    "rich_text": [{"text": {"content": "Sportbex"}}]
                 }
             }
-            
-            # Add Status field (Review for candidates)
-            # Note: Status field may need to be created manually in Notion if it doesn't exist
-            # Options: Review, Approved, Pending, Won, Lost
-            try:
-                properties["Status"] = {
-                    "select": {
-                        "name": "Review"
-                    }
-                }
-            except Exception as e:
-                logger.debug(f"Status field may not exist in database: {e}")
-            
-            # Add Player 1 Odds if available
-            if match.player1_odds:
-                properties["Player 1 Ranking"] = {
-                    "number": match.player1_ranking
-                } if match.player1_ranking else {}
-                # Note: We'll add odds in a separate field if the schema supports it
-            
-            # Add Player 2 Odds if available
-            if match.player2_odds:
-                properties["Player 2 Ranking"] = {
-                    "number": match.player2_ranking
-                } if match.player2_ranking else {}
             
             # Add Surface if available
             if match.surface:
+                surface_mapping = {
+                    'hard': 'Hard',
+                    'clay': 'Clay',
+                    'grass': 'Grass'
+                }
+                surface_value = surface_mapping.get(match.surface.lower(), match.surface.title())
                 properties["Surface"] = {
                     "select": {
-                        "name": match.surface.title()
+                        "name": surface_value
                     }
                 }
             
-            # Add Notes field (empty, for AI analysis later)
+            # Add Notes field (for AI analysis and candidate info)
+            notes_content = f"Candidate from Sportbex API. Selected: {candidate.selected_player}. {candidate.filter_reason}"
+            if match.tournament:
+                notes_content += f" Tournament: {match.tournament}."
             properties["Notes"] = {
-                "rich_text": [{"text": {"content": f"Candidate from Sportbex API. {candidate.filter_reason}"}}]
+                "rich_text": [{"text": {"content": notes_content}}]
             }
+            
+            # Optional fields (if they exist in schema)
+            # These might not exist, so we'll try to add them but won't fail if they don't
+            if match.tournament_tier:
+                # Try to add tournament info in Notes if no Tournament field exists
+                pass
             
             # Add Stake field (empty for now, will be filled when approved)
             # Note: Stake will be set manually when bet is placed
+            # Stake is optional, so we don't add it if not set
             
             # Create page in Notion
             page = self.client.pages.create(

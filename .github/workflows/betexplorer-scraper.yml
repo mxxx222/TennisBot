@@ -1,0 +1,48 @@
+name: BetExplorer Scraper
+
+on:
+  schedule:
+    # Run daily at 08:00 EET (06:00 UTC)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Create logs directory
+        run: |
+          mkdir -p logs
+
+      - name: Run BetExplorer Scraper
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_TENNIS_PREMATCH_DB_ID: ${{ secrets.NOTION_TENNIS_PREMATCH_DB_ID }}
+          NOTION_PREMATCH_DB_ID: ${{ secrets.NOTION_PREMATCH_DB_ID }}
+        run: |
+          python run_betexplorer_scraper.py
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: betexplorer-scraper-logs
+          path: logs/
+

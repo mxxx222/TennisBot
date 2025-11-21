@@ -59,6 +59,8 @@ class MatchFilter:
             raise ValueError("NOTION_TOKEN environment variable required")
         
         try:
+            if not NOTION_TOKEN:
+                raise ValueError("NOTION_TOKEN not set")
             self.notion = Client(auth=NOTION_TOKEN)
         except Exception as e:
             logger.error(f"❌ Failed to initialize Notion client: {e}")
@@ -476,28 +478,23 @@ class MatchFilter:
         }
         
         try:
-            # Check if already exists
-            existing = self.notion.databases.query(
-                database_id=self.prematch_db,
-                filter={
-                    "or": [
-                        {
-                            "property": "Pelaaja A nimi",
-                            "rich_text": {"equals": player_a}
-                        },
-                        {
-                            "property": "Pelaaja B nimi",
-                            "rich_text": {"equals": player_b}
-                        }
-                    ],
-                    "and": [
-                        {
-                            "property": "Päivämäärä",
-                            "date": {"equals": match_date.get("start") if match_date else None}
-                        }
-                    ]
-                }
-            )
+            # Check if already exists (simplified check)
+            try:
+                existing = self.notion.databases.query(
+                    database_id=self.prematch_db,
+                    filter={
+                        "and": [
+                            {
+                                "property": "Pelaaja A nimi",
+                                "rich_text": {"contains": player_a}
+                            }
+                        ]
+                    },
+                    page_size=1
+                )
+            except:
+                # If query fails, skip duplicate check
+                existing = {"results": []}
             
             if existing.get("results"):
                 logger.debug(f"  ⚠️  Match already exists in Prematch DB: {player_a} vs {player_b}")

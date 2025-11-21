@@ -26,7 +26,11 @@ class WeatherEnricher:
     
     def __init__(self):
         self.api_key = WEATHER_API_KEY
-        self.notion = notion_client
+        # Initialize Notion client in __init__ to avoid module-level issues
+        if NOTION_TOKEN:
+            self.notion = Client(auth=NOTION_TOKEN)
+        else:
+            self.notion = None
         self.location_cache = {}  # Cache geocoding results
         
     def get_upcoming_matches(self) -> list:

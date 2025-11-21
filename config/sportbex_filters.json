@@ -1,0 +1,15 @@
+{
+  "odds_min": 1.20,
+  "odds_max": 1.80,
+  "ev_min_pct": 5.0,
+  "confidence_levels": ["High", "Very High"],
+  "max_daily_review": 10,
+  "leagues": ["ITF"],
+  "tournament_tiers": ["W15", "W25", "W35"],
+  "sort_by": "odds",
+  "enabled": true,
+  "bankroll_eur": 1000,
+  "max_stake_pct": 3.0,
+  "ai_score_threshold": 80
+}
+

@@ -1,0 +1,47 @@
+name: ITF Rankings Scraper
+
+on:
+  schedule:
+    # Run daily at 08:00 EET (06:00 UTC)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Playwright browsers
+        run: |
+          pip install playwright==1.40.0
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run ITF Rankings Scraper
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          PLAYER_CARDS_DB_ID: ${{ secrets.PLAYER_CARDS_DB_ID }}
+          HEADLESS: "true"
+        run: |
+          python src/scrapers/itf_rankings_scraper.py
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itf-rankings-scraper-logs
+          path: logs/
+

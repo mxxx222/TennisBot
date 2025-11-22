@@ -32,6 +32,17 @@ fallback_env = project_root / 'telegram_secrets.env'
 if fallback_env.exists():
     load_dotenv(fallback_env, override=True)
 
+# Sentry error tracking
+try:
+    from utils.sentry_config import init_sentry, capture_exception, capture_message, set_sentry_tags, add_breadcrumb
+    SENTRY_AVAILABLE = True
+except ImportError:
+    SENTRY_AVAILABLE = False
+    def capture_exception(*args, **kwargs): pass
+    def capture_message(*args, **kwargs): pass
+    def set_sentry_tags(*args, **kwargs): pass
+    def add_breadcrumb(*args, **kwargs): pass
+
 # Notion API
 try:
     from notion_client import Client
@@ -80,20 +91,66 @@ def scrape_player_history(page, player_name: str) -> Optional[Dict[str, any]]:
     BASE_URL = "https://www.flashscore.kz"
     
     try:
+        # Extract last name for better search results
+        # "Hewitt D." -> "Hewitt"
+        search_name = player_name.split()[0] if player_name.split() else player_name
+        if len(player_name.split()) > 1:
+            # Use last name (usually more unique)
+            search_name = player_name.split()[-1].replace('.', '').strip()
+        
         # Search for player
-        search_url = f"{BASE_URL}/search/?q={player_name.replace(' ', '+')}"
-        logger.debug(f"Searching: {search_url}")
+        search_url = f"{BASE_URL}/search/?q={search_name.replace(' ', '+')}"
+        logger.debug(f"Searching: {search_url} (original: {player_name})")
         
         page.goto(search_url, timeout=30000, wait_until='domcontentloaded')
         time.sleep(2)  # Wait for search results
         
-        # Click first player result
+        # Click first player result - try multiple selectors
         try:
-            page.wait_for_selector('.event__participant', timeout=10000)
-            player_link = page.locator('.event__participant').first
-            if player_link.count() > 0:
-                player_link.click()
+            # Wait for search results - try multiple selectors
+            selectors = [
+                '.event__participant',
+                '[class*="participant"]',
+                'a[href*="/player/"]',
+                '.searchResult',
+                'a[href*="tennis"]'
+            ]
+            
+            found = False
+            for selector in selectors:
+                try:
+                    page.wait_for_selector(selector, timeout=5000)
+                    found = True
+                    break
+                except:
+                    continue
+            
+            if not found:
+                # Check if page has any tennis-related links
+                page.wait_for_load_state('networkidle', timeout=5000)
                 time.sleep(2)
+            
+            # Try to find and click player link
+            player_link = None
+            for selector in selectors:
+                links = page.locator(selector).all()
+                if len(links) > 0:
+                    # Look for tennis player link
+                    for link in links[:5]:  # Check first 5 results
+                        try:
+                            text = link.text_content(timeout=1000) or ""
+                            href = link.get_attribute('href') or ""
+                            if player_name.split()[-1].lower() in text.lower() or '/player/' in href or '/tennis/' in href:
+                                player_link = link
+                                break
+                        except:
+                            continue
+                    if player_link:
+                        break
+            
+            if player_link:
+                player_link.click()
+                time.sleep(3)  # Wait for player page to load
             else:
                 logger.warning(f"⚠️ Player not found: {player_name}")
                 return None
@@ -103,10 +160,25 @@ def scrape_player_history(page, player_name: str) -> Optional[Dict[str, any]]:
         
         # Navigate to Results tab if available
         try:
-            results_tab = page.locator('text=Results, a[href*="results"]').first
-            if results_tab.count() > 0:
-                results_tab.click()
-                time.sleep(2)
+            # Try multiple selectors for Results tab
+            results_selectors = [
+                'text=Results',
+                'a[href*="results"]',
+                'button:has-text("Results")',
+                '[class*="results"]',
+                '[class*="tab"][class*="results"]'
+            ]
+            
+            for selector in results_selectors:
+                try:
+                    results_tab = page.locator(selector).first
+                    if results_tab.count() > 0:
+                        results_tab.click()
+                        time.sleep(3)
+                        logger.debug(f"Clicked Results tab with selector: {selector}")
+                        break
+                except:
+                    continue
         except:
             logger.debug("Results tab not found or already on results page")
         
@@ -194,9 +266,23 @@ def scrape_player_history(page, player_name: str) -> Optional[Dict[str, any]]:
         
     except PlaywrightTimeout:
         logger.error(f"⏱️ Timeout scraping {player_name}")
+        if SENTRY_AVAILABLE:
+            capture_exception(
+                PlaywrightTimeout(f"Timeout scraping {player_name}"),
+                component='match_history_scraper',
+                stage='scrape_player_history',
+                player_name=player_name
+            )
         return None
     except Exception as e:
         logger.error(f"❌ Error scraping {player_name}: {e}")
+        if SENTRY_AVAILABLE:
+            capture_exception(
+                e,
+                component='match_history_scraper',
+                stage='scrape_player_history',
+                player_name=player_name
+            )
         import traceback
         logger.debug(traceback.format_exc())
         return None
@@ -261,6 +347,13 @@ def get_players_to_update(notion_client: Client, database_id: str, limit: int = 
         
     except Exception as e:
         logger.error(f"❌ Error getting players: {e}")
+        if SENTRY_AVAILABLE:
+            capture_exception(
+                e,
+                component='match_history_scraper',
+                stage='get_players_to_update',
+                database_id=database_id
+            )
         import traceback
         logger.debug(traceback.format_exc())
         return []
@@ -305,6 +398,13 @@ def update_player_card(notion_client: Client, page_id: str, history: Dict[str, a
         
     except Exception as e:
         logger.error(f"❌ Error updating player card: {e}")
+        if SENTRY_AVAILABLE:
+            capture_exception(
+                e,
+                component='match_history_scraper',
+                stage='update_player_card',
+                page_id=page_id
+            )
         import traceback
         logger.debug(traceback.format_exc())
 
@@ -314,6 +414,16 @@ def main():
     print("\n" + "="*80)
     print("📊 MATCH HISTORY SCRAPER")
     print("="*80 + "\n")
+    
+    # Initialize Sentry
+    if SENTRY_AVAILABLE:
+        init_sentry(environment='production' if (project_root / '.env').exists() else 'development')
+        set_sentry_tags(component='match_history_scraper')
+        add_breadcrumb(
+            message="Match History Scraper started",
+            category="scraper",
+            level="info"
+        )
     
     if not PLAYWRIGHT_AVAILABLE:
         logger.error("❌ Playwright not available")
@@ -348,6 +458,12 @@ def main():
     
     if not players:
         logger.info("✅ No players need updates")
+        if SENTRY_AVAILABLE:
+            add_breadcrumb(
+                message="No players need updates",
+                category="scraper",
+                level="info"
+            )
         return
     
     # Scrape match history for each player
@@ -377,14 +493,40 @@ def main():
         for i, player in enumerate(players, 1):
             print(f"\n[{i}/{len(players)}] 👤 Processing: {player['name']}")
             
+            if SENTRY_AVAILABLE:
+                add_breadcrumb(
+                    message=f"Processing player {i}/{len(players)}: {player['name']}",
+                    category="scraper",
+                    level="info",
+                    data={"player_name": player['name'], "player_index": i}
+                )
+            
             history = scrape_player_history(page, player['name'])
             
             if history:
+                if SENTRY_AVAILABLE:
+                    add_breadcrumb(
+                        message=f"Successfully scraped history for {player['name']}",
+                        category="scraper",
+                        level="info",
+                        data={
+                            "player_name": player['name'],
+                            "win_rate": history.get('win_rate'),
+                            "total_matches": history.get('total_matches')
+                        }
+                    )
                 update_player_card(notion, player['page_id'], history)
                 updated_count += 1
             else:
                 failed_count += 1
                 logger.warning(f"⚠️ Could not get history for {player['name']}")
+                if SENTRY_AVAILABLE:
+                    add_breadcrumb(
+                        message=f"Failed to get history for {player['name']}",
+                        category="scraper",
+                        level="warning",
+                        data={"player_name": player['name']}
+                    )
             
             # Rate limiting
             if i < len(players):
@@ -399,6 +541,26 @@ def main():
     print(f"   Updated: {updated_count}/{len(players)}")
     print(f"   Failed: {failed_count}/{len(players)}")
     print("="*80 + "\n")
+    
+    if SENTRY_AVAILABLE:
+        add_breadcrumb(
+            message="Match History Scraper completed",
+            category="scraper",
+            level="info",
+            data={
+                "updated_count": updated_count,
+                "failed_count": failed_count,
+                "total_players": len(players)
+            }
+        )
+        if updated_count > 0:
+            capture_message(
+                f"Match History Scraper completed: {updated_count}/{len(players)} players updated",
+                level="info",
+                updated_count=updated_count,
+                failed_count=failed_count,
+                total_players=len(players)
+            )
 
 
 if __name__ == "__main__":

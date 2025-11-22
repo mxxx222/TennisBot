@@ -13,6 +13,7 @@ import os
 import sys
 import logging
 import re
+import time
 from typing import Dict, List, Optional
 from datetime import datetime
 from pathlib import Path
@@ -102,13 +103,28 @@ def scrape_itf_rankings() -> List[Dict[str, any]]:
             try:
                 page.goto(url, timeout=30000, wait_until='domcontentloaded')
                 
+                # Accept cookies if present
+                try:
+                    accept_button = page.locator('text=Accept, button:has-text("Accept"), [id*="accept"], [class*="accept"]').first
+                    if accept_button.count() > 0:
+                        accept_button.click()
+                        time.sleep(2)
+                        logger.debug("Accepted cookies")
+                except:
+                    pass
+                
+                # Wait a bit for page to fully load
+                time.sleep(3)
+                
                 # Wait for rankings table to load
                 # Try multiple selector strategies
                 selectors = [
                     '.rankings-table',
                     'table',
                     '[class*="ranking"]',
-                    '[class*="table"]'
+                    '[class*="table"]',
+                    'tbody',
+                    '[data-rank]'
                 ]
                 
                 found = False
@@ -129,26 +145,78 @@ def scrape_itf_rankings() -> List[Dict[str, any]]:
                 from bs4 import BeautifulSoup
                 soup = BeautifulSoup(html, 'html.parser')
                 
+                # Debug: Save HTML snippet for inspection
+                logger.debug(f"Page HTML length: {len(html)}")
+                
+                # Try to find any text that looks like rankings
+                page_text = page.locator('body').text_content(timeout=5000) or ""
+                if 'rank' in page_text.lower()[:1000] or '1' in page_text[:500]:
+                    logger.debug("Found ranking-like text in page")
+                    # Try to extract rankings from visible text
+                    lines = page_text.split('\n')[:200]
+                    for line in lines:
+                        line = line.strip()
+                        # Look for pattern: number + name
+                        match = re.search(r'^(\d+)\s+([A-Z][a-zA-Z\s]+)', line)
+                        if match:
+                            rank = int(match.group(1))
+                            name = match.group(2).strip()
+                            if name and 1 <= rank <= MAX_RANKINGS and len(name) > 2:
+                                rankings.append({'rank': rank, 'name': name})
+                                if len(rankings) >= 10:
+                                    logger.info(f"Found {len(rankings)} rankings from page text")
+                                    break
+                
                 # Find ranking rows - try multiple patterns
                 rows = soup.find_all('tr')
+                logger.debug(f"Found {len(rows)} table rows")
                 
-                for row in rows[:MAX_RANKINGS + 50]:
+                # Also try to find any divs or other elements with ranking data
+                all_elements = soup.find_all(['tr', 'div', 'li'], class_=re.compile(r'rank|player|name', re.I))
+                logger.debug(f"Found {len(all_elements)} elements with rank/player/name classes")
+                
+                for row in rows[:MAX_RANKINGS + 100]:
                     cells = row.find_all(['td', 'th'])
                     if len(cells) >= 2:
-                        # Try to extract rank and name
+                        # Try to extract rank and name from cells
+                        cell_texts = [cell.get_text(strip=True) for cell in cells]
+                        
+                        # Look for rank in first cell and name in second cell
+                        if len(cell_texts) >= 2:
+                            rank_text = cell_texts[0]
+                            name_text = cell_texts[1]
+                            
+                            # Try to extract rank number
+                            rank_match = re.search(r'(\d+)', rank_text)
+                            if rank_match and name_text:
+                                rank = int(rank_match.group(1))
+                                name = name_text.strip()
+                                
+                                # Clean name
+                                name = re.sub(r'\s+', ' ', name)
+                                name = re.sub(r'\s*\([^)]+\)\s*', '', name)
+                                
+                                if name and 1 <= rank <= MAX_RANKINGS:
+                                    rankings.append({
+                                        'rank': rank,
+                                        'name': name
+                                    })
+                                    continue
+                        
+                        # Fallback: Try to extract from full row text
                         text = row.get_text(strip=True)
                         
-                        # Pattern: number followed by name
-                        match = re.search(r'^(\d+)\s+(.+?)(?:\s+\d+|\s*$)', text)
+                        # Pattern: number followed by name (more flexible)
+                        match = re.search(r'(\d+)\s+([A-Z][a-zA-Z\s]+?)(?:\s+\d+|$|\(|\[)', text)
                         if match:
                             rank = int(match.group(1))
                             name = match.group(2).strip()
                             
-                            # Clean name (remove extra whitespace, country codes, etc.)
+                            # Clean name
                             name = re.sub(r'\s+', ' ', name)
-                            name = re.sub(r'\s*\([^)]+\)\s*', '', name)  # Remove parentheses
+                            name = re.sub(r'\s*\([^)]+\)\s*', '', name)
                             
-                            if name and 1 <= rank <= MAX_RANKINGS:
+                            if name and len(name) > 2 and 1 <= rank <= MAX_RANKINGS:
                                 rankings.append({
                                     'rank': rank,
                                     'name': name

@@ -1,0 +1,11 @@
+{
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.autoSave": "onFocusChange",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "terminal.integrated.defaultLocation": "editor",
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false
+}

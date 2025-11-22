@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "ms-vscode.vscode-json",
+        "ms-python.python",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "eamodio.gitlens"
+    ]
+}
